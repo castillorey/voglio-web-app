@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import supabase from "../supabase-client";
 import { Navigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Main from "./Main";
 
-function wrapper({ children } : any) {
+export default function Wrapper() {
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -14,7 +16,7 @@ function wrapper({ children } : any) {
       setAuthenticated(!!session);
       setLoading(false);
     };
-    
+
     getSession();
   }, []);
 
@@ -22,10 +24,13 @@ function wrapper({ children } : any) {
     return <span>Loading...</span>;
   } else {
     if (authenticated) {
-      return <>{ children }</>;
+      return (
+        <>
+          <Navbar />
+          <Main />
+        </>
+      );
     }
     return <Navigate to={"/login"} />;
   }
 }
-
-export default wrapper;

@@ -28,6 +28,7 @@ function register() {
   };
   return (
     <>
+    <div className="flex justify-center px-6 py-12 lg:px-8">
       <div className="max-w-md w-full rounded-xl shadow-lg p-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-5 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
@@ -103,6 +104,7 @@ function register() {
           </p>
         </div>
       </div>
+    </div>
     </>
   );
 }
