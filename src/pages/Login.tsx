@@ -25,7 +25,7 @@ function login() {
     }
 
     if (data) {
-      navigate("/");
+      navigate("/dashboard");
     }
     
   };
