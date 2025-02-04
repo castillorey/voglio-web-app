@@ -1,33 +1,42 @@
 import {
   Dialog,
   DialogBackdrop,
-  DialogPanel
+  DialogPanel,
+  DialogTitle,
 } from "@headlessui/react";
 import React from "react";
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
-export default function SimpleDialog({open, content, onClose}: {open: boolean, content: React.ReactNode, onClose: () => void}) {
-
+export default function SimpleDialog({
+  open,
+  onClose,
+  children,
+}: {
+  open: boolean;
+  children: React.ReactNode;
+  onClose: () => void;
+}) {
   return (
-    <Dialog open={open} onClose={onClose} className="relative z-10">
-      <DialogBackdrop
-        transition
-        className="fixed inset-0 bg-gray-500/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
-      />
-
-      {<div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div className="flex min-h-full items-end justify-center p-4 sm:items-center sm:p-0">
+    <Dialog
+      open={open}
+      as="div"
+      className="relative z-10 focus:outline-none"
+      onClose={onClose}
+    >
+      <DialogBackdrop className="fixed inset-0 bg-black/30" />
+      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4">
           <DialogPanel
             transition
-            className="relative transform overflow-hidden rounded-lg bg-white shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95 px-4 pt-5 pb-4 sm:p-6 sm:pb-4"
+            className="w-full max-w-md rounded-md bg-white p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
           >
             <div className="flex justify-end">
-              <XMarkIcon className="size-5 flex align-self-"/>
+              <XMarkIcon onClick={onClose} className="size-5" />
             </div>
-            {content}
+            {children}
           </DialogPanel>
         </div>
-      </div>}
+      </div>
     </Dialog>
   );
 }

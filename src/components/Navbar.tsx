@@ -18,7 +18,7 @@ function classNames(...classes: string[]) {
 
 export default function Navbar() {
   const [navigation, setNavigation] = useState([
-    { name: "My voglios", href: "/dashboard", current: true },
+    { name: "Voglios", href: "/dashboard", current: true },
     { name: "Friends", href: "friends", current: false },
   ]);
 

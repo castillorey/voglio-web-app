@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import supabase from "../supabase-client";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import Main from "./Main";
 
 export default function Wrapper() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -13,7 +12,10 @@ export default function Wrapper() {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      setAuthenticated(!!session);
+      if (session) {
+        localStorage.setItem("session", JSON.stringify(session));
+        setAuthenticated(!!session);
+      }
       setLoading(false);
     };
 
@@ -27,7 +29,9 @@ export default function Wrapper() {
       return (
         <>
           <Navbar />
-          <Main />
+          <main className="px-6 py-12 lg:px-8">
+            <Outlet></Outlet>
+          </main>
         </>
       );
     }

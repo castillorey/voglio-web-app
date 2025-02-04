@@ -27,7 +27,6 @@ function login() {
     if (data) {
       navigate("/dashboard");
     }
-    
   };
 
   return (
