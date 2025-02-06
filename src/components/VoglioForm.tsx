@@ -1,35 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import VoglioFormStep1 from "./VoglioFormStep1";
 import VoglioFormStep2 from "./VoglioFormStep2";
+import { IVoglio } from "../pages/Voglios";
 import supabase from "../supabase-client";
 import { v4 as uuidv4 } from "uuid";
+
+export interface ISize {
+  id: number;
+  value: string;
+}
+
+export interface ICategory {
+  id: number;
+  name: string;
+}
 
 export default function VoglioForm({
   onCreateVoglio,
 }: {
-  onCreateVoglio: (newVoglio: any) => void;
+  onCreateVoglio: (newVoglio: IVoglio) => void;
 }) {
   const CDNURL =
     "https://bblscslptefmqyjhizvl.supabase.co/storage/v1/object/public/images/";
-  const [step, setStep] = useState(1);
   const session: string = localStorage.getItem("session")!;
   const user = session && JSON.parse(session)?.user;
 
+  const [step, setStep] = useState(1);
+  const [sizeList, setSizeList] = useState<ISize[]>([
+    { id: 0, value: "Choose an option" },
+  ]);
+  const [categoryList, setCategoryList] = useState<ICategory[]>([
+    { id: 0, name: "Choose an option" },
+  ]);
+
   const handleNextStep = () => setStep(step + 1);
   const handlePrevStep = () => setStep(step > 1 ? step - 1 : 1);
-
-  const categoryList = [
-    { id: 0, name: "Select an option" },
-    { id: 1, name: "Category 1" },
-    { id: 2, name: "Category 2" },
-    { id: 3, name: "Category 3" },
-  ];
-  const sizeList = [
-    { id: 0, name: "Select an option" },
-    { id: 1, name: "Size 1" },
-    { id: 2, name: "Size 2" },
-    { id: 3, name: "Size 3" },
-  ];
 
   const emptyForm = {
     name: "",
@@ -38,10 +43,34 @@ export default function VoglioForm({
     referenceLink: "",
     sizeId: null,
     imageFile: null,
-    imageUrl: "",
+  };
+  const [formData, setFormData] = useState(emptyForm);
+  let imageUrl = "";
+
+  useEffect(() => {
+    fetchSizeList();
+    fetchCategoryList();
+  }, []);
+
+  const fetchSizeList = async () => {
+    const { data, error } = await supabase.from("size").select("*");
+
+    if (error) {
+      console.log("Error fetching sis=ze list: ", error);
+    } else {
+      setSizeList([...sizeList, ...data]);
+    }
   };
 
-  let [formData, setFormData] = useState(emptyForm);
+  const fetchCategoryList = async () => {
+    const { data, error } = await supabase.from("category").select("*");
+
+    if (error) {
+      console.log("Error fetching category list: ", error);
+    } else {
+      setCategoryList([...categoryList, ...data]);
+    }
+  };
 
   const uploadImage = async (imageFile: File) => {
     if (!imageFile) return;
@@ -50,36 +79,36 @@ export default function VoglioForm({
       .from("images")
       .upload(fileName, imageFile);
 
-      if (!error) {
-        setFormData(prev => ({ ...prev, imageUrl: CDNURL + fileName }));
-      } else {
-        console.log(error);
-      }
+    if (!error) {
+      imageUrl = CDNURL + fileName;
+    } else {
+      console.log(error);
+    }
   };
 
   const formDataPublish = async () => {
     if (formData.imageFile) {
       await uploadImage(formData.imageFile);
     }
-
     const newVoglioInfo = {
       name: formData.name,
       notes: formData.notes,
       category_id: formData.categoryId,
       reference_link: formData.referenceLink,
       size_id: formData.sizeId,
-      image_url: formData.imageUrl
+      image_url: imageUrl,
+      user_id: user.id,
     };
 
     const { data, error } = await supabase
       .from("voglio")
       .insert([newVoglioInfo])
-      .single();
+      .select();
 
     if (error) {
       console.log("Error adding new Voglio: ", error);
     } else {
-      onCreateVoglio(newVoglioInfo);
+      onCreateVoglio({ id: data[0].id, ...newVoglioInfo });
     }
 
     setFormData(emptyForm);

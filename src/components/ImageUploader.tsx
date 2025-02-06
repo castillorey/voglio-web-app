@@ -6,7 +6,6 @@ export default function ImageUploader({formData, onImageChange}: {formData: any;
     let file = e?.target?.files[0];
     if (!file) return;
 
-    console.log(file);
     onImageChange(file);
   };
 

@@ -4,7 +4,7 @@ export default function Voglio(props: { name: string; notes: string; imageSrc: s
       <img
         className="w-full"
         src={props.imageSrc}
-        alt="Sunset in the mountains"
+        alt={props.name}
       />
       <div className="px-6 py-4">
         <h3 className="font-bold text-xl mb-2">{props.name}</h3>

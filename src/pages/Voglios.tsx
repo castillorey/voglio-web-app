@@ -6,12 +6,29 @@ import SimpleDialog from "../components/SimpleDialog";
 import VoglioForm from "../components/VoglioForm";
 import supabase from "../supabase-client";
 
+export interface IVoglio {
+  id: number | null;
+  name: string;
+  notes: string;
+  category_id: number | null;
+  reference_link: string;
+  size_id: number | null;
+  image_url: string;
+}
+
 export default function Voglios() {
-  const [voglioList, setVoglioList] = useState([]);
+  const [voglioList, setVoglioList] = useState<IVoglio[]>([]);
   const [openNewVoglioDialog, setOpenNewVoglioDialog] = useState(false);
 
-  const voglioListItems = voglioList.map((item: any) => {
-    return <Voglio key={item.name} name={item.name} notes={item.notes} imageSrc={item.image_url} />;
+  const voglioListItems = voglioList.map((item: IVoglio) => {
+    return (
+      <Voglio
+        key={item.id}
+        name={item.name}
+        notes={item.notes}
+        imageSrc={item.image_url}
+      />
+    );
   });
 
   useEffect(() => {
@@ -20,7 +37,7 @@ export default function Voglios() {
 
   const fetchVoglios = async () => {
     const { data, error } = await supabase.from("voglio").select("*");
-    
+
     if (error) {
       console.log("Error fetching: ", error);
     } else {

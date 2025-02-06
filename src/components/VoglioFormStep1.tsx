@@ -1,11 +1,13 @@
+import { ICategory, ISize } from "./VoglioForm";
+
 export default function VoglioFormStep1({
   formData,
   categoryList,
   onFormChange,
 }: {
   formData: any;
-  categoryList: any[];
-  sizeList: any[];
+  categoryList: ICategory[];
+  sizeList: ISize[];
   onFormChange: (formData: any) => void;
 }) {
   return (

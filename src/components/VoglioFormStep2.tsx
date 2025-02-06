@@ -54,7 +54,7 @@ export default function VoglioFormStep2({
         >
           {sizeList.map((size) => (
             <option key={size.id} value={size.id}>
-              {size.name}
+              {size.value}
             </option>
           ))}
         </select>
