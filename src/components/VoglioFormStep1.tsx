@@ -1,12 +1,10 @@
-import { ICategory, ISize } from "./VoglioForm";
+import { ISize } from "./VoglioForm";
 
 export default function VoglioFormStep1({
   formData,
-  categoryList,
   onFormChange,
 }: {
   formData: any;
-  categoryList: ICategory[];
   sizeList: ISize[];
   onFormChange: (formData: any) => void;
 }) {
@@ -31,30 +29,7 @@ export default function VoglioFormStep1({
           className="mt-2 w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:gray-indigo-600 sm:text-sm/6"
         />
       </div>
-      {/* Category */}
-      <div className="mt-4">
-        <label
-          htmlFor="category"
-          className="block text-sm font-medium text-gray-900"
-        >
-          Category
-        </label>
 
-        <select
-          name="category"
-          id="category"
-          onChange={(event) =>
-            onFormChange({ ...formData, categoryId: event.target.value })
-          }
-          className="mt-1.5 w-full px-3 py-1.5 border rounded-md border-gray-300 text-gray-700 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-600 sm:text-sm/6"
-        >
-          {categoryList.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-      </div>
       {/* Notes */}
       <div className="mt-4">
         <label

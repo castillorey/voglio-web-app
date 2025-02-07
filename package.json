@@ -15,6 +15,8 @@
     "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/supabase-js": "^2.47.12",
     "autoprefixer": "^10.4.20",
+    "axios": "^1.7.9",
+    "emoji-picker-react": "^4.12.0",
     "firebase": "^11.1.0",
     "postcss": "^8.4.49",
     "react": "^18.3.1",

@@ -29,7 +29,7 @@ export default function Wrapper() {
       return (
         <>
           <Navbar />
-          <main className="px-6 py-12 lg:px-8">
+          <main className="px-6 pt-5 lg:px-8">
             <Outlet></Outlet>
           </main>
         </>

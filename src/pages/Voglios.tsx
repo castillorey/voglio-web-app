@@ -1,70 +1,69 @@
 import { useEffect, useState } from "react";
 import { Button } from "@headlessui/react";
 
-import Voglio from "../components/Voglio";
+import CategoryPreview from "../components/CategoryPreview";
 import SimpleDialog from "../components/SimpleDialog";
-import VoglioForm from "../components/VoglioForm";
+import { ICategory } from "../components/VoglioForm";
 import supabase from "../supabase-client";
-
-export interface IVoglio {
-  id: number | null;
-  name: string;
-  notes: string;
-  category_id: number | null;
-  reference_link: string;
-  size_id: number | null;
-  image_url: string;
-}
+import CategoryForm from "../components/CategoryForm";
 
 export default function Voglios() {
-  const [voglioList, setVoglioList] = useState<IVoglio[]>([]);
-  const [openNewVoglioDialog, setOpenNewVoglioDialog] = useState(false);
+  const [openNewCategoryDialog, setOpenNewCategoryDialog] = useState(false);
 
-  const voglioListItems = voglioList.map((item: IVoglio) => {
+  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
+
+  useEffect(() => {
+    fetchCategoryList();
+  }, []);
+
+  const fetchCategoryList = async () => {
+    const { data, error } = await supabase.from("category").select("*");
+
+    if (error) {
+      console.log("Error fetching category list: ", error);
+    } else {
+      setCategoryList(data.map((item) => ({ emojiCode: item.emoji_code, ...item })));
+    }
+  };
+
+  const categoryListItems = categoryList.map((item: ICategory) => {
     return (
-      <Voglio
+      <CategoryPreview
         key={item.id}
         name={item.name}
-        notes={item.notes}
-        imageSrc={item.image_url}
+        description={item.description}
+        emojiCode={item.emojiCode}
       />
     );
   });
 
-  useEffect(() => {
-    fetchVoglios();
-  }, []);
-
-  const fetchVoglios = async () => {
-    const { data, error } = await supabase.from("voglio").select("*");
-
-    if (error) {
-      console.log("Error fetching: ", error);
-    } else {
-      setVoglioList(data);
-    }
-  };
-
   return (
     <div>
       <SimpleDialog
-        open={openNewVoglioDialog}
-        onClose={() => setOpenNewVoglioDialog(false)}
+        open={openNewCategoryDialog}
+        onClose={() => setOpenNewCategoryDialog(false)}
       >
-        <VoglioForm
-          onCreateVoglio={(newVoglio) => {
-            setVoglioList([...voglioList, newVoglio]);
-            setOpenNewVoglioDialog(false);
+        <CategoryForm
+          onCreateCategory={(newCategory) => {
+            setCategoryList([...categoryList, newCategory]);
+            setOpenNewCategoryDialog(false);
           }}
         />
       </SimpleDialog>
+      <h2 className="font-bold text-lg uppercase">Categories</h2>
       <Button
-        onClick={() => setOpenNewVoglioDialog(!openNewVoglioDialog)}
-        className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
+        onClick={() => setOpenNewCategoryDialog(!openNewCategoryDialog)}
+        className="mt-2 group relative inline-block focus:ring-3 focus:outline-hidden"
       >
-        New Voglio
+        <span className="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-gray-300 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"></span>
+
+        <span className="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold tracking-widest text-black uppercase">
+          New Category
+        </span>
       </Button>
-      <div className="mt-5 grid grid-cols-2 gap-4">{voglioListItems}</div>
+      <div className="mt-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {categoryListItems}
+      </div>
     </div>
   );
 }

@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
 import VoglioFormStep1 from "./VoglioFormStep1";
 import VoglioFormStep2 from "./VoglioFormStep2";
-import { IVoglio } from "../pages/Voglios";
 import supabase from "../supabase-client";
 import { v4 as uuidv4 } from "uuid";
+
+export interface IVoglio {
+  id: number | null;
+  name: string;
+  notes: string;
+  categoryId: number | null;
+  referenceLink: string;
+  sizeId: number | null;
+  imageUrl: string;
+}
 
 export interface ISize {
   id: number;
@@ -13,6 +22,8 @@ export interface ISize {
 export interface ICategory {
   id: number;
   name: string;
+  description: string;
+  emojiCode: string;
 }
 
 export default function VoglioForm({
@@ -26,12 +37,7 @@ export default function VoglioForm({
   const user = session && JSON.parse(session)?.user;
 
   const [step, setStep] = useState(1);
-  const [sizeList, setSizeList] = useState<ISize[]>([
-    { id: 0, value: "Choose an option" },
-  ]);
-  const [categoryList, setCategoryList] = useState<ICategory[]>([
-    { id: 0, name: "Choose an option" },
-  ]);
+  const [sizeList, setSizeList] = useState<ISize[]>([]);
 
   const handleNextStep = () => setStep(step + 1);
   const handlePrevStep = () => setStep(step > 1 ? step - 1 : 1);
@@ -49,7 +55,6 @@ export default function VoglioForm({
 
   useEffect(() => {
     fetchSizeList();
-    fetchCategoryList();
   }, []);
 
   const fetchSizeList = async () => {
@@ -59,16 +64,6 @@ export default function VoglioForm({
       console.log("Error fetching sis=ze list: ", error);
     } else {
       setSizeList([...sizeList, ...data]);
-    }
-  };
-
-  const fetchCategoryList = async () => {
-    const { data, error } = await supabase.from("category").select("*");
-
-    if (error) {
-      console.log("Error fetching category list: ", error);
-    } else {
-      setCategoryList([...categoryList, ...data]);
     }
   };
 
@@ -93,11 +88,10 @@ export default function VoglioForm({
     const newVoglioInfo = {
       name: formData.name,
       notes: formData.notes,
-      category_id: formData.categoryId,
-      reference_link: formData.referenceLink,
-      size_id: formData.sizeId,
-      image_url: imageUrl,
-      user_id: user.id,
+      categoryId: formData.categoryId,
+      referenceLink: formData.referenceLink,
+      sizeId: formData.sizeId,
+      imageUrl: imageUrl,
     };
 
     const { data, error } = await supabase
@@ -119,7 +113,6 @@ export default function VoglioForm({
       {step === 1 && (
         <VoglioFormStep1
           formData={formData}
-          categoryList={categoryList}
           sizeList={sizeList}
           onFormChange={setFormData}
         />
