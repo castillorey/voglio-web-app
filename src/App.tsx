@@ -4,7 +4,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Wrapper from "./pages/Wrapper";
 import Voglios from "./pages/Voglios";
-import Friends from "./pages/Friends";
+import Category from "./pages/Category";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -16,9 +16,12 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Wrapper />}>
             <Route index element={<Voglios />} />
-            <Route path="friends" element={<Friends />} />
+            <Route path="category/:categoryId" element={<Category />} />
           </Route>
-          <Route path="/" element={<Navigate to="/dashboard" replace={true} />}/>
+          <Route
+            path="/"
+            element={<Navigate to="/dashboard" replace={true} />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

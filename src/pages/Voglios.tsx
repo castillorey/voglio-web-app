@@ -6,6 +6,7 @@ import SimpleDialog from "../components/SimpleDialog";
 import { ICategory } from "../components/VoglioForm";
 import supabase from "../supabase-client";
 import CategoryForm from "../components/CategoryForm";
+import { Link, Navigate } from "react-router";
 
 export default function Voglios() {
   const [openNewCategoryDialog, setOpenNewCategoryDialog] = useState(false);
@@ -22,18 +23,22 @@ export default function Voglios() {
     if (error) {
       console.log("Error fetching category list: ", error);
     } else {
-      setCategoryList(data.map((item) => ({ emojiCode: item.emoji_code, ...item })));
+      setCategoryList(
+        data.map((item) => ({ emojiCode: item.emoji_code, ...item }))
+      );
     }
   };
 
   const categoryListItems = categoryList.map((item: ICategory) => {
     return (
-      <CategoryPreview
-        key={item.id}
-        name={item.name}
-        description={item.description}
-        emojiCode={item.emojiCode}
-      />
+      <Link to={`category/${item.id}`}>
+        <CategoryPreview
+          key={item.id}
+          name={item.name}
+          description={item.description}
+          emojiCode={item.emojiCode}
+        />
+      </Link>
     );
   });
 

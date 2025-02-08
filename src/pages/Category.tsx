@@ -1,16 +1,38 @@
 import { useEffect, useState } from "react";
 import supabase from "../supabase-client";
-import { IVoglio } from "./Voglios";
+import { ICategory, IVoglio } from "../components/VoglioForm";
+import { useParams } from "react-router";
+import VoglioPreview from "../components/VoglioPreview";
 
-export default function Category({ name }: { name: string }) {
+export default function Category() {
+  const { categoryId } = useParams();
+  const [categoryData, setCategoryData] = useState<ICategory>({} as ICategory);
   const [voglioList, setVoglioList] = useState<IVoglio[]>([]);
 
+  const fetchCategory = async () => {
+    if (!categoryId) return;
+    const { data, error } = await supabase
+      .from("category")
+      .select("*")
+      .eq("id", categoryId);
+
+    if (error) {
+      console.log("Error fetching: ", error);
+    } else {
+      setCategoryData({ ...data[0], emojiCode: data[0].emoji_code });
+    }
+  };
+
   useEffect(() => {
+    fetchCategory();
     fetchVoglios();
   }, []);
 
   const fetchVoglios = async () => {
-    const { data, error } = await supabase.from("voglio").select("*");
+    const { data, error } = await supabase
+      .from("voglio")
+      .select("*")
+      .eq("category_id", categoryId);
 
     if (error) {
       console.log("Error fetching: ", error);
@@ -31,5 +53,31 @@ export default function Category({ name }: { name: string }) {
     }
   };
 
-  return <h2>{name}</h2>;
+  return (
+    <>
+      <div className="text-center">
+        <p className="py-5 text-center text-6xl rounded-lg bg-gray-100">
+          {categoryData.emojiCode}
+        </p>
+      </div>
+      <span className="relative flex justify-center">
+        <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>
+
+        <span className="relative z-10 bg-white px-6 text-center">
+          <h2 className="mt-2 text-2xl font-bold">{categoryData.name}</h2>
+          <p className="text-gray-800 text-sm">{categoryData.description}</p>
+        </span>
+      </span>
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {voglioList.map((voglio) => (
+          <VoglioPreview
+            name={voglio.name}
+            imageUrl={voglio.imageUrl}
+            notes={voglio.notes}
+            key={voglio.id}
+          />
+        ))}
+      </div>
+    </>
+  );
 }

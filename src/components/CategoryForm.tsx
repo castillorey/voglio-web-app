@@ -11,11 +11,11 @@ export default function CategoryForm({
   const emptyForm = {
     name: "",
     description: "",
-    emojiCode: "",
+    emojiCode: "❔",
     isPrivate: false,
   };
   const [formData, setFormData] = useState(emptyForm);
-  const [emojiInput, setEmojiInput] = useState("");
+  const [emojiInput, setEmojiInput] = useState("❔");
   const [openEmoji, setOpenEmoji] = useState(false);
 
   const handleEmojiChange = (data: any) => {
@@ -48,7 +48,7 @@ export default function CategoryForm({
     <div>
       {/* Emoji */}
       <p className="py-5 text-center text-6xl">
-        <span>{!!emojiInput ? emojiInput : "❔"}</span>
+        <span>{emojiInput}</span>
       </p>
       <div className="text-center">
         <button
