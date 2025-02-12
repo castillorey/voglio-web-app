@@ -28,7 +28,6 @@ export default function Wrapper() {
     if (authenticated) {
       return (
         <>
-          <Navbar />
           <main className="px-6 pt-5 lg:px-8">
             <Outlet></Outlet>
           </main>

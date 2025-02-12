@@ -14,14 +14,10 @@ function App() {
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Wrapper />}>
+          <Route path="/" element={<Wrapper />}>
             <Route index element={<Voglios />} />
             <Route path="category/:categoryId" element={<Category />} />
           </Route>
-          <Route
-            path="/"
-            element={<Navigate to="/dashboard" replace={true} />}
-          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

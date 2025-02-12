@@ -18,8 +18,7 @@ function classNames(...classes: string[]) {
 
 export default function Navbar() {
   const [navigation, setNavigation] = useState([
-    { name: "Voglios", href: "/dashboard", current: true },
-    { name: "Friends", href: "friends", current: false },
+    { name: "Voglios", href: "/", current: true }
   ]);
 
   const handleActiveTab = (name: String) =>

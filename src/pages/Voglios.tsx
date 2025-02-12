@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button } from "@headlessui/react";
+import { Link } from "react-router";
+import { Button } from "@/components/ui/button"
 
 import CategoryPreview from "../components/CategoryPreview";
 import SimpleDialog from "../components/SimpleDialog";
 import { ICategory } from "../components/VoglioForm";
 import supabase from "../supabase-client";
 import CategoryForm from "../components/CategoryForm";
-import { Link } from "react-router";
 
 export default function Voglios() {
   const [openNewCategoryDialog, setOpenNewCategoryDialog] = useState(false);
@@ -54,16 +54,11 @@ export default function Voglios() {
           }}
         />
       </SimpleDialog>
-      <h2 className="font-bold text-lg uppercase">Categories</h2>
       <Button
         onClick={() => setOpenNewCategoryDialog(!openNewCategoryDialog)}
-        className="mt-2 group relative inline-block focus:ring-3 focus:outline-hidden"
+        className="mt-2"
       >
-        <span className="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-gray-300 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"></span>
-
-        <span className="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold tracking-widest text-black uppercase">
-          New Category
-        </span>
+        New Category
       </Button>
       <div className="mt-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {categoryListItems}
