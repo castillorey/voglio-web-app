@@ -6,7 +6,7 @@ import SimpleDialog from "../components/SimpleDialog";
 import { ICategory } from "../components/VoglioForm";
 import supabase from "../supabase-client";
 import CategoryForm from "../components/CategoryForm";
-import { Link, Navigate } from "react-router";
+import { Link } from "react-router";
 
 export default function Voglios() {
   const [openNewCategoryDialog, setOpenNewCategoryDialog] = useState(false);
@@ -31,9 +31,8 @@ export default function Voglios() {
 
   const categoryListItems = categoryList.map((item: ICategory) => {
     return (
-      <Link to={`category/${item.id}`}>
+      <Link key={item.id} to={`category/${item.id}`}>
         <CategoryPreview
-          key={item.id}
           name={item.name}
           description={item.description}
           emojiCode={item.emojiCode}

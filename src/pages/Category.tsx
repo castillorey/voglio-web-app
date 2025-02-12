@@ -3,11 +3,13 @@ import supabase from "../supabase-client";
 import { ICategory, IVoglio } from "../components/VoglioForm";
 import { useParams } from "react-router";
 import VoglioPreview from "../components/VoglioPreview";
+import { Button } from "@headlessui/react";
 
 export default function Category() {
   const { categoryId } = useParams();
   const [categoryData, setCategoryData] = useState<ICategory>({} as ICategory);
   const [voglioList, setVoglioList] = useState<IVoglio[]>([]);
+  const [openNewVoglioDialog, setOpenNewVoglioDialog] = useState(false);
 
   const fetchCategory = async () => {
     if (!categoryId) return;
@@ -68,7 +70,18 @@ export default function Category() {
           <p className="text-gray-800 text-sm">{categoryData.description}</p>
         </span>
       </span>
+      <Button
+            onClick={() => setOpenNewVoglioDialog(!openNewVoglioDialog)}
+            className="mt-2 group relative inline-block focus:ring-3 focus:outline-hidden"
+          >
+            <span className="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-gray-300 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"></span>
+    
+            <span className="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold tracking-widest text-black uppercase">
+              New Voglio
+            </span>
+          </Button>
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      
         {voglioList.map((voglio) => (
           <VoglioPreview
             name={voglio.name}
