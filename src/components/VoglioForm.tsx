@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button"
+import { v4 as uuidv4 } from "uuid";
+
+import supabase from "../supabase-client";
 import VoglioFormStep1 from "./VoglioFormStep1";
 import VoglioFormStep2 from "./VoglioFormStep2";
-import supabase from "../supabase-client";
-import { v4 as uuidv4 } from "uuid";
+
 
 export interface IVoglio {
   id: number | null;
@@ -125,36 +128,37 @@ export default function VoglioForm({
         />
       )}
       <div
-        className={`mt-6 pt-3 border-t border-gray-900/10 sm:flex ${
+        className={`mt-6 pt-3 border-t border-gray-900/10 xs:flex ${
           step == 2 ? "justify-between" : "justify-end"
         }`}
       >
         {step > 1 && (
-          <button
+          <Button
             type="button"
+            variant="secondary"
             onClick={handlePrevStep}
-            className="w-full sm:w-auto justify-self-start rounded-lg bg-gray-500 px-5 py-3 text-sm font-medium text-white"
+            className="w-full xs:w-auto px-5 py-3 xs:justify-self-start text-sm font-mediumrounded-lg"
           >
             Previous
-          </button>
+          </Button>
         )}
         {step < 2 && (
-          <button
+          <Button
             type="button"
             onClick={handleNextStep}
-            className="w-full sm:w-auto justify-self-end rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white"
+            className="w-full xs:w-auto px-5 py-3 xs:justify-self-end text-sm font-medium rounded-lg"
           >
             Next
-          </button>
+          </Button>
         )}
         {step == 2 && (
-          <button
+          <Button
             type="button"
             onClick={formDataPublish}
-            className="w-full mt-3 sm:mt-0 sm:w-auto justify-self-end rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white"
+            className="w-full xs:w-auto mt-2 xs:mt-0 px-5 py-3 xs:justify-self-end text-sm font-medium rounded-lg"
           >
             Create
-          </button>
+          </Button>
         )}
       </div>
     </form>

@@ -20,13 +20,12 @@ export default function ImageUploader({formData, onImageChange}: {formData: any;
       {formData.imageFile ? (
         <img src={URL.createObjectURL(formData.imageFile)} alt="Upload image previewer" className="h-40 w-full mt-2 rounded-lg object-cover" />
       ) : (
-        <div className="h-40 w-full mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-6">
-          <div className="text-center">
+        <div className="w-full mt-2 flex flex-col justify-center items-center text-center rounded-lg border border-dashed border-gray-900/25 px-6 py-3">
             <PhotoIcon
               aria-hidden="true"
               className="mx-auto size-12 text-gray-300"
             />
-            <div className="mt-4 flex text-sm/6 text-gray-600">
+            <div className="flex text-sm/6 text-gray-600">
               <label
                 htmlFor="file-upload"
                 className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 focus-within:outline-hidden hover:text-indigo-500"
@@ -44,9 +43,7 @@ export default function ImageUploader({formData, onImageChange}: {formData: any;
               </label>
               <p className="pl-1">or drag and drop</p>
             </div>
-            <p className="text-xs/5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
           </div>
-        </div>
       )}
     </div>
   );

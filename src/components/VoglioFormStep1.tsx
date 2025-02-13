@@ -1,4 +1,5 @@
 import { ISize } from "./VoglioForm";
+import ImageUploader from "./ImageUploader";
 
 export default function VoglioFormStep1({
   formData,
@@ -10,8 +11,15 @@ export default function VoglioFormStep1({
 }) {
   return (
     <div>
+      {/* Reference image */}
+      <ImageUploader
+        formData={formData}
+        onImageChange={(newImageFile) =>
+          onFormChange({ ...formData, imageFile: newImageFile })
+        }
+      />
       {/* Name */}
-      <div>
+      <div className="mt-2">
         <label
           htmlFor="name"
           className="block text-sm/6 font-medium text-gray-900"
@@ -48,9 +56,6 @@ export default function VoglioFormStep1({
           value={formData.notes}
           className="mt-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:gray-indigo-600 sm:text-sm/6"
         />
-        <p className="mt-2 text-sm/6 text-gray-600">
-          Write something that helps looking for this item.
-        </p>
       </div>
     </div>
   );

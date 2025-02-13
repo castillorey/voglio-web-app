@@ -1,5 +1,4 @@
 import { LinkIcon } from "@heroicons/react/24/solid";
-import ImageUploader from "./ImageUploader";
 
 export default function VoglioFormStep2({
   formData,
@@ -60,13 +59,7 @@ export default function VoglioFormStep2({
         </select>
       </div>
 
-      {/* Reference image */}
-      <ImageUploader
-        formData={formData}
-        onImageChange={(newImageFile) =>
-          onFormChange({ ...formData, imageFile: newImageFile })
-        }
-      />
+
     </div>
   );
 }

@@ -1,5 +1,6 @@
-import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import React from "react";
+
+import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function SimpleDialog({

@@ -1,12 +1,33 @@
 import { useEffect, useState } from "react";
 import supabase from "../supabase-client";
-import { ICategory, IVoglio } from "../components/VoglioForm";
 import { useParams } from "react-router";
+import { Button } from "@/components/ui/button";
+import { useMediaQuery } from "@uidotdev/usehooks";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Plus } from "lucide-react";
+
+import VoglioForm, { ICategory, IVoglio } from "../components/VoglioForm";
 import VoglioPreview from "../components/VoglioPreview";
-import { Button } from "@headlessui/react";
 
 export default function Category() {
   const { categoryId } = useParams();
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
   const [categoryData, setCategoryData] = useState<ICategory>({} as ICategory);
   const [voglioList, setVoglioList] = useState<IVoglio[]>([]);
   const [openNewVoglioDialog, setOpenNewVoglioDialog] = useState(false);
@@ -57,31 +78,67 @@ export default function Category() {
 
   return (
     <>
-      <div className="text-center">
-        <p className="py-5 text-center text-6xl rounded-lg bg-gray-100">
-          {categoryData.emojiCode}
-        </p>
+      <div className="flex items-center">
+        <div className="w-28 flex items-center justify-center p-4 text-center text-6xl rounded-lg bg-gray-100">
+          <span>{categoryData.emojiCode}</span>
+        </div>
+        <div className="ml-4">
+          <h2 className="text-2xl font-bold">{categoryData.name}</h2>
+          <p className="text-sm">{categoryData.description}</p>
+        </div>
       </div>
-      <span className="relative flex justify-center">
-        <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-transparent bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-75"></div>
-
-        <span className="relative z-10 bg-white px-6 text-center">
-          <h2 className="mt-2 text-2xl font-bold">{categoryData.name}</h2>
-          <p className="text-gray-800 text-sm">{categoryData.description}</p>
-        </span>
-      </span>
-      <Button
-            onClick={() => setOpenNewVoglioDialog(!openNewVoglioDialog)}
-            className="mt-2 group relative inline-block focus:ring-3 focus:outline-hidden"
+      <p className="mt-2 h-2 w-full border-b border-gray-300"></p>
+      <div className="mt-4 flex justify-between items-center">
+        <p className="text-lg font-bold">Voglios</p>
+        {isSmallDevice ? (
+          <Drawer
+            open={openNewVoglioDialog}
+            onOpenChange={setOpenNewVoglioDialog}
           >
-            <span className="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-gray-300 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"></span>
-    
-            <span className="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold tracking-widest text-black uppercase">
-              New Voglio
-            </span>
-          </Button>
+            <DrawerTrigger asChild>
+              <Button>
+                <Plus /> <span className="hidden xs:block">Add new</span>
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="mb-5">
+              <DrawerHeader className="text-left">
+                <DrawerTitle>New Voglio</DrawerTitle>
+              </DrawerHeader>
+              <DrawerDescription className="px-5">
+                <VoglioForm
+                  onCreateVoglio={(newVoglio) => {
+                    setVoglioList([...voglioList, newVoglio]);
+                  }}
+                />
+              </DrawerDescription>
+            </DrawerContent>
+          </Drawer>
+        ) : (
+          <Dialog
+            open={openNewVoglioDialog}
+            onOpenChange={setOpenNewVoglioDialog}
+          >
+            <DialogTrigger asChild>
+              <Button>
+                <Plus /> <span className="hidden xs:block">Add new</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>New Voglio</DialogTitle>
+              </DialogHeader>
+              <DialogDescription>
+                <VoglioForm
+                  onCreateVoglio={(newVoglio) => {
+                    setVoglioList([...voglioList, newVoglio]);
+                  }}
+                />
+              </DialogDescription>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      
         {voglioList.map((voglio) => (
           <VoglioPreview
             name={voglio.name}
