@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import supabase from "../supabase-client";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@uidotdev/usehooks";
 
@@ -22,21 +22,29 @@ import {
 } from "@/components/ui/drawer";
 import { Plus } from "lucide-react";
 
-import VoglioForm, { ICategory, IVoglio } from "../components/VoglioForm";
-import VoglioPreview from "../components/VoglioPreview";
+import VoglioForm, {
+  ICategory,
+  IVoglio,
+} from "../components/voglio/VoglioForm";
+import VoglioPreview from "../components/voglio/VoglioPreview";
 
 export default function Category() {
   const { categoryId } = useParams();
+  const { state } = useLocation();
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
   const [categoryData, setCategoryData] = useState<ICategory>({} as ICategory);
   const [voglioList, setVoglioList] = useState<IVoglio[]>([]);
   const [openNewVoglioDialog, setOpenNewVoglioDialog] = useState(false);
 
   const fetchCategory = async () => {
-    if (!categoryId) return;
+    if (state) {
+      setCategoryData(state);
+      return;
+    }
+
     const { data, error } = await supabase
       .from("category")
-      .select("*")
+      .select(`*, voglio(count:count())`)
       .eq("id", categoryId);
 
     if (error) {
@@ -47,6 +55,7 @@ export default function Category() {
   };
 
   useEffect(() => {
+    if (!categoryId) return;
     fetchCategory();
     fetchVoglios();
   }, []);
@@ -83,11 +92,15 @@ export default function Category() {
           <span>{categoryData.emojiCode}</span>
         </div>
         <div className="ml-4">
-          <h2 className="text-2xl font-bold">{categoryData.name}</h2>
+          <h2 className="text-xl font-bold">{categoryData.name}</h2>
           <p className="text-sm">{categoryData.description}</p>
+          <p className="mt-2 text-xs text-gray-500">
+            {categoryData.vogliosCount} voglios
+          </p>
         </div>
       </div>
       <p className="mt-2 h-2 w-full border-b border-gray-300"></p>
+
       <div className="mt-4 flex justify-between items-center">
         <p className="text-lg font-bold">Voglios</p>
         {isSmallDevice ? (
@@ -97,20 +110,22 @@ export default function Category() {
           >
             <DrawerTrigger asChild>
               <Button>
-                <Plus /> <span className="hidden xs:block">Add new</span>
+                <Plus size={14} />{" "}
+                <span className="hidden xs:block">Add new</span>
               </Button>
             </DrawerTrigger>
             <DrawerContent className="mb-5">
               <DrawerHeader className="text-left">
                 <DrawerTitle>New Voglio</DrawerTitle>
               </DrawerHeader>
-              <DrawerDescription className="px-5">
+              <DrawerDescription aria-describedby="New voglio form">
+              </DrawerDescription>
                 <VoglioForm
+                  categoryId={categoryData.id}
                   onCreateVoglio={(newVoglio) => {
                     setVoglioList([...voglioList, newVoglio]);
                   }}
                 />
-              </DrawerDescription>
             </DrawerContent>
           </Drawer>
         ) : (
@@ -120,31 +135,35 @@ export default function Category() {
           >
             <DialogTrigger asChild>
               <Button>
-                <Plus /> <span className="hidden xs:block">Add new</span>
+                <Plus size={14} />
+                <span className="hidden xs:block text-xs">Add new</span>
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>New Voglio</DialogTitle>
+                <DialogDescription aria-describedby="New voglio form" />
               </DialogHeader>
-              <DialogDescription>
-                <VoglioForm
-                  onCreateVoglio={(newVoglio) => {
-                    setVoglioList([...voglioList, newVoglio]);
-                  }}
-                />
-              </DialogDescription>
+              <VoglioForm
+                categoryId={categoryData.id}
+                onCreateVoglio={(newVoglio) => {
+                  setVoglioList([...voglioList, newVoglio]);
+                }}
+              />
             </DialogContent>
           </Dialog>
         )}
       </div>
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+      {/* Voglio list */}
+      <div className="mt-6 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {voglioList.map((voglio) => (
           <VoglioPreview
-            name={voglio.name}
-            imageUrl={voglio.imageUrl}
-            notes={voglio.notes}
             key={voglio.id}
+            props={voglio}
+            onDeleteVoglio={(voglioId: number) =>
+              setVoglioList(voglioList.filter((v) => v.id !== voglioId))
+            }
           />
         ))}
       </div>

@@ -1,11 +1,15 @@
 import { useState } from "react";
-import supabase from "../supabase-client";
+import supabase from "../../supabase-client";
 import EmojiPicker, { EmojiStyle } from "emoji-picker-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
-import { ICategory } from "./VoglioForm";
+import { Trash2 } from "lucide-react";
+
+import { ICategory } from "../voglio/VoglioForm";
 
 export default function CategoryForm({
   onCreateCategory,
@@ -19,7 +23,7 @@ export default function CategoryForm({
     isPrivate: false,
   };
   const [formData, setFormData] = useState(emptyForm);
-  const [emojiInput, setEmojiInput] = useState("❔");
+  const [emojiInput, setEmojiInput] = useState("");
   const [openEmoji, setOpenEmoji] = useState(false);
 
   const handleEmojiChange = (data: any) => {
@@ -33,6 +37,7 @@ export default function CategoryForm({
       name: formData.name,
       description: formData.description,
       emoji_code: formData.emojiCode,
+      is_private: formData.isPrivate,
     };
 
     const { data, error } = await supabase
@@ -43,27 +48,40 @@ export default function CategoryForm({
     if (error) {
       console.log("Error adding new Category: ", error);
     } else {
-      onCreateCategory({ id: data[0].id, ...formData });
+      onCreateCategory({ id: data[0].id, vogliosCount: 0, ...formData });
     }
 
     setFormData(emptyForm);
   };
   return (
-    <div>
+    <>
       {/* Emoji */}
-      <p className="py-5 text-center text-6xl">
-        <span>{emojiInput}</span>
-      </p>
+      {emojiInput && (
+        <div className="mt-5 flex justify-center text-6xl ">
+          <p className="w-[120px] group relative text-center">
+            <span>{emojiInput}</span>
+            <Trash2
+              size={14}
+              onClick={() => {
+                setEmojiInput("");
+                setFormData({ ...formData, emojiCode: "" });
+              }}
+              className="hidden cursor-pointer group-hover:block absolute top-0 right-4 text-red-500"
+            />
+          </p>
+        </div>
+      )}
       <div className="text-center">
         <Button
           variant="secondary"
           onClick={() => setOpenEmoji(!openEmoji)}
-          className="text-xs rounded-lg px-3 py-1.5 text-gray-500"
+          className="mt-2 text-xs rounded-xl  text-gray-500"
         >
           {!openEmoji ? "Emoji picker" : "Close"}
         </Button>
       </div>
 
+      {/* Emoji picker */}
       {openEmoji ? (
         <div className="mt-3 flex justify-center items-center">
           <EmojiPicker
@@ -76,13 +94,8 @@ export default function CategoryForm({
         <>
           {/* Name */}
           <div>
-            <label
-              htmlFor="name"
-              className="block text-sm/6 font-medium text-gray-900"
-            >
-              Name
-            </label>
-            <input
+            <Label htmlFor="name">Name</Label>
+            <Input
               id="name"
               name="name"
               type="text"
@@ -94,8 +107,31 @@ export default function CategoryForm({
             />
           </div>
 
+          {/* description */}
+          <div>
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              name="description"
+              rows={1}
+              onChange={(event) => {
+                setFormData({ ...formData, description: event.target.value });
+              }}
+              value={formData.description}
+              className="mt-2 text-sm"
+            />
+          </div>
+
           {/* Is private */}
-          <div className="mt-2 flex items-center space-x-2">
+          <div className="flex justify-between items-center space-x-4">
+            <div>
+              <Label htmlFor="is-private" className="font-medium">
+                Is private
+              </Label>
+              <p className="text-xs text-gray-500">
+                Only you and your friends can see this category
+              </p>
+            </div>
             <Switch
               id="is-private"
               checked={formData.isPrivate}
@@ -103,37 +139,19 @@ export default function CategoryForm({
                 setFormData({ ...formData, isPrivate: event });
               }}
             />
-            <Label htmlFor="is-private">Is Private?</Label>
           </div>
 
-          {/* description */}
-          <div className="mt-2">
-            <label
-              htmlFor="notes"
-              className="block text-sm/6 font-medium text-gray-900"
+          <div className="xs:flex justify-end">
+            <Button
+              type="button"
+              onClick={formDataPublish}
+              className="w-full mt-5 xs:w-auto justify-self-end text-xs"
             >
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              rows={2}
-              onChange={(event) => {
-                setFormData({ ...formData, description: event.target.value });
-              }}
-              value={formData.description}
-              className="mt-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:gray-indigo-600 sm:text-sm/6"
-            />
+              Create
+            </Button>
           </div>
-          <Button
-            type="button"
-            onClick={formDataPublish}
-            className="w-full mt-5 justify-self-end rounded-lgpx-5 py-3 text-sm font-medium text-white"
-          >
-            Create
-          </Button>
         </>
       )}
-    </div>
+    </>
   );
 }

@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import { v4 as uuidv4 } from "uuid";
 
-import supabase from "../supabase-client";
+import supabase from "../../supabase-client";
 import VoglioFormStep1 from "./VoglioFormStep1";
 import VoglioFormStep2 from "./VoglioFormStep2";
-
 
 export interface IVoglio {
   id: number | null;
@@ -15,6 +14,7 @@ export interface IVoglio {
   referenceLink: string;
   sizeId: number | null;
   imageUrl: string;
+  imageFile?: File;
 }
 
 export interface ISize {
@@ -27,12 +27,15 @@ export interface ICategory {
   name: string;
   description: string;
   emojiCode: string;
+  vogliosCount?: number;
 }
 
 export default function VoglioForm({
+  categoryId,
   onCreateVoglio,
 }: {
-  onCreateVoglio: (newVoglio: IVoglio) => void;
+  categoryId?: number;
+  onCreateVoglio?: (newVoglio: IVoglio) => void;
 }) {
   const CDNURL =
     "https://bblscslptefmqyjhizvl.supabase.co/storage/v1/object/public/images/";
@@ -41,32 +44,54 @@ export default function VoglioForm({
 
   const [step, setStep] = useState(1);
   const [sizeList, setSizeList] = useState<ISize[]>([]);
+  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
 
   const handleNextStep = () => setStep(step + 1);
   const handlePrevStep = () => setStep(step > 1 ? step - 1 : 1);
 
   const emptyForm = {
+    id: null,
     name: "",
     notes: "",
     categoryId: null,
     referenceLink: "",
     sizeId: null,
-    imageFile: null,
+    imageUrl: "",
   };
-  const [formData, setFormData] = useState(emptyForm);
+  const [formData, setFormData] = useState<IVoglio>(emptyForm);
   let imageUrl = "";
 
   useEffect(() => {
+    fetchCategoryList();
     fetchSizeList();
   }, []);
+
+  const fetchCategoryList = async () => {
+    console.log("categoryData:", categoryId);
+
+    const { data, error } = await supabase
+      .from("category")
+      .select("*")
+      .order("id", { ascending: true });
+
+    if (error) {
+      console.log("Error fetching category list: ", error);
+    } else {
+      setCategoryList(data);
+    }
+
+    if (categoryId) {
+      setFormData({ ...formData, categoryId });
+    }
+  };
 
   const fetchSizeList = async () => {
     const { data, error } = await supabase.from("size").select("*");
 
     if (error) {
-      console.log("Error fetching sis=ze list: ", error);
+      console.log("Error fetching size list: ", error);
     } else {
-      setSizeList([...sizeList, ...data]);
+      setSizeList(data);
     }
   };
 
@@ -105,10 +130,10 @@ export default function VoglioForm({
     if (error) {
       console.log("Error adding new Voglio: ", error);
     } else {
-      onCreateVoglio({ id: data[0].id, ...newVoglioInfo });
+      onCreateVoglio && onCreateVoglio({ id: data[0].id, ...newVoglioInfo });
     }
 
-    setFormData(emptyForm);
+    setFormData({ ...emptyForm });
   };
 
   return (
@@ -116,7 +141,7 @@ export default function VoglioForm({
       {step === 1 && (
         <VoglioFormStep1
           formData={formData}
-          sizeList={sizeList}
+          categoryList={categoryList}
           onFormChange={setFormData}
         />
       )}
@@ -127,17 +152,13 @@ export default function VoglioForm({
           onFormChange={setFormData}
         />
       )}
-      <div
-        className={`mt-6 pt-3 border-t border-gray-900/10 xs:flex ${
-          step == 2 ? "justify-between" : "justify-end"
-        }`}
-      >
+      <div className="mt-6 pt-3 border-t border-gray-900/10 xs:flex justify-end gap-4">
         {step > 1 && (
           <Button
             type="button"
             variant="secondary"
             onClick={handlePrevStep}
-            className="w-full xs:w-auto px-5 py-3 xs:justify-self-start text-sm font-mediumrounded-lg"
+            className="w-full xs:w-auto xs:justify-self-start text-xs"
           >
             Previous
           </Button>
@@ -146,7 +167,7 @@ export default function VoglioForm({
           <Button
             type="button"
             onClick={handleNextStep}
-            className="w-full xs:w-auto px-5 py-3 xs:justify-self-end text-sm font-medium rounded-lg"
+            className="w-full xs:w-auto xs:justify-self-end text-xs"
           >
             Next
           </Button>
@@ -155,7 +176,7 @@ export default function VoglioForm({
           <Button
             type="button"
             onClick={formDataPublish}
-            className="w-full xs:w-auto mt-2 xs:mt-0 px-5 py-3 xs:justify-self-end text-sm font-medium rounded-lg"
+            className="w-full xs:w-auto mt-3 xs:mt-0 xs:justify-self-end text-xs"
           >
             Create
           </Button>
