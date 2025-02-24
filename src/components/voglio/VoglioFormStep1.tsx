@@ -6,6 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 import { ICategory } from "./VoglioForm";
 import ImageUploader from "../ImageUploader";
@@ -23,22 +25,21 @@ export default function VoglioFormStep1({
     <div>
       {/* Category */}
       <div className="flex items-center gap-4">
-        <label className="text-xs font-medium text-gray-900" htmlFor="category">
+        <Label className="text-xs" htmlFor="category">
           Category:
-        </label>
+        </Label>
         {categoryList.length > 0 && (
           <Select
             name="category"
             defaultValue={"" + formData.categoryId}
             onValueChange={(value) => {
-              console.log("I am entering here:", value);
               return onFormChange({ ...formData, categoryId: +value });
             }}
           >
-            <SelectTrigger className="w-auto h-[25px] text-xs">
+            <SelectTrigger className="w-auto text-xs">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent >
               <SelectGroup>
                 {categoryList.map((category) => (
                   <SelectItem
@@ -64,13 +65,10 @@ export default function VoglioFormStep1({
       />
       {/* Name */}
       <div className="mt-2">
-        <label
-          htmlFor="name"
-          className="block text-xs font-medium text-gray-900"
-        >
+        <Label htmlFor="name" className="text-xs">
           Name
-        </label>
-        <input
+        </Label>
+        <Input
           id="name"
           name="name"
           type="text"
@@ -78,7 +76,7 @@ export default function VoglioFormStep1({
             onFormChange({ ...formData, name: event.target.value });
           }}
           value={formData.name}
-          className="mt-2 w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:gray-indigo-600 sm:text-sm/6"
+          className="mt-2 text-sm"
         />
       </div>
     </div>

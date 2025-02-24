@@ -28,9 +28,11 @@ import { IVoglio } from "./VoglioForm";
 export default function VoglioPreview({
   props,
   onDeleteVoglio,
+  OnEditClick,
 }: {
   props: IVoglio;
   onDeleteVoglio: (voglioId: number) => void;
+  OnEditClick: (voglioData: IVoglio) => void;
 }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -64,7 +66,10 @@ export default function VoglioPreview({
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem className="text-xs">
+            <DropdownMenuItem
+              className="text-xs"
+              onClick={() => OnEditClick(props)}
+            >
               <Pencil />
               Edit
             </DropdownMenuItem>
@@ -97,7 +102,7 @@ export default function VoglioPreview({
           <Command className="md:min-w-[450px]">
             <CommandList>
               <CommandGroup heading="Actions">
-                <CommandItem>
+                <CommandItem onClick={() => OnEditClick(props)}>
                   <Pencil />
                   <span>Edit</span>
                 </CommandItem>
@@ -113,6 +118,7 @@ export default function VoglioPreview({
       </Drawer>
     );
   };
+
   return (
     <Card className="relative rounded-md">
       {isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />}

@@ -2,24 +2,6 @@ import { useEffect, useState } from "react";
 import supabase from "../supabase-client";
 import { useLocation, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
-import { useMediaQuery } from "@uidotdev/usehooks";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { Plus } from "lucide-react";
 
 import VoglioForm, {
@@ -27,14 +9,15 @@ import VoglioForm, {
   IVoglio,
 } from "../components/voglio/VoglioForm";
 import VoglioPreview from "../components/voglio/VoglioPreview";
+import VoglioDialog from "@/components/VoglioDialog";
 
 export default function Category() {
   const { categoryId } = useParams();
   const { state } = useLocation();
-  const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
   const [categoryData, setCategoryData] = useState<ICategory>({} as ICategory);
   const [voglioList, setVoglioList] = useState<IVoglio[]>([]);
   const [openNewVoglioDialog, setOpenNewVoglioDialog] = useState(false);
+  const [editVoglioData, setEditVoglioData] = useState<IVoglio | null>(null);
 
   const fetchCategory = async () => {
     if (state) {
@@ -103,56 +86,24 @@ export default function Category() {
 
       <div className="mt-4 flex justify-between items-center">
         <p className="text-lg font-bold">Voglios</p>
-        {isSmallDevice ? (
-          <Drawer
+        <Button onClick={() => setOpenNewVoglioDialog(true)}>
+          <Plus size={12} /> <span className="hidden xs:block text-xs">Add new</span>
+        </Button>
+        {
+          <VoglioDialog
             open={openNewVoglioDialog}
-            onOpenChange={setOpenNewVoglioDialog}
-          >
-            <DrawerTrigger asChild>
-              <Button>
-                <Plus size={14} />{" "}
-                <span className="hidden xs:block">Add new</span>
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent className="mb-5">
-              <DrawerHeader className="text-left">
-                <DrawerTitle>New Voglio</DrawerTitle>
-              </DrawerHeader>
-              <DrawerDescription aria-describedby="New voglio form">
-              </DrawerDescription>
-                <VoglioForm
-                  categoryId={categoryData.id}
-                  onCreateVoglio={(newVoglio) => {
-                    setVoglioList([...voglioList, newVoglio]);
-                  }}
-                />
-            </DrawerContent>
-          </Drawer>
-        ) : (
-          <Dialog
-            open={openNewVoglioDialog}
-            onOpenChange={setOpenNewVoglioDialog}
-          >
-            <DialogTrigger asChild>
-              <Button>
-                <Plus size={14} />
-                <span className="hidden xs:block text-xs">Add new</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>New Voglio</DialogTitle>
-                <DialogDescription aria-describedby="New voglio form" />
-              </DialogHeader>
+            onClose={() => setOpenNewVoglioDialog(false)}
+            contentChildren={
               <VoglioForm
                 categoryId={categoryData.id}
                 onCreateVoglio={(newVoglio) => {
                   setVoglioList([...voglioList, newVoglio]);
                 }}
+                editVoglioData={editVoglioData}
               />
-            </DialogContent>
-          </Dialog>
-        )}
+            }
+          />
+        }
       </div>
 
       {/* Voglio list */}
@@ -164,6 +115,10 @@ export default function Category() {
             onDeleteVoglio={(voglioId: number) =>
               setVoglioList(voglioList.filter((v) => v.id !== voglioId))
             }
+            OnEditClick={(voglio) => {
+              setEditVoglioData(voglio);
+              setOpenNewVoglioDialog(true);
+            }}
           />
         ))}
       </div>

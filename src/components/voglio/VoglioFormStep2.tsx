@@ -1,4 +1,17 @@
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { LinkIcon } from "@heroicons/react/24/solid";
+import { Button } from "@/components/ui/button";
+import { Plus, Minus } from "lucide-react";
 
 export default function VoglioFormStep2({
   formData,
@@ -13,13 +26,10 @@ export default function VoglioFormStep2({
     <div>
       {/* Notes */}
       <div className="mt-4">
-        <label
-          htmlFor="notes"
-          className="block text-sm/6 font-medium text-gray-900"
-        >
+        <Label htmlFor="notes" className="text-xs">
           Notes
-        </label>
-        <textarea
+        </Label>
+        <Textarea
           id="notes"
           name="notes"
           rows={2}
@@ -27,70 +37,95 @@ export default function VoglioFormStep2({
             onFormChange({ ...formData, notes: event.target.value });
           }}
           value={formData.notes}
-          className="mt-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:gray-indigo-600 sm:text-sm/6"
+          className="mt-2 text-sm"
         />
       </div>
 
       <div className="mt-2 flex justify-evenly gap-6">
         {/* Size */}
         <div className="w-full">
-          <label
-            htmlFor="size"
-            className="block text-sm font-medium text-gray-900"
-          >
+          <Label htmlFor="size" className="text-xs">
             Size
-          </label>
+          </Label>
 
-          <select
+          <Select
             name="size"
-            id="size"
-            onChange={(event) =>
-              onFormChange({ ...formData, sizeId: event.target.value })
+            value={"" + formData.sizeId}
+            onValueChange={(value) =>
+              onFormChange({ ...formData, sizeId: +value })
             }
-            className="mt-1.5 w-full px-3 py-1.5 border rounded-md border-gray-300 text-gray-700 focus:outline-2 focus:-outline-offset-2 focus:gray-indigo-600 sm:text-sm/6"
           >
-            {sizeList.map((size) => (
-              <option key={size.id} value={size.id}>
-                {size.value}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="mt-1.5 w-full text-xs">
+              <SelectValue placeholder="Select a size" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {sizeList.map((size) => (
+                  <SelectItem
+                    className="text-xs"
+                    key={size.id}
+                    value={size.id.toString()}
+                  >
+                    {size.value}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Quantity */}
         <div className="w-full">
-          <label
-            htmlFor="quantity"
-            className="block text-sm font-medium text-gray-900"
-          >
+          <Label htmlFor="quantity" className="text-xs">
             Quantity
-          </label>
+          </Label>
 
-          <select
-            name="quantity"
-            id="quantity"
-            onChange={(event) =>
-              onFormChange({ ...formData, quantity: event.target.value })
-            }
-            className="mt-1.5 w-full px-3 py-1.5 border rounded-md border-gray-300 text-gray-700 focus:outline-2 focus:-outline-offset-2 focus:gray-indigo-600 sm:text-sm/6"
-          >
-            {sizeList.map((size) => (
-              <option key={size.id} value={size.id}>
-                {size.value}
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center gap-1">
+            <Input
+              type="number"
+              id="quantity"
+              value={formData.quantity}
+              className="text-sm"
+            />
+            <Button
+              variant="secondary"
+              size="icon"
+              type="button"
+              onClick={() => {
+                if (formData.quantity > 0) {
+                  onFormChange({
+                    ...formData,
+                    quantity: formData.quantity - 1,
+                  });
+                }
+              }}
+              className="px-2"
+            >
+              <Minus size={12} />
+            </Button>
+            <Button
+              variant="secondary"
+              size="icon"
+              type="button"
+              onClick={() => {
+                onFormChange({
+                  ...formData,
+                  quantity: formData.quantity + 1,
+                });
+              }}
+              className="px-2"
+            >
+              <Plus size={12} />
+            </Button>
+          </div>
         </div>
       </div>
       {/* Reference link */}
       <div className="mt-2 relative">
-        <label
-          htmlFor="referenceLink"
-          className="block text-sm/6 font-medium text-gray-900"
-        >
+        <Label htmlFor="referenceLink" className="text-xs">
           Reference link
-        </label>
-        <input
+        </Label>
+        <Input
           id="referenceLink"
           name="referenceLink"
           type="text"
@@ -98,7 +133,7 @@ export default function VoglioFormStep2({
             onFormChange({ ...formData, referenceLink: event.target.value });
           }}
           value={formData.referenceLink}
-          className="mt-2 w-full rounded-md bg-white px-3 py-1.5 pr-10 text-base text-gray-900 border border-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:gray-indigo-600 sm:text-sm/6"
+          className="mt-2 text-xs"
         />
         <span className="absolute inset-y-0  top-8 end-3 grid place-content-center">
           <LinkIcon className="size-4 text-gray-300" />

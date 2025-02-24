@@ -15,6 +15,7 @@ export interface IVoglio {
   sizeId: number | null;
   imageUrl: string;
   imageFile?: File;
+  quantity?: number;
 }
 
 export interface ISize {
@@ -32,9 +33,11 @@ export interface ICategory {
 
 export default function VoglioForm({
   categoryId,
+  editVoglioData,
   onCreateVoglio,
 }: {
   categoryId?: number;
+  editVoglioData?: IVoglio | null;
   onCreateVoglio?: (newVoglio: IVoglio) => void;
 }) {
   const CDNURL =
@@ -57,6 +60,7 @@ export default function VoglioForm({
     referenceLink: "",
     sizeId: null,
     imageUrl: "",
+    quantity: 1,
   };
   const [formData, setFormData] = useState<IVoglio>(emptyForm);
   let imageUrl = "";
@@ -64,11 +68,14 @@ export default function VoglioForm({
   useEffect(() => {
     fetchCategoryList();
     fetchSizeList();
+    if (editVoglioData) {
+      setFormData({ ...formData, ...editVoglioData });
+    } else if (categoryId) {
+      setFormData({ ...formData, categoryId });
+    }
   }, []);
 
   const fetchCategoryList = async () => {
-    console.log("categoryData:", categoryId);
-
     const { data, error } = await supabase
       .from("category")
       .select("*")
@@ -78,10 +85,6 @@ export default function VoglioForm({
       console.log("Error fetching category list: ", error);
     } else {
       setCategoryList(data);
-    }
-
-    if (categoryId) {
-      setFormData({ ...formData, categoryId });
     }
   };
 
