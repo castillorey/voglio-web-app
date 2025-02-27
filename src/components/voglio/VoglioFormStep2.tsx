@@ -80,19 +80,16 @@ export default function VoglioFormStep2({
             Quantity
           </Label>
 
-          <div className="flex items-center gap-1">
-            <Input
-              type="number"
-              id="quantity"
-              value={formData.quantity}
-              className="text-sm"
-            />
+          <div className="mt-1.5 flex items-center gap-1">
+            <span className="w-full h-9 text-xs rounded-md border border-neutral-200 bg-transparent px-3 py-2 shadow-sm">
+              {formData.quantity}
+            </span>
             <Button
               variant="secondary"
               size="icon"
               type="button"
               onClick={() => {
-                if (formData.quantity > 0) {
+                if (formData.quantity > 1) {
                   onFormChange({
                     ...formData,
                     quantity: formData.quantity - 1,
@@ -120,6 +117,7 @@ export default function VoglioFormStep2({
           </div>
         </div>
       </div>
+
       {/* Reference link */}
       <div className="mt-2 relative">
         <Label htmlFor="referenceLink" className="text-xs">

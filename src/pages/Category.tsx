@@ -61,6 +61,7 @@ export default function Category() {
           referenceLink: voglio.reference_link,
           sizeId: voglio.size_id,
           imageUrl: voglio.image_url,
+          quantity: voglio.quantity,
         };
       });
 
@@ -87,7 +88,8 @@ export default function Category() {
       <div className="mt-4 flex justify-between items-center">
         <p className="text-lg font-bold">Voglios</p>
         <Button onClick={() => setOpenNewVoglioDialog(true)}>
-          <Plus size={12} /> <span className="hidden xs:block text-xs">Add new</span>
+          <Plus size={12} />{" "}
+          <span className="hidden xs:block text-xs">Add new</span>
         </Button>
         {
           <VoglioDialog
@@ -98,8 +100,17 @@ export default function Category() {
                 categoryId={categoryData.id}
                 onCreateVoglio={(newVoglio) => {
                   setVoglioList([...voglioList, newVoglio]);
+                  setOpenNewVoglioDialog(false);
                 }}
                 editVoglioData={editVoglioData}
+                onUpdateVoglio={(editedVoglio) => {
+                  setVoglioList(
+                    voglioList.map((voglio) =>
+                      voglio.id === editedVoglio.id ? editedVoglio : voglio
+                    )
+                  );
+                  setOpenNewVoglioDialog(false);
+                }}
               />
             }
           />

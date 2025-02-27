@@ -39,7 +39,7 @@ export default function VoglioFormStep1({
             <SelectTrigger className="w-auto text-xs">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
-            <SelectContent >
+            <SelectContent>
               <SelectGroup>
                 {categoryList.map((category) => (
                   <SelectItem
@@ -60,7 +60,7 @@ export default function VoglioFormStep1({
       <ImageUploader
         formData={formData}
         onImageChange={(newImageFile) =>
-          onFormChange({ ...formData, imageFile: newImageFile })
+          onFormChange({ ...formData, imageUrl: "", imageFile: newImageFile })
         }
       />
       {/* Name */}

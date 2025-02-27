@@ -15,7 +15,18 @@ export interface IVoglio {
   sizeId: number | null;
   imageUrl: string;
   imageFile?: File;
-  quantity?: number;
+  quantity: number | null;
+}
+
+export interface IVoglioDto {
+  id: number | null;
+  name: string;
+  notes: string;
+  category_id: number | null;
+  reference_link: string;
+  size_id: number | null;
+  image_url: string;
+  quantity: number | null;
 }
 
 export interface ISize {
@@ -35,10 +46,12 @@ export default function VoglioForm({
   categoryId,
   editVoglioData,
   onCreateVoglio,
+  onUpdateVoglio,
 }: {
   categoryId?: number;
   editVoglioData?: IVoglio | null;
   onCreateVoglio?: (newVoglio: IVoglio) => void;
+  onUpdateVoglio?: (editedVoglio: IVoglio) => void;
 }) {
   const CDNURL =
     "https://bblscslptefmqyjhizvl.supabase.co/storage/v1/object/public/images/";
@@ -115,25 +128,45 @@ export default function VoglioForm({
   const formDataPublish = async () => {
     if (formData.imageFile) {
       await uploadImage(formData.imageFile);
+    } else {
+      imageUrl = "";
     }
-    const newVoglioInfo = {
+    setFormData({ ...formData, imageUrl: imageUrl });
+    
+    const voglioInfo = {
+      id: formData.id,
       name: formData.name,
       notes: formData.notes,
-      categoryId: formData.categoryId,
-      referenceLink: formData.referenceLink,
-      sizeId: formData.sizeId,
-      imageUrl: imageUrl,
+      category_id: formData.categoryId,
+      reference_link: formData.referenceLink,
+      size_id: formData.sizeId,
+      image_url: imageUrl,
+      quantity: formData.quantity,
     };
 
-    const { data, error } = await supabase
-      .from("voglio")
-      .insert([newVoglioInfo])
-      .select();
+    if (voglioInfo.id) {
+      const { data, error } = await supabase
+        .from("voglio")
+        .update(voglioInfo)
+        .eq("id", voglioInfo.id)
+        .select();
 
-    if (error) {
-      console.log("Error adding new Voglio: ", error);
+      if (error) {
+        console.log("Error updating new Voglio: ", error);
+      } else {
+        onUpdateVoglio && onUpdateVoglio(formData);
+      }
     } else {
-      onCreateVoglio && onCreateVoglio({ id: data[0].id, ...newVoglioInfo });
+      const { data, error } = await supabase
+        .from("voglio")
+        .insert([voglioInfo])
+        .select();
+
+      if (error) {
+        console.log("Error adding new Voglio: ", error);
+      } else {
+        onCreateVoglio && onCreateVoglio({ ...formData, id: data[0].id });
+      }
     }
 
     setFormData({ ...emptyForm });
@@ -155,7 +188,7 @@ export default function VoglioForm({
           onFormChange={setFormData}
         />
       )}
-      <div className="mt-6 pt-3 border-t border-gray-900/10 xs:flex justify-end gap-4">
+      <div className="mt-2 pt-3 xs:flex justify-end gap-4">
         {step > 1 && (
           <Button
             type="button"

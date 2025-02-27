@@ -57,7 +57,7 @@ export default function CategoryForm({
     <>
       {/* Emoji */}
       {emojiInput && (
-        <div className="mt-5 flex justify-center text-6xl ">
+        <div className="mt-5 flex justify-center text-6xl">
           <p className="w-[120px] group relative text-center">
             <span>{emojiInput}</span>
             <Trash2

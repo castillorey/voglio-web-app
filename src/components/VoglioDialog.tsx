@@ -31,7 +31,11 @@ export default function VoglioDialog({
       <Drawer open={open} onOpenChange={onClose}>
         <DrawerContent className="mb-5">
           <DrawerHeader className="text-left">
-            <DrawerTitle>New Voglio</DrawerTitle>
+            <DrawerTitle>
+              {contentChildren && contentChildren.props.editVoglioData
+                ? "Edit voglio"
+                : "Create voglio"}
+            </DrawerTitle>
           </DrawerHeader>
           <DrawerDescription aria-describedby="New voglio form"></DrawerDescription>
           {contentChildren}
@@ -45,7 +49,11 @@ export default function VoglioDialog({
       <Dialog open={open} onOpenChange={onClose}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>New Voglio</DialogTitle>
+            <DialogTitle>
+              {contentChildren && contentChildren.props.editVoglioData
+                ? "Edit voglio"
+                : "Create voglio"}
+            </DialogTitle>
             <DialogDescription aria-describedby="New voglio form" />
           </DialogHeader>
           {contentChildren}

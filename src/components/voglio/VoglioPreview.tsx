@@ -17,7 +17,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { BookmarkCheck, Ellipsis, Pencil, Delete } from "lucide-react";
+import { BookmarkCheck, Ellipsis, Pencil, Delete, Image, Divide } from "lucide-react";
 
 import { useNavigate } from "react-router";
 import { useState } from "react";
@@ -123,14 +123,17 @@ export default function VoglioPreview({
     <Card className="relative rounded-md">
       {isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />}
       <CardContent
-        className="p-0  cursor-pointer"
+        className="p-0 cursor-pointer"
         onClick={() => navigate(`voglio/${props.id}`, { state: props })}
       >
-        <img
+        {props.imageUrl ? (<img
           src={props.imageUrl}
           alt=""
           className="w-full h-32 object-cover cursor-pointer"
-        />
+        />) : (<div className="w-full h-32 flex justify-center items-center">
+          <Image color="gray"/>
+        </div>)}
+        
         <div className="px-4">
           <p className="mt-2 font-bold text-sm text-gray-700"> {props.name}</p>
           <p className="mt-1 text-xs text-gray-500"> {props.notes}</p>
