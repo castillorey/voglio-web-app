@@ -13,32 +13,35 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@uidotdev/usehooks";
-import React from "react";
+import { ReactElement } from "react";
+import { IVoglio } from "./voglio/VoglioForm";
 
-export default function VoglioDialog({
-  open,
-  onClose,
-  contentChildren,
-}: {
+type voglioFormProps = {
   open: boolean;
-  contentChildren: React.ReactNode;
   onClose: () => void;
-}) {
+  children: ReactElement<{
+    categoryId?: number;
+    editVoglioData?: IVoglio | null;
+    onCreateVoglio?: (newVoglio: IVoglio) => void;
+    onUpdateVoglio?: (editedVoglio: IVoglio) => void;
+  }>;
+};
+export default function VoglioDialog(props: voglioFormProps) {
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
 
   const MobileDrawerForm = () => {
     return (
-      <Drawer open={open} onOpenChange={onClose}>
-        <DrawerContent className="mb-5">
+      <Drawer open={props.open} onOpenChange={props.onClose}>
+        <DrawerContent className="mb-5 px-4">
           <DrawerHeader className="text-left">
             <DrawerTitle>
-              {contentChildren && contentChildren.props.editVoglioData
+              {props.children && props.children.props.editVoglioData
                 ? "Edit voglio"
                 : "Create voglio"}
             </DrawerTitle>
           </DrawerHeader>
           <DrawerDescription aria-describedby="New voglio form"></DrawerDescription>
-          {contentChildren}
+          {props.children}
         </DrawerContent>
       </Drawer>
     );
@@ -46,17 +49,17 @@ export default function VoglioDialog({
 
   const DesktopDialogForm = () => {
     return (
-      <Dialog open={open} onOpenChange={onClose}>
+      <Dialog open={props.open} onOpenChange={props.onClose}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {contentChildren && contentChildren.props.editVoglioData
+              {props.children && props.children.props.editVoglioData
                 ? "Edit voglio"
                 : "Create voglio"}
             </DialogTitle>
             <DialogDescription aria-describedby="New voglio form" />
           </DialogHeader>
-          {contentChildren}
+          {props.children}
         </DialogContent>
       </Dialog>
     );

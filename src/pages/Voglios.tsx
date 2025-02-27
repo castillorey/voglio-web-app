@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -70,7 +70,7 @@ export default function Voglios() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button onClick={() => setOpen(true)} className="mt-3 sm:mt-0">
-            <Plus size={14} />{" "}
+            <CirclePlus size={14} />{" "}
             <span className="hidden xs:block text-xs">New Category</span>
           </Button>
         </DialogTrigger>
@@ -95,7 +95,7 @@ export default function Voglios() {
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
           <Button>
-            <Plus size={14} /> <span className="hidden xs:block">Add new</span>
+            <CirclePlus size={14} /> <span className="hidden xs:block">Add new</span>
           </Button>
         </DrawerTrigger>
         <DrawerContent className="mb-5 px-5">

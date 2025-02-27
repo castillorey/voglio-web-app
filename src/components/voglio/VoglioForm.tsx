@@ -132,7 +132,7 @@ export default function VoglioForm({
       imageUrl = "";
     }
     setFormData({ ...formData, imageUrl: imageUrl });
-    
+
     const voglioInfo = {
       id: formData.id,
       name: formData.name,
@@ -145,7 +145,7 @@ export default function VoglioForm({
     };
 
     if (voglioInfo.id) {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("voglio")
         .update(voglioInfo)
         .eq("id", voglioInfo.id)
@@ -154,7 +154,9 @@ export default function VoglioForm({
       if (error) {
         console.log("Error updating new Voglio: ", error);
       } else {
-        onUpdateVoglio && onUpdateVoglio(formData);
+        if (onUpdateVoglio) {
+          onUpdateVoglio(formData);
+        }
       }
     } else {
       const { data, error } = await supabase
@@ -165,7 +167,9 @@ export default function VoglioForm({
       if (error) {
         console.log("Error adding new Voglio: ", error);
       } else {
-        onCreateVoglio && onCreateVoglio({ ...formData, id: data[0].id });
+        if (onCreateVoglio) {
+          onCreateVoglio({ ...formData, id: data[0].id });
+        }
       }
     }
 

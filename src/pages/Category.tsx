@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import supabase from "../supabase-client";
 import { useLocation, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 
 import VoglioForm, {
   ICategory,
@@ -87,33 +87,37 @@ export default function Category() {
 
       <div className="mt-4 flex justify-between items-center">
         <p className="text-lg font-bold">Voglios</p>
-        <Button onClick={() => setOpenNewVoglioDialog(true)}>
-          <Plus size={12} />{" "}
+        <Button
+          onClick={() => {
+            setEditVoglioData(null);
+            setOpenNewVoglioDialog(true);
+          }}
+        >
+          <CirclePlus size={12} />{" "}
           <span className="hidden xs:block text-xs">Add new</span>
         </Button>
         {
           <VoglioDialog
             open={openNewVoglioDialog}
             onClose={() => setOpenNewVoglioDialog(false)}
-            contentChildren={
-              <VoglioForm
-                categoryId={categoryData.id}
-                onCreateVoglio={(newVoglio) => {
-                  setVoglioList([...voglioList, newVoglio]);
-                  setOpenNewVoglioDialog(false);
-                }}
-                editVoglioData={editVoglioData}
-                onUpdateVoglio={(editedVoglio) => {
-                  setVoglioList(
-                    voglioList.map((voglio) =>
-                      voglio.id === editedVoglio.id ? editedVoglio : voglio
-                    )
-                  );
-                  setOpenNewVoglioDialog(false);
-                }}
-              />
-            }
-          />
+          >
+            <VoglioForm
+              categoryId={categoryData.id}
+              onCreateVoglio={(newVoglio) => {
+                setVoglioList([...voglioList, newVoglio]);
+                setOpenNewVoglioDialog(false);
+              }}
+              editVoglioData={editVoglioData}
+              onUpdateVoglio={(editedVoglio) => {
+                setVoglioList(
+                  voglioList.map((voglio) =>
+                    voglio.id === editedVoglio.id ? editedVoglio : voglio
+                  )
+                );
+                setOpenNewVoglioDialog(false);
+              }}
+            />
+          </VoglioDialog>
         }
       </div>
 
