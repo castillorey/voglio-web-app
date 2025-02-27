@@ -102,7 +102,7 @@ export default function Voglios() {
           <DrawerHeader className="text-left">
             <DrawerTitle>New Voglio</DrawerTitle>
           </DrawerHeader>
-          <DrawerDescription aria-describedby="New voglio form"></DrawerDescription>
+          <DrawerDescription aria-describedby="New voglio form"/>
           <CategoryForm
             onCreateCategory={(newCategory) => {
               setOpen(false);

@@ -9,7 +9,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import {
   Command,
   CommandGroup,
@@ -17,7 +23,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { BookmarkCheck, Ellipsis, Pencil, Delete, Image, Divide } from "lucide-react";
+import { BookmarkCheck, Ellipsis, Pencil, Delete, Image } from "lucide-react";
 
 import { useNavigate } from "react-router";
 import { useState } from "react";
@@ -99,15 +105,22 @@ export default function VoglioPreview({
           </Button>
         </DrawerTrigger>
         <DrawerContent className="mt-4 border-t">
+          <DrawerTitle aria-describedby="Mobile actions menu" />
+          <DrawerDescription aria-describedby="Mobile actions menu" />
           <Command className="md:min-w-[450px]">
             <CommandList>
               <CommandGroup heading="Actions">
-                <CommandItem onClick={() => OnEditClick(props)}>
+                <CommandItem
+                  onSelect={() => {
+                    setOpen(false);
+                    OnEditClick(props);
+                  }}
+                >
                   <Pencil />
                   <span>Edit</span>
                 </CommandItem>
                 <CommandSeparator />
-                <CommandItem onClick={handleOnDelete}>
+                <CommandItem onSelect={handleOnDelete}>
                   <Delete className="text-red-400" />
                   <span className="text-red-500">Delete</span>
                 </CommandItem>
@@ -126,14 +139,18 @@ export default function VoglioPreview({
         className="p-0 cursor-pointer"
         onClick={() => navigate(`voglio/${props.id}`, { state: props })}
       >
-        {props.imageUrl ? (<img
-          src={props.imageUrl}
-          alt=""
-          className="w-full h-32 object-cover cursor-pointer"
-        />) : (<div className="w-full h-32 flex justify-center items-center">
-          <Image color="gray"/>
-        </div>)}
-        
+        {props.imageUrl ? (
+          <img
+            src={props.imageUrl}
+            alt=""
+            className="w-full h-32 object-cover cursor-pointer"
+          />
+        ) : (
+          <div className="w-full h-32 flex justify-center items-center">
+            <Image color="gray" />
+          </div>
+        )}
+
         <div className="px-4">
           <p className="mt-2 font-bold text-sm text-gray-700"> {props.name}</p>
           <p className="mt-1 text-xs text-gray-500"> {props.notes}</p>
