@@ -12,15 +12,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { LinkIcon } from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
+import { ISize, IVoglio } from "./VoglioForm";
 
 export default function VoglioFormStep2({
   formData,
   sizeList,
   onFormChange,
 }: {
-  formData: any;
-  sizeList: any[];
-  onFormChange: (formData: any) => void;
+  formData: IVoglio;
+  sizeList: ISize[];
+  onFormChange: (formData: IVoglio) => void;
 }) {
   return (
     <div>
@@ -50,9 +51,9 @@ export default function VoglioFormStep2({
 
           <Select
             name="size"
-            value={"" + formData.sizeId}
+            value={formData?.sizeId ? "" + formData.sizeId: undefined}
             onValueChange={(value) =>
-              onFormChange({ ...formData, sizeId: +value })
+              onFormChange({ ...formData, sizeId: value })
             }
           >
             <SelectTrigger className="mt-1.5 w-full text-xs">

@@ -10,12 +10,12 @@ export interface IVoglio {
   id: number | null;
   name: string;
   notes: string;
-  categoryId: number | null;
+  categoryId: string | null;
   referenceLink: string;
-  sizeId: number | null;
+  sizeId: string | null;
   imageUrl: string;
-  imageFile?: File;
-  quantity: number | null;
+  imageFile?: File | null;
+  quantity: number;
 }
 
 export interface IVoglioDto {
@@ -84,7 +84,7 @@ export default function VoglioForm({
     if (editVoglioData) {
       setFormData({ ...formData, ...editVoglioData });
     } else if (categoryId) {
-      setFormData({ ...formData, categoryId });
+      setFormData({ ...formData, categoryId: categoryId.toString() });
     }
   }, []);
 
@@ -129,9 +129,8 @@ export default function VoglioForm({
     if (formData.imageFile) {
       await uploadImage(formData.imageFile);
     } else {
-      imageUrl = "";
+      imageUrl = formData.imageUrl;
     }
-    setFormData({ ...formData, imageUrl: imageUrl });
 
     const voglioInfo = {
       id: formData.id,
@@ -144,6 +143,7 @@ export default function VoglioForm({
       quantity: formData.quantity,
     };
 
+    // Update
     if (voglioInfo.id) {
       const { error } = await supabase
         .from("voglio")
@@ -155,10 +155,11 @@ export default function VoglioForm({
         console.log("Error updating new Voglio: ", error);
       } else {
         if (onUpdateVoglio) {
-          onUpdateVoglio(formData);
+          onUpdateVoglio({ ...formData, imageUrl });
         }
       }
     } else {
+      // Create
       const { data, error } = await supabase
         .from("voglio")
         .insert([voglioInfo])
@@ -218,7 +219,7 @@ export default function VoglioForm({
             onClick={formDataPublish}
             className="w-full xs:w-auto mt-3 xs:mt-0 xs:justify-self-end text-xs"
           >
-            Create
+            {editVoglioData ? "Update" : "Create"}
           </Button>
         )}
       </div>

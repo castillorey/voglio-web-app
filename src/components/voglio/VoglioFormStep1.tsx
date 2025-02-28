@@ -9,7 +9,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-import { ICategory } from "./VoglioForm";
+import { ICategory, IVoglio } from "./VoglioForm";
 import ImageUploader from "../ImageUploader";
 
 export default function VoglioFormStep1({
@@ -17,9 +17,9 @@ export default function VoglioFormStep1({
   categoryList,
   onFormChange,
 }: {
-  formData: any;
+  formData: IVoglio;
   categoryList: ICategory[];
-  onFormChange: (formData: any) => void;
+  onFormChange: (formData: IVoglio) => void;
 }) {
   return (
     <div>
@@ -28,32 +28,31 @@ export default function VoglioFormStep1({
         <Label className="text-xs" htmlFor="category">
           Category:
         </Label>
-        {categoryList.length > 0 && (
-          <Select
-            name="category"
-            defaultValue={"" + formData.categoryId}
-            onValueChange={(value) => {
-              return onFormChange({ ...formData, categoryId: +value });
-            }}
-          >
-            <SelectTrigger className="w-auto text-xs">
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {categoryList.map((category) => (
-                  <SelectItem
-                    className="text-xs"
-                    key={category.id}
-                    value={category.id.toString()}
-                  >
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        )}
+
+        <Select
+          name="category"
+          value={formData?.categoryId ?? undefined}
+          onValueChange={(value) => {
+            if (value) return onFormChange({ ...formData, categoryId: value });
+          }}
+        >
+          <SelectTrigger className="w-[150px] text-xs">
+            <SelectValue placeholder="Select a category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {categoryList.map((category) => (
+                <SelectItem
+                  className="text-xs"
+                  key={category.id}
+                  value={category.id.toString()}
+                >
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Reference image */}

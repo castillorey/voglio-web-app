@@ -57,7 +57,7 @@ export default function Category() {
           id: voglio.id,
           name: voglio.name,
           notes: voglio.notes,
-          categoryId: voglio.category_id,
+          categoryId: voglio.category_id.toString(),
           referenceLink: voglio.reference_link,
           sizeId: voglio.size_id,
           imageUrl: voglio.image_url,
@@ -96,29 +96,29 @@ export default function Category() {
           <CirclePlus size={12} />{" "}
           <span className="hidden xs:block text-xs">Add new</span>
         </Button>
-        {
-          <VoglioDialog
-            open={openNewVoglioDialog}
-            onClose={() => setOpenNewVoglioDialog(false)}
-          >
-            <VoglioForm
-              categoryId={categoryData.id}
-              onCreateVoglio={(newVoglio) => {
-                setVoglioList([...voglioList, newVoglio]);
-                setOpenNewVoglioDialog(false);
-              }}
-              editVoglioData={editVoglioData}
-              onUpdateVoglio={(editedVoglio) => {
-                setVoglioList(
-                  voglioList.map((voglio) =>
-                    voglio.id === editedVoglio.id ? editedVoglio : voglio
-                  )
-                );
-                setOpenNewVoglioDialog(false);
-              }}
-            />
-          </VoglioDialog>
-        }
+        <VoglioDialog
+          open={openNewVoglioDialog}
+          onClose={() => setOpenNewVoglioDialog(false)}
+        >
+          <VoglioForm
+            categoryId={categoryData.id}
+            onCreateVoglio={(newVoglio) => {
+              setVoglioList([...voglioList, newVoglio]);
+              setOpenNewVoglioDialog(false);
+            }}
+            editVoglioData={editVoglioData}
+            onUpdateVoglio={(editedVoglio) => {
+              let refreshedVoglioList = voglioList.map((voglio) =>
+                voglio.id === editedVoglio.id ? editedVoglio : voglio
+              );
+              refreshedVoglioList = refreshedVoglioList.filter(
+                (voglio) => categoryData.id.toString() == voglio.categoryId
+              );
+              setVoglioList(refreshedVoglioList);
+              setOpenNewVoglioDialog(false);
+            }}
+          />
+        </VoglioDialog>
       </div>
 
       {/* Voglio list */}
