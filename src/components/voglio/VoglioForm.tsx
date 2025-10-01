@@ -54,7 +54,7 @@ export default function VoglioForm({
   onUpdateVoglio?: (editedVoglio: IVoglio) => void;
 }) {
   const CDNURL =
-    "https://bblscslptefmqyjhizvl.supabase.co/storage/v1/object/public/images/";
+    "https://utmwcxmirkbgshowswyz.supabase.co/storage/v1/object/public/images/";
   const session: string = localStorage.getItem("session")!;
   const user = session && JSON.parse(session)?.user;
 
@@ -133,7 +133,6 @@ export default function VoglioForm({
     }
 
     const voglioInfo = {
-      id: formData.id,
       name: formData.name,
       notes: formData.notes,
       category_id: formData.categoryId,
@@ -144,11 +143,12 @@ export default function VoglioForm({
     };
 
     // Update
-    if (voglioInfo.id) {
+    if (formData.id) {
+      const voglioInfoUpdate = {...voglioInfo, id: formData.id}
       const { error } = await supabase
         .from("voglio")
-        .update(voglioInfo)
-        .eq("id", voglioInfo.id)
+        .update(voglioInfoUpdate)
+        .eq("id", voglioInfoUpdate.id)
         .select();
 
       if (error) {
