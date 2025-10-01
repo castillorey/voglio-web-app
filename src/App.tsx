@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Wrapper from "./pages/Wrapper";
-import Voglios from "./pages/Voglios";
+import Voglios from "./pages/Collections";
 import Category from "./pages/Category";
 import NotFound from "./pages/NotFound";
 import Voglio from "./pages/Voglio";
