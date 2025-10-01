@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import supabase from "../supabase-client";
 import { useLocation, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, ChevronLeft } from "lucide-react";
 
 import VoglioForm, {
   ICategory,
@@ -12,6 +13,7 @@ import VoglioPreview from "../components/voglio/VoglioPreview";
 import VoglioDialog from "@/components/VoglioDialog";
 
 export default function Category() {
+  const navigate = useNavigate();
   const { categoryId } = useParams();
   const { state } = useLocation();
   const [categoryData, setCategoryData] = useState<ICategory>({} as ICategory);
@@ -71,6 +73,10 @@ export default function Category() {
 
   return (
     <>
+      <Button variant="secondary" size="icon" className="size-8 mb-5"
+        onClick={() => navigate("/")}>
+        <ChevronLeft />
+      </Button>
       <div className="flex items-center">
         <div className="w-28 flex items-center justify-center p-4 text-center text-6xl rounded-lg bg-gray-100">
           <span>{categoryData.emojiCode}</span>
