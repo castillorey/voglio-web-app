@@ -53,8 +53,7 @@ export default function VoglioForm({
   onCreateVoglio?: (newVoglio: IVoglio) => void;
   onUpdateVoglio?: (editedVoglio: IVoglio) => void;
 }) {
-  const CDNURL =
-    "https://utmwcxmirkbgshowswyz.supabase.co/storage/v1/object/public/images/";
+  const CDNURL = import.meta.env.VITE_CDNURL;
   const session: string = localStorage.getItem("session")!;
   const user = session && JSON.parse(session)?.user;
 
