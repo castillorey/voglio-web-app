@@ -121,7 +121,7 @@ export default function Voglios() {
         {isSmallDevice ? <MobileDialog /> : <DesktopDialog />}
       </div>
       <p className="mt-4 h-2 w-full border-b border-gray-300"></p>
-      <div className="mt-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="mt-8 mb-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {categoryListItems}
       </div>
     </div>

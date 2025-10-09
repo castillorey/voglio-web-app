@@ -27,11 +27,12 @@ export default function Wrapper() {
   } else {
     if (authenticated) {
       return (
-        <>
-          <main className="px-6 pt-5 lg:px-8">
+        <div className="flex flex-col min-h-screen">
+          <main className="flex-grow px-6 pt-5 lg:px-8 box-border border-b-[70px]">
             <Outlet></Outlet>
           </main>
-        </>
+          <Navbar></Navbar>
+        </div>
       );
     }
     return <Navigate to={"/login"} />;

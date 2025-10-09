@@ -6,24 +6,20 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import { Home, Settings, User } from "lucide-react";
-import supabase from "../supabase-client";
-import { useNavigate, Link } from "react-router-dom";
+import { BookOpen, Home, Rss, Settings, User } from "lucide-react";
+import Link from "next/link";
 
 const navigationMenuItems = [
-  { title: "Collections", href: "#", icon: Home, isActive: true },
+  { title: "Home", href: "#", icon: Home, isActive: true },
+  { title: "Blog", href: "#blog", icon: Rss },
+  { title: "Docs", href: "#docs", icon: BookOpen },
   { title: "Account", href: "#account", icon: Settings },
+  { title: "Settings", href: "#settings", icon: User },
 ];
 
-export default function Navbar() {
-  const navigate = useNavigate();
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    navigate("/login");
-  };
+export default function NavigationMenuMobile() {
   return (
-    <NavigationMenu className="h-[70px] max-w-full fixed bottom-0 left-0 w-full bg-white">
+    <NavigationMenu>
       <NavigationMenuList>
         {navigationMenuItems.map((item) => (
           <NavigationMenuItem key={item.title}>
@@ -35,7 +31,7 @@ export default function Navbar() {
               active={item.isActive}
               asChild
             >
-              <Link to={item.href}>
+              <Link href={item.href}>
                 <item.icon className="mb-1.5 h-5 w-5" />
                 {item.title}
               </Link>
