@@ -7,6 +7,7 @@ import Voglios from "./pages/Collections";
 import Category from "./pages/Category";
 import NotFound from "./pages/NotFound";
 import Voglio from "./pages/Voglio";
+import Account from "./pages/Account";
 
 function App() {
   return (
@@ -18,8 +19,9 @@ function App() {
           <Route path="/" element={<Wrapper />}>
             <Route index element={<Voglios />} />
             <Route path="category/:categoryId" element={<Category />} />
+            <Route path="voglio/:voglioId" element={<Voglio />} />
+            <Route path="account" element={<Account />} />
           </Route>
-          <Route path="voglio/:voglioId" element={<Voglio />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

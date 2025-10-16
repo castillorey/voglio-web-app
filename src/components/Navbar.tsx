@@ -6,22 +6,15 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import { Home, Settings, User } from "lucide-react";
-import supabase from "../supabase-client";
-import { useNavigate, Link } from "react-router-dom";
+import { Home, User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const navigationMenuItems = [
-  { title: "Collections", href: "#", icon: Home, isActive: true },
-  { title: "Account", href: "#account", icon: Settings },
+  { title: "Collections", href: "/", icon: Home, isActive: true },
+  { title: "Account", href: "/account", icon: User },
 ];
 
 export default function Navbar() {
-  const navigate = useNavigate();
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    navigate("/login");
-  };
   return (
     <NavigationMenu className="h-[70px] max-w-full fixed bottom-0 left-0 w-full bg-white">
       <NavigationMenuList>

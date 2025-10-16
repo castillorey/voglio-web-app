@@ -115,7 +115,7 @@ export default function Voglios() {
   };
 
   return (
-    <div>
+    <>
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold">Collections</h2>
         {isSmallDevice ? <MobileDialog /> : <DesktopDialog />}
@@ -124,6 +124,6 @@ export default function Voglios() {
       <div className="mt-8 mb-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {categoryListItems}
       </div>
-    </div>
+    </>
   );
 }

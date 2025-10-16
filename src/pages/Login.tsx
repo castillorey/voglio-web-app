@@ -42,69 +42,69 @@ function login() {
 
   return (
     <>
-    <div className="flex justify-center py-12 lg:px-8">
-      <Card className="w-full max-w-sm content-center">
-      <CardHeader>
-        <CardTitle>Login to your account</CardTitle>
-        <CardDescription>
-          Enter your email below to login to your account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-6">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                name="email"
-                placeholder="m@example.com"
-                required
-                autoComplete="email"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-              />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                {/* <a
+      <div className="flex justify-center py-12 lg:px-8">
+        <Card className="w-full max-w-sm content-center">
+          <CardHeader>
+            <CardTitle>Login to your account</CardTitle>
+            <CardDescription>
+              Enter your email below to login to your account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form>
+              <div className="flex flex-col gap-6">
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    name="email"
+                    placeholder="m@example.com"
+                    required
+                    autoComplete="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <div className="flex items-center">
+                    <Label htmlFor="password">Password</Label>
+                    {/* <a
                   href="#"
                   className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                 >
                   Forgot your password?
                 </a> */}
+                  </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    required
+                    autoComplete="current-password"
+                    onChange={(e) => setpassword(e.target.value)}
+                    value={password} />
+                </div>
               </div>
-              <Input 
-                id="password" 
-                type="password" 
-                required 
-                autoComplete="current-password"
-                onChange={(e) => setpassword(e.target.value)}
-                value={password}/>
-            </div>
-          </div>
-        </form>
-      </CardContent>
-      <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full">
-          Login
-        </Button>
-        {message && <p className="mt-2">{message}</p>}
-        <p className="mt-5 text-center text-sm/6 text-gray-500">
+            </form>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+            <Button type="button" className="w-full" onClick={handleSubmit}>
+              Login
+            </Button>
+            {message && <p className="mt-2">{message}</p>}
+            <p className="mt-5 text-center text-sm/6 text-gray-500">
               Don't have an account?{" "}
               <Link
                 to={"/register"}
                 className="font-semibold text-indigo-600 hover:text-indigo-500"
               >
-                Sign up 
+                Sign up
               </Link>
             </p>
-      </CardFooter>
-    </Card>
-    </div>
-    
+          </CardFooter>
+        </Card>
+      </div>
+
     </>
   );
 }
