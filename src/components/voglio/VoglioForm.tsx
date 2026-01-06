@@ -35,11 +35,12 @@ export interface ISize {
 }
 
 export interface ICategory {
-  id: number;
+  id: number | null;
   name: string;
   description: string;
   emojiCode: string;
   vogliosCount?: number;
+  isPrivate: boolean;
 }
 
 export default function VoglioForm({
@@ -48,7 +49,7 @@ export default function VoglioForm({
   onCreateVoglio,
   onUpdateVoglio,
 }: {
-  categoryId?: number;
+  categoryId?: number | null;
   editVoglioData?: IVoglio | null;
   onCreateVoglio?: (newVoglio: IVoglio) => void;
   onUpdateVoglio?: (editedVoglio: IVoglio) => void;

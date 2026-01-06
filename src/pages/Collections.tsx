@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { CirclePlus } from "lucide-react";
 import {
@@ -28,6 +27,7 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 export default function Voglios() {
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [open, setOpen] = useState(false);
+  const [editCategoryData, setEditCategoryData] = useState<ICategory | null>(null);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function Voglios() {
   const fetchCategoryList = async () => {
     const { data, error } = await supabase
       .from("category")
-      .select(`id, name,description, emoji_code, voglio(count:count())`);
+      .select(`id, name,description, emoji_code,is_private, voglio(count:count())`);
     if (error) {
       console.log("Error fetching category list: ", error);
     } else {
@@ -48,6 +48,7 @@ export default function Voglios() {
           emojiCode: item.emoji_code,
           description: item.description,
           vogliosCount: item.voglio[0].count,
+          isPrivate: item.is_private
         }))
       );
     }
@@ -55,13 +56,17 @@ export default function Voglios() {
 
   const categoryListItems = categoryList.map((item) => {
     return (
-      <Link key={item.id} to={`category/${item.id}`} state={item}>
-        <CategoryPreview
-          name={item.name}
-          vogliosCount={item.vogliosCount!}
-          emojiCode={item.emojiCode}
+      <CategoryPreview
+          key={item.id}
+          props={item}
+          onDeleteClick={(categoryName: string) =>
+            setCategoryList(categoryList.filter((v) => v.name !== categoryName))
+          }
+          OnEditClick={(category) => {
+              setEditCategoryData(category);
+              setOpen(true);
+            }}
         />
-      </Link>
     );
   });
 
@@ -71,7 +76,7 @@ export default function Voglios() {
         <DialogTrigger asChild>
           <Button onClick={() => setOpen(true)} className="mt-3 sm:mt-0">
             <CirclePlus size={14} />{" "}
-            <span className="hidden xs:block text-xs">New Category</span>
+            <span className="hidden xs:block text-sm">New Category</span>
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -80,9 +85,17 @@ export default function Voglios() {
             <DialogDescription aria-describedby="New category form" />
           </DialogHeader>
           <CategoryForm
+            editCategoryData={editCategoryData}
             onCreateCategory={(newCategory) => {
               setOpen(false);
               setCategoryList([...categoryList, newCategory]);
+            }}
+            onUpdateCategory={(editedCategory) => {
+              let refreshedCategoryList = categoryList.map((category) =>
+                category.id === editedCategory.id ? editedCategory : category
+              );
+              setCategoryList(refreshedCategoryList);
+              setOpen(false);
             }}
           />
         </DialogContent>
@@ -104,9 +117,17 @@ export default function Voglios() {
           </DrawerHeader>
           <DrawerDescription aria-describedby="New voglio form"/>
           <CategoryForm
+            editCategoryData={editCategoryData}
             onCreateCategory={(newCategory) => {
               setOpen(false);
               setCategoryList([...categoryList, newCategory]);
+            }}
+            onUpdateCategory={(editedCategory) => {
+              let refreshedCategoryList = categoryList.map((category) =>
+                category.id === editedCategory.id ? editedCategory : category
+              );
+              setCategoryList(refreshedCategoryList);
+              setOpen(false);
             }}
           />
         </DrawerContent>

@@ -26,7 +26,7 @@ export default function VoglioFormStep2({
   return (
     <div>
       {/* Notes */}
-      <div className="mt-4">
+      <div>
         <Label htmlFor="notes" className="text-xs">
           Notes
         </Label>

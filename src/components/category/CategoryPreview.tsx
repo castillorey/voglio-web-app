@@ -31,17 +31,12 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import supabase from "../../supabase-client";
 import { ICategory } from "../voglio/VoglioForm";
 
-
 export default function CategoryPreview({
-  name,
-  vogliosCount,
-  emojiCode,
+  props,
   onDeleteClick,
   OnEditClick,
 }: {
-  name: string;
-  vogliosCount: number;
-  emojiCode: string;
+  props: ICategory;
   onDeleteClick: (categoryName: string) => void;
   OnEditClick: (categoryData: ICategory) => void;
 }) {
@@ -50,11 +45,11 @@ export default function CategoryPreview({
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
 
   const handleOnDelete = async () => {
-    const { error } = await supabase.from("category").delete().eq("name", name);
+    const { error } = await supabase.from("category").delete().eq("id", props.id);
     if (error) {
       console.log("Error deleting: ", error);
     } else {
-      onDeleteClick(name);
+      onDeleteClick(props.name);
     }
     setOpen(false);
   };
@@ -79,7 +74,7 @@ export default function CategoryPreview({
           <DropdownMenuGroup>
             <DropdownMenuItem
               className="text-xs"
-              // onClick={() => OnEditClick(name)}
+              onClick={() => OnEditClick(props)}
             >
               <Pencil />
               Edit
@@ -118,7 +113,7 @@ export default function CategoryPreview({
                 <CommandItem
                   onSelect={() => {
                     setOpen(false);
-                    // OnEditClick(props);
+                    OnEditClick(props);
                   }}
                 >
                   <Pencil />
@@ -141,14 +136,14 @@ export default function CategoryPreview({
       {isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />}
       <CardContent
         className="p-0 cursor-pointer"
-        onClick={() => navigate("/")}
+        onClick={() => navigate(`category/${props.id}`)}
       >
         <div className="text-center">
         <p className="py-4 bg-gray-100 text-6xl">
-          <span>{emojiCode}</span>
+          <span>{props.emojiCode}</span>
         </p>
-        <h3 className="mt-2 font-bold text-md">{name}</h3>
-        <p className="mt-2 mb-2 text-xs text-gray-400">{vogliosCount} voglios</p>
+        <h3 className="mt-2 font-bold text-md">{props.name}</h3>
+        <p className="mt-2 mb-2 text-xs text-gray-400">{props.vogliosCount} voglios</p>
       </div>
       </CardContent>
     </Card>

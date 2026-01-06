@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import supabase from "../../supabase-client";
 import EmojiPicker, { EmojiStyle } from "emoji-picker-react";
 import { Button } from "@/components/ui/button";
@@ -12,19 +12,32 @@ import { Trash2 } from "lucide-react";
 import { ICategory } from "../voglio/VoglioForm";
 
 export default function CategoryForm({
+  editCategoryData,
   onCreateCategory,
+  onUpdateCategory,
 }: {
-  onCreateCategory: (newCategory: ICategory) => void;
+  editCategoryData: ICategory | null
+  onCreateCategory?: (newCategory: ICategory) => void;
+  onUpdateCategory?: (editedCategory: ICategory) => void;
 }) {
   const emptyForm = {
+    id: null,
     name: "",
     description: "",
     emojiCode: "❔",
     isPrivate: false,
   };
-  const [formData, setFormData] = useState(emptyForm);
+  const [formData, setFormData] = useState<ICategory>(emptyForm);
   const [emojiInput, setEmojiInput] = useState("");
   const [openEmoji, setOpenEmoji] = useState(false);
+
+  useEffect(() => {
+    if (editCategoryData) {
+      setEmojiInput(editCategoryData.emojiCode);
+      setFormData({ ...formData, ...editCategoryData });
+      setOpenEmoji(false);
+    }
+  }, []);
 
   const handleEmojiChange = (data: any) => {
     setEmojiInput(data.emoji);
@@ -33,25 +46,46 @@ export default function CategoryForm({
   };
 
   const formDataPublish = async () => {
-    const newCategoryInfo = {
+    const categoryInfo = {
+      id: formData.id,
       name: formData.name,
       description: formData.description,
       emoji_code: formData.emojiCode,
-      is_private: formData.isPrivate,
+      is_private: formData.isPrivate
     };
 
-    const { data, error } = await supabase
-      .from("category")
-      .insert([newCategoryInfo])
-      .select();
+    // Update
+    if (categoryInfo.id) {
+      const { error } = await supabase
+        .from("category")
+        .update(categoryInfo)
+        .eq("id", categoryInfo.id)
+        .select();
 
-    if (error) {
-      console.log("Error adding new Category: ", error);
-    } else {
-      onCreateCategory({ id: data[0].id, vogliosCount: 0, ...formData });
+      if (error) {
+        console.log("Error updating new Category: ", error);
+      } else {
+        if (onUpdateCategory) {
+          onUpdateCategory({ ...formData });
+        }
+      }
+    } else { // Create
+      delete (categoryInfo as any).id;
+
+      const { data, error } = await supabase
+        .from("category")
+        .insert([categoryInfo])
+        .select();
+
+      if (error) {
+        console.log("Error adding new Category: ", error);
+      } else {
+        onCreateCategory && onCreateCategory({ vogliosCount: 0, ...formData, id: data[0].id });
+      }
+
+      setFormData(emptyForm);
     }
-
-    setFormData(emptyForm);
+    
   };
   return (
     <>
@@ -147,7 +181,7 @@ export default function CategoryForm({
               onClick={formDataPublish}
               className="w-full mt-5 xs:w-auto justify-self-end text-xs"
             >
-              Create
+              {editCategoryData ? "Update" : "Create"}
             </Button>
           </div>
         </>

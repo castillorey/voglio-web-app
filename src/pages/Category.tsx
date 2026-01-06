@@ -118,7 +118,7 @@ export default function Category() {
                 voglio.id === editedVoglio.id ? editedVoglio : voglio
               );
               refreshedVoglioList = refreshedVoglioList.filter(
-                (voglio) => categoryData.id.toString() == voglio.categoryId
+                (voglio) => categoryData.id?.toString() == voglio.categoryId
               );
               setVoglioList(refreshedVoglioList);
               setOpenNewVoglioDialog(false);
