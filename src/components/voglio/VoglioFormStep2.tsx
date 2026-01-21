@@ -6,85 +6,69 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { LinkIcon } from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
-import { ISize, IVoglio } from "./VoglioForm";
+import ImageUploader from "../ImageUploader";
+
+import { ICategory, IVoglio } from "./VoglioForm";
 
 export default function VoglioFormStep2({
   formData,
-  sizeList,
+  categoryList,
   onFormChange,
 }: {
   formData: IVoglio;
-  sizeList: ISize[];
+  categoryList: ICategory[];
   onFormChange: (formData: IVoglio) => void;
 }) {
   return (
-    <div>
-      {/* Notes */}
-      <div>
-        <Label htmlFor="notes" className="text-xs">
-          Notes
+    <>
+      {/* Title */}
+      <div className="mt-2">
+        <Label htmlFor="name" className="text-sm text-gray-900">
+          Title
         </Label>
-        <Textarea
-          id="notes"
-          name="notes"
-          rows={2}
+        <Input
+          id="name"
+          name="name"
+          type="text"
           onChange={(event) => {
-            onFormChange({ ...formData, notes: event.target.value });
+            onFormChange({ ...formData, name: event.target.value });
           }}
-          value={formData.notes}
-          className="mt-2 text-sm"
+          value={formData.name}
+          className="mt-1 text-sm"
         />
       </div>
 
-      <div className="mt-2 flex justify-evenly gap-6">
-        {/* Size */}
+      <div className="mt-2 flex justify-evenly gap-8">
+        {/* Price */}
         <div className="w-full">
-          <Label htmlFor="size" className="text-xs">
-            Size
+          <Label htmlFor="price" className="text-sm text-gray-900">
+            Price
           </Label>
 
-          <Select
-            name="size"
-            value={formData?.sizeId ? "" + formData.sizeId: undefined}
-            onValueChange={(value) =>
-              onFormChange({ ...formData, sizeId: value })
-            }
-          >
-            <SelectTrigger className="mt-1.5 w-full text-xs">
-              <SelectValue placeholder="Select a size" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {sizeList.map((size) => (
-                  <SelectItem
-                    className="text-xs"
-                    key={size.id}
-                    value={size.id.toString()}
-                  >
-                    {size.value}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <Input
+            id="price"
+            name="price"
+            type="number"
+            onChange={(event) => {
+              onFormChange({ ...formData, price: +event.target.value });
+            }}
+            value={formData.price}
+            className="mt-1 text-sm"
+          />
         </div>
 
         {/* Quantity */}
         <div className="w-full">
-          <Label htmlFor="quantity" className="text-xs">
+          <Label htmlFor="quantity" className="text-sm text-gray-900">
             Quantity
           </Label>
 
           <div className="mt-1.5 flex items-center gap-1">
-            <span className="w-full h-9 text-xs rounded-md border border-neutral-200 bg-transparent px-3 py-2 shadow-sm">
-              {formData.quantity}
-            </span>
             <Button
               variant="secondary"
               size="icon"
@@ -101,6 +85,10 @@ export default function VoglioFormStep2({
             >
               <Minus size={12} />
             </Button>
+            <span className="w-16 text-sm text-center rounded-md border border-neutral-200 bg-transparent px-3 py-2 shadow-sm">
+              {formData.quantity}
+            </span>
+
             <Button
               variant="secondary"
               size="icon"
@@ -119,25 +107,62 @@ export default function VoglioFormStep2({
         </div>
       </div>
 
-      {/* Reference link */}
-      <div className="mt-2 relative">
-        <Label htmlFor="referenceLink" className="text-xs">
-          Reference link
+      {/* Description */}
+      <div>
+        <Label htmlFor="notes" className="text-sm text-gray-900">
+          Description
         </Label>
-        <Input
-          id="referenceLink"
-          name="referenceLink"
-          type="text"
+        <Textarea
+          id="notes"
+          name="notes"
+          rows={2}
           onChange={(event) => {
-            onFormChange({ ...formData, referenceLink: event.target.value });
+            onFormChange({ ...formData, notes: event.target.value });
           }}
-          value={formData.referenceLink}
-          className="mt-2 text-xs"
+          value={formData.notes}
+          className="mt-2 text-sm"
         />
-        <span className="absolute inset-y-0  top-8 end-3 grid place-content-center">
-          <LinkIcon className="size-4 text-gray-300" />
-        </span>
       </div>
-    </div>
+
+      {/* Category */}
+      <div className="flex items-center gap-4 mt-4">
+        <Label className="text-sm text-gray-900" htmlFor="category">
+          Category:
+        </Label>
+
+        <Select
+          name="category"
+          value={formData?.categoryId ?? undefined}
+          onValueChange={(value) => {
+            if (value) return onFormChange({ ...formData, categoryId: value });
+          }}
+        >
+          <SelectTrigger className="w-[150px] text-xs">
+            <SelectValue placeholder="Select a category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {categoryList.map((category) => (
+                <SelectItem
+                  className="text-xs"
+                  key={category.id}
+                  value={category?.id.toString()}
+                >
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Reference image */}
+      <ImageUploader
+        formData={formData}
+        onImageChange={(newImageFile) =>
+          onFormChange({ ...formData, imageUrl: "", imageFile: newImageFile })
+        }
+      />
+    </>
   );
 }

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { PhotoIcon } from "@heroicons/react/24/solid";
+import { ArrowUpTrayIcon } from "@heroicons/react/24/solid";
 import { Pencil, Eraser } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -34,57 +34,53 @@ export default function ImageUploader({
     <div className="mt-4">
       <label
         htmlFor="cover-photo"
-        className="block text-xs font-medium text-gray-900"
+        className="block text-sm font-medium text-gray-900"
       >
         Reference image
       </label>
       {imageSrc ? (
         <>
-          <div className="h-40 w-full group mt-2 bg-gray-100 rounded-lg">
+          <div className="relative w-20 h-20 group mt-2 bg-gray-200 rounded-lg">
             <img
               src={imageSrc}
               alt="Upload image previewer"
               className="opacity-50 w-full h-full object-cover rounded-lg"
             />
             <div className="w-auto h-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                type="button"
+              <Pencil
+                color="white"
+                className="cursor-pointer"
+                size={18}
                 onClick={() => {
                   inputFile.current?.click();
                 }}
-              >
-                <Pencil size={22} />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                type="button"
+              />
+              <Eraser
+                color="#F87C63"
+                className="cursor-pointer"
+                size={18}
                 onClick={() => {
                   setImageSrc(null);
                   onImageChange(null);
+                  if(inputFile?.current)
+                    inputFile.current.value = "";
                 }}
-              >
-                <Eraser size={22} color="red" />
-              </Button>
+              />
             </div>
           </div>
         </>
       ) : (
-        <div className="w-full mt-2 flex flex-col justify-center items-center text-center rounded-lg border-2 border-dashed border-gray-250 px-6 py-3">
-          <PhotoIcon
-            aria-hidden="true"
-            className="mx-auto size-12 text-gray-300"
-          />
+        <div className="w-20 mt-2 flex flex-col justify-center items-center text-center rounded-lg border-2 border-dashed border-gray-250 py-5">
           <div className="flex text-sm/6 text-gray-600">
             <label
               htmlFor="file-upload"
-              className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 hover:text-indigo-500"
+              className="relative cursor-pointer rounded-md bg-white"
             >
-              <span>Upload a file</span>
+              <ArrowUpTrayIcon
+                aria-hidden="true"
+                className="mx-auto size-8 text-gray-400"
+              />
             </label>
-            <p className="pl-1">or drag and drop</p>
           </div>
         </div>
       )}

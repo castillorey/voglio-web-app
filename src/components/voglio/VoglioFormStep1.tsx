@@ -1,83 +1,40 @@
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-import { ICategory, IVoglio } from "./VoglioForm";
-import ImageUploader from "../ImageUploader";
+import { LinkIcon } from "@heroicons/react/24/solid";
+
+import { IVoglio } from "./VoglioForm";
 
 export default function VoglioFormStep1({
   formData,
-  categoryList,
   onFormChange,
 }: {
   formData: IVoglio;
-  categoryList: ICategory[];
   onFormChange: (formData: IVoglio) => void;
 }) {
   return (
-    <div>
-      {/* Category */}
-      <div className="flex items-center gap-4">
-        <Label className="text-xs" htmlFor="category">
-          Category:
-        </Label>
-
-        <Select
-          name="category"
-          value={formData?.categoryId ?? undefined}
-          onValueChange={(value) => {
-            if (value) return onFormChange({ ...formData, categoryId: value });
-          }}
-        >
-          <SelectTrigger className="w-[150px] text-xs">
-            <SelectValue placeholder="Select a category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {categoryList.map((category) => (
-                <SelectItem
-                  className="text-xs"
-                  key={category.id}
-                  value={category.id.toString()}
-                >
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Reference image */}
-      <ImageUploader
-        formData={formData}
-        onImageChange={(newImageFile) =>
-          onFormChange({ ...formData, imageUrl: "", imageFile: newImageFile })
-        }
-      />
-      {/* Name */}
-      <div className="mt-2">
-        <Label htmlFor="name" className="text-xs">
-          Name
+    <>
+    {/* Reference link */}
+      <div className="relative">
+        <Label htmlFor="referenceLink" className="text-sm text-gray-900">
+          Reference link <span className="text-xs text-gray-400">(Optional)</span>
         </Label>
         <Input
-          id="name"
-          name="name"
+          id="referenceLink"
+          name="referenceLink"
           type="text"
           onChange={(event) => {
-            onFormChange({ ...formData, name: event.target.value });
+            onFormChange({ ...formData, referenceLink: event.target.value });
           }}
-          value={formData.name}
-          className="mt-2 text-sm"
+          value={formData.referenceLink}
+          className="mt-2 text-xs"
         />
+        <span className="absolute inset-y-0  top-8 end-3 grid place-content-center">
+          <LinkIcon className="size-4 text-gray-300" />
+        </span>
       </div>
-    </div>
+
+    </>
   );
 }

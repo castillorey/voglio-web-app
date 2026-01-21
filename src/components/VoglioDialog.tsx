@@ -34,7 +34,7 @@ export default function VoglioDialog(props: voglioFormProps) {
       <Drawer open={props.open} onOpenChange={props.onClose}>
         <DrawerContent className="mb-5 px-4">
           <DrawerHeader className="text-left">
-            <DrawerTitle>
+            <DrawerTitle className="text-2xl">
               {props.children && props.children.props.editVoglioData
                 ? "Edit voglio"
                 : "Create voglio"}
@@ -52,7 +52,7 @@ export default function VoglioDialog(props: voglioFormProps) {
       <Dialog open={props.open} onOpenChange={props.onClose}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-2xl">
               {props.children && props.children.props.editVoglioData
                 ? "Edit voglio"
                 : "Create voglio"}

@@ -143,7 +143,7 @@ export default function VoglioPreview({
           <img
             src={props.imageUrl}
             alt=""
-            className="w-full h-32 object-cover cursor-pointer"
+            className="w-full h-32 object-cover cursor-pointer rounded-md"
           />
         ) : (
           <div className="w-full h-32 flex justify-center items-center">

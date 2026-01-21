@@ -10,6 +10,7 @@ export interface IVoglio {
   id: number | null;
   name: string;
   notes: string;
+  price: number | null;
   categoryId: string | null;
   referenceLink: string;
   sizeId: string | null;
@@ -74,6 +75,7 @@ export default function VoglioForm({
     sizeId: null,
     imageUrl: "",
     quantity: 1,
+    price: null
   };
   const [formData, setFormData] = useState<IVoglio>(emptyForm);
   let imageUrl = "";
@@ -182,14 +184,13 @@ export default function VoglioForm({
       {step === 1 && (
         <VoglioFormStep1
           formData={formData}
-          categoryList={categoryList}
           onFormChange={setFormData}
         />
       )}
       {step === 2 && (
         <VoglioFormStep2
           formData={formData}
-          sizeList={sizeList}
+          categoryList={categoryList}
           onFormChange={setFormData}
         />
       )}

@@ -73,20 +73,17 @@ export default function Category() {
 
   return (
     <>
-      <Button variant="secondary" size="icon" className="size-8 mb-5"
+      <div className="flex flex-col justify-center items-center">
+        <Button variant="secondary" size="icon" className="size-8 self-start"
         onClick={() => navigate("/")}>
         <ChevronLeft />
       </Button>
-      <div className="flex items-center">
-        <div className="w-28 flex items-center justify-center p-4 text-center text-6xl rounded-lg bg-gray-100">
+        <div className="flex items-center justify-center p-6 text-center text-6xl rounded-full bg-gray-100">
           <span>{categoryData.emojiCode}</span>
         </div>
-        <div className="ml-4">
-          <h2 className="text-xl font-bold">{categoryData.name}</h2>
-          <p className="text-sm">{categoryData.description}</p>
-          <p className="mt-2 text-xs text-gray-500">
-            {categoryData.vogliosCount} voglios
-          </p>
+        <div className="mt-2">
+          <h2 className="text-3xl font-bold text-center">{categoryData.name}</h2>
+          <p className="mt-2 text-sm text-center">{categoryData.description}</p>
         </div>
       </div>
       <p className="mt-2 h-2 w-full border-b border-gray-300"></p>
