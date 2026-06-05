@@ -64,6 +64,7 @@ export default function Category() {
           sizeId: voglio.size_id,
           imageUrl: voglio.image_url,
           quantity: voglio.quantity,
+          price: voglio.price
         };
       });
 

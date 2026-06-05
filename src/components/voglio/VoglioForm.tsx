@@ -171,7 +171,7 @@ export default function VoglioForm({
         console.log("Error adding new Voglio: ", error);
       } else {
         if (onCreateVoglio) {
-          onCreateVoglio({ ...formData, id: data[0].id });
+          onCreateVoglio({ ...formData, id: data[0].id, imageUrl });
         }
       }
     }
