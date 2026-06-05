@@ -60,6 +60,12 @@ CREATE POLICY "Enable insert for authenticated users only" ON public.category
 CREATE POLICY "Enable users to view their own data only" ON public.category
     FOR SELECT TO authenticated USING ((( SELECT auth.uid() AS uid) = user_id));
 
+CREATE POLICY "Enable delete for users based on user_id" ON public.category
+    FOR DELETE USING ((( SELECT auth.uid() AS uid) = user_id));
+
+CREATE POLICY "Enable update for users based on user_id" ON public.category
+    FOR UPDATE USING ((( SELECT auth.uid() AS uid) = user_id));
+
 -- Voglio policies
 CREATE POLICY "Enable delete for users based on user_id" ON public.voglio
     FOR DELETE USING ((( SELECT auth.uid() AS uid) = user_id));
