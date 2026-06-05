@@ -37,7 +37,7 @@ export default function CategoryPreview({
   OnEditClick,
 }: {
   props: ICategory;
-  onDeleteClick: (categoryName: string) => void;
+  onDeleteClick: (categoryId: number| null) => void;
   OnEditClick: (categoryData: ICategory) => void;
 }) {
   const navigate = useNavigate();
@@ -45,11 +45,17 @@ export default function CategoryPreview({
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
 
   const handleOnDelete = async () => {
-    const { error } = await supabase.from("category").delete().eq("id", props.id);
+    const { data, error } = await supabase
+      .from("category")
+      .delete()
+      .eq("id", props.id)
+      .select();
     if (error) {
       console.log("Error deleting: ", error);
+    } else if (!data || data.length === 0) {
+      console.log("Delete failed: category not found or permission denied");
     } else {
-      onDeleteClick(props.name);
+      onDeleteClick(props.id);
     }
     setOpen(false);
   };
