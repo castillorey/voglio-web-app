@@ -29,12 +29,12 @@ export default function Category() {
 
     const { data, error } = await supabase
       .from("category")
-      .select(`*, voglio(count:count())`)
+      .select(`*, voglio(count)`)
       .eq("id", categoryId);
 
     if (error) {
       console.log("Error fetching: ", error);
-    } else {
+    } else if (data?.[0]) {
       setCategoryData({ ...data[0], emojiCode: data[0].emoji_code });
     }
   };

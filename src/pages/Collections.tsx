@@ -28,6 +28,8 @@ export default function Voglios() {
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [open, setOpen] = useState(false);
   const [editCategoryData, setEditCategoryData] = useState<ICategory | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
 
   useEffect(() => {
@@ -35,23 +37,30 @@ export default function Voglios() {
   }, []);
 
   const fetchCategoryList = async () => {
+    setLoading(true);
+    setError(null);
+
     const { data, error } = await supabase
       .from("category")
-      .select(`id, name,description, emoji_code,is_private, voglio(count:count())`);
+      .select(`id, name, description, emoji_code, is_private, voglio(count)`);
     if (error) {
       console.log("Error fetching category list: ", error);
-    } else {
-      setCategoryList(
-        data.map((item) => ({
-          id: item.id,
-          name: item.name,
-          emojiCode: item.emoji_code,
-          description: item.description,
-          vogliosCount: item.voglio[0].count,
-          isPrivate: item.is_private
-        }))
-      );
+      setError(error.message);
+      setLoading(false);
+      return;
     }
+
+    setCategoryList(
+      data.map((item) => ({
+        id: item.id,
+        name: item.name,
+        emojiCode: item.emoji_code,
+        description: item.description,
+        vogliosCount: item.voglio?.[0]?.count ?? 0,
+        isPrivate: item.is_private,
+      }))
+    );
+    setLoading(false);
   };
 
   const categoryListItems = categoryList.map((item) => {
@@ -142,9 +151,17 @@ export default function Voglios() {
         {isSmallDevice ? <MobileDialog /> : <DesktopDialog />}
       </div>
       <p className="mt-4 h-2 w-full border-b border-gray-300"></p>
-      <div className="mt-8 mb-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {categoryListItems}
-      </div>
+      {loading ? (
+        <div className="mt-8 text-center text-gray-500">Loading...</div>
+      ) : error ? (
+        <div className="mt-8 text-center text-red-500">
+          Failed to load categories: {error}
+        </div>
+      ) : (
+        <div className="mt-8 mb-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {categoryListItems}
+        </div>
+      )}
     </>
   );
 }
