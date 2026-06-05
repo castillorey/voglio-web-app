@@ -57,7 +57,7 @@ export default function VoglioFormStep2({
             onChange={(event) => {
               onFormChange({ ...formData, price: +event.target.value });
             }}
-            value={formData.price}
+            value={formData.price ?? ""}
             className="mt-1 text-sm"
           />
         </div>
@@ -146,7 +146,7 @@ export default function VoglioFormStep2({
                 <SelectItem
                   className="text-xs"
                   key={category.id}
-                  value={category?.id.toString()}
+                  value={category?.id?.toString() ?? ""}
                 >
                   {category.name}
                 </SelectItem>

@@ -68,8 +68,8 @@ export default function Voglios() {
       <CategoryPreview
           key={item.id}
           props={item}
-          onDeleteClick={(categoryName: string) =>
-            setCategoryList(categoryList.filter((v) => v.name !== categoryName))
+          onDeleteClick={(categoryId: number | null) =>
+            setCategoryList(categoryList.filter((v) => v.id !== categoryId))
           }
           OnEditClick={(category) => {
               setEditCategoryData(category);
