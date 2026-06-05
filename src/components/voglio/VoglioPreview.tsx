@@ -151,13 +151,22 @@ export default function VoglioPreview({
           </div>
         )}
 
-        <div className="px-4">
-          <p className="mt-2 font-bold text-sm text-gray-700"> {props.name}</p>
-          <p className="mt-1 text-xs text-gray-500"> {props.notes}</p>
+        <div className="px-4 flex justify-between items-center">
+          <div>
+            <p className="mt-2 font-bold text-sm text-gray-700"> {props.name}</p>
+            <p className="mt-1 text-xs text-gray-500"> {props.notes}</p>
+          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            className="mt-2 size-8 rounded-full"
+          >
+            <BookmarkCheck />
+          </Button>
         </div>
       </CardContent>
-      <CardFooter className="mt-4 pb-4 flex gap-3">
-        {props.referenceLink && (
+      {props.referenceLink && (
+        <CardFooter className="mt-4 pb-4 flex gap-3">
           <Button
             size="sm"
             className="flex-1 rounded-xl text-[10px]"
@@ -165,15 +174,8 @@ export default function VoglioPreview({
           >
             Visit Link
           </Button>
-        )}
-        <Button
-          size="sm"
-          variant="outline"
-          className="w-12 rounded-full text-[10px]"
-        >
-          <BookmarkCheck />
-        </Button>
-      </CardFooter>
+        </CardFooter>
+      )}
     </Card>
   );
 }
