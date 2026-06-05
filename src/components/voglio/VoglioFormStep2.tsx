@@ -47,7 +47,7 @@ export default function VoglioFormStep2({
         {/* Price */}
         <div className="w-full">
           <Label htmlFor="price" className="text-sm text-gray-900">
-            Price
+            Price <span className="text-xs text-gray-400">(Optional)</span>
           </Label>
 
           <Input
@@ -157,12 +157,18 @@ export default function VoglioFormStep2({
       </div>
 
       {/* Reference image */}
-      <ImageUploader
-        formData={formData}
-        onImageChange={(newImageFile) =>
-          onFormChange({ ...formData, imageUrl: "", imageFile: newImageFile })
-        }
-      />
+      
+      <div className="mt-2">  
+        <Label htmlFor="quantity" className="text-sm text-gray-900">
+          Reference image <span className="text-xs text-gray-400">(Optional)</span>
+        </Label>
+        <ImageUploader
+          formData={formData}
+          onImageChange={(newImageFile) =>
+            onFormChange({ ...formData, imageUrl: "", imageFile: newImageFile })
+          }
+        />
+      </div>
     </>
   );
 }

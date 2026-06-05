@@ -32,12 +32,7 @@ export default function ImageUploader({
 
   return (
     <div className="mt-4">
-      <label
-        htmlFor="cover-photo"
-        className="block text-sm font-medium text-gray-900"
-      >
-        Reference image
-      </label>
+      
       {imageSrc ? (
         <>
           <div className="relative w-20 h-20 group mt-2 bg-gray-200 rounded-lg">
