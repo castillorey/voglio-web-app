@@ -135,15 +135,12 @@ export default function VoglioPreview({
   return (
     <Card className="relative rounded-md">
       {isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />}
-      <CardContent
-        className="p-0 cursor-pointer"
-        onClick={() => navigate(`voglio/${props.id}`, { state: props })}
-      >
+      <CardContent>
         {props.imageUrl ? (
           <img
             src={props.imageUrl}
             alt=""
-            className="w-full h-32 object-cover cursor-pointer rounded-md"
+            className="w-full h-32 object-cover rounded-md"
           />
         ) : (
           <div className="w-full h-32 flex justify-center items-center">
