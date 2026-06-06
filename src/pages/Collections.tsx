@@ -23,6 +23,7 @@ import supabase from "../supabase-client";
 import CategoryForm from "../components/category/CategoryForm";
 import { ICategory } from "@/components/voglio/VoglioForm";
 import { useMediaQuery } from "@uidotdev/usehooks";
+import { getCurrentUserId } from "../services/profile";
 
 export default function Voglios() {
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
@@ -31,6 +32,7 @@ export default function Voglios() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
+  const currentUserId = getCurrentUserId();
 
   useEffect(() => {
     fetchCategoryList();
@@ -40,9 +42,16 @@ export default function Voglios() {
     setLoading(true);
     setError(null);
 
+    if (!currentUserId) {
+      setError("Not authenticated");
+      setLoading(false);
+      return;
+    }
+
     const { data, error } = await supabase
       .from("category")
-      .select(`id, name, description, emoji_code, is_private, voglio(count)`);
+      .select(`id, name, description, emoji_code, is_private, voglio(count)`)
+      .eq("user_id", currentUserId);
     if (error) {
       console.log("Error fetching category list: ", error);
       setError(error.message);
