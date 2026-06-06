@@ -35,16 +35,19 @@ export default function CategoryPreview({
   props,
   onDeleteClick,
   OnEditClick,
+  isReadOnly,
 }: {
   props: ICategory;
-  onDeleteClick: (categoryId: number| null) => void;
+  onDeleteClick: (categoryId: number) => void;
   OnEditClick: (categoryData: ICategory) => void;
+  isReadOnly?: boolean;
 }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
 
   const handleOnDelete = async () => {
+    if (props.id === null) return;
     const { data, error } = await supabase
       .from("category")
       .delete()
@@ -139,10 +142,10 @@ export default function CategoryPreview({
   };
   return (
     <Card className="relative rounded-md">
-      {isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />}
+      {!isReadOnly && (isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />)}
       <CardContent
         className="p-0 cursor-pointer"
-        onClick={() => navigate(`category/${props.id}`)}
+        onClick={() => !isReadOnly && navigate(`category/${props.id}`)}
       >
         <div className="text-center">
         <p className="py-4 bg-gray-100 text-6xl">

@@ -1,6 +1,6 @@
 import { SyntheticEvent, useState } from "react";
 import supabase from "../supabase-client";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner"
 import {

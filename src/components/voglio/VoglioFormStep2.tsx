@@ -9,6 +9,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
 import ImageUploader from "../ImageUploader";
@@ -154,6 +155,20 @@ export default function VoglioFormStep2({
             </SelectGroup>
           </SelectContent>
         </Select>
+      </div>
+
+      {/* Visibility */}
+      <div className="flex items-center justify-between mt-4">
+        <Label htmlFor="is-private" className="text-sm text-gray-900">
+          Private voglio
+        </Label>
+        <Switch
+          id="is-private"
+          checked={formData.isPrivate}
+          onCheckedChange={(checked) =>
+            onFormChange({ ...formData, isPrivate: checked })
+          }
+        />
       </div>
 
       {/* Reference image */}

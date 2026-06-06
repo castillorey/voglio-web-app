@@ -17,6 +17,8 @@ export interface IVoglio {
   imageUrl: string;
   imageFile?: File | null;
   quantity: number;
+  isPrivate: boolean;
+  userId?: string;
 }
 
 export interface IVoglioDto {
@@ -28,11 +30,9 @@ export interface IVoglioDto {
   size_id: number | null;
   image_url: string;
   quantity: number | null;
-}
-
-export interface ISize {
-  id: number;
-  value: string;
+  price: number | null;
+  is_private: boolean;
+  user_id?: string;
 }
 
 export interface ICategory {
@@ -60,7 +60,6 @@ export default function VoglioForm({
   const user = session && JSON.parse(session)?.user;
 
   const [step, setStep] = useState(1);
-  const [sizeList, setSizeList] = useState<ISize[]>([]);
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
 
   const handleNextStep = () => setStep(step + 1);
@@ -75,14 +74,14 @@ export default function VoglioForm({
     sizeId: null,
     imageUrl: "",
     quantity: 1,
-    price: null
+    price: null,
+    isPrivate: false,
   };
   const [formData, setFormData] = useState<IVoglio>(emptyForm);
   let imageUrl = "";
 
   useEffect(() => {
     fetchCategoryList();
-    fetchSizeList();
     if (editVoglioData) {
       setFormData({ ...formData, ...editVoglioData });
     } else if (categoryId) {
@@ -100,16 +99,6 @@ export default function VoglioForm({
       console.log("Error fetching category list: ", error);
     } else {
       setCategoryList(data);
-    }
-  };
-
-  const fetchSizeList = async () => {
-    const { data, error } = await supabase.from("size").select("*");
-
-    if (error) {
-      console.log("Error fetching size list: ", error);
-    } else {
-      setSizeList(data);
     }
   };
 
@@ -142,6 +131,7 @@ export default function VoglioForm({
       size_id: formData.sizeId,
       image_url: imageUrl,
       quantity: formData.quantity,
+      is_private: formData.isPrivate,
     };
 
     // Update

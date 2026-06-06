@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/solid";
 import { Pencil, Eraser } from "lucide-react";
 import { useEffect, useRef, useState } from "react";

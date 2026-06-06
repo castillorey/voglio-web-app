@@ -8,6 +8,8 @@ import Category from "./pages/Category";
 import NotFound from "./pages/NotFound";
 import Voglio from "./pages/Voglio";
 import Account from "./pages/Account";
+import Friends from "./pages/Friends";
+import UserCollections from "./pages/UserCollections";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
             <Route path="category/:categoryId" element={<Category />} />
             <Route path="voglio/:voglioId" element={<Voglio />} />
             <Route path="account" element={<Account />} />
+            <Route path="friends" element={<Friends />} />
+            <Route path="u/:username" element={<UserCollections />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

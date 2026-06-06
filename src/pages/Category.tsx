@@ -59,12 +59,14 @@ export default function Category() {
           id: voglio.id,
           name: voglio.name,
           notes: voglio.notes,
-          categoryId: voglio.category_id.toString(),
-          referenceLink: voglio.reference_link,
+          categoryId: voglio.category_id?.toString() ?? null,
+          referenceLink: voglio.reference_link ?? "",
           sizeId: voglio.size_id,
-          imageUrl: voglio.image_url,
+          imageUrl: voglio.image_url ?? "",
           quantity: voglio.quantity,
-          price: voglio.price
+          price: voglio.price,
+          isPrivate: voglio.is_private,
+          userId: voglio.user_id,
         };
       });
 

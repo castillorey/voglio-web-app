@@ -25,24 +25,27 @@ import {
 } from "@/components/ui/command";
 import { BookmarkCheck, Ellipsis, Pencil, Delete, Image } from "lucide-react";
 
-import { useNavigate } from "react-router";
 import { useState } from "react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import supabase from "../../supabase-client";
 import { IVoglio } from "./VoglioForm";
+import { getCurrentUserId } from "../../services/profile";
 
 export default function VoglioPreview({
   props,
   onDeleteVoglio,
   OnEditClick,
+  isReadOnly,
 }: {
   props: IVoglio;
   onDeleteVoglio: (voglioId: number) => void;
   OnEditClick: (voglioData: IVoglio) => void;
+  isReadOnly?: boolean;
 }) {
-  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
+  const currentUserId = getCurrentUserId();
+  const isOwner = !isReadOnly && !!currentUserId && currentUserId === props.userId;
 
   const handleOnDelete = async () => {
     const { error } = await supabase.from("voglio").delete().eq("id", props.id);
@@ -134,7 +137,7 @@ export default function VoglioPreview({
 
   return (
     <Card className="relative rounded-md">
-      {isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />}
+      {isOwner && (isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />)}
       <CardContent>
         {props.imageUrl ? (
           <img
