@@ -38,6 +38,7 @@ export default function VoglioPreview({
   isReadOnly,
   isTaken,
   onToggleTaken,
+  categoryEmoji,
 }: {
   props: IVoglio;
   onDeleteVoglio: (voglioId: number) => void;
@@ -45,6 +46,7 @@ export default function VoglioPreview({
   isReadOnly?: boolean;
   isTaken?: boolean;
   onToggleTaken?: () => void;
+  categoryEmoji?: string;
 }) {
   const [open, setOpen] = useState(false);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
@@ -143,6 +145,9 @@ export default function VoglioPreview({
     <Card className="relative rounded-md">
       {isOwner && (isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />)}
       <CardContent>
+        {categoryEmoji && (
+            <span>{categoryEmoji}</span>
+        )}
         {props.imageUrl ? (
           <img
             src={props.imageUrl}

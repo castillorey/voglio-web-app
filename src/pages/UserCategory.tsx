@@ -1,7 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Users } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ChevronLeft, Users, Search, ArrowUpDown } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import supabase from "../supabase-client";
 import { getProfileByUsername, getCurrentUserId, IProfile } from "../services/profile";
 import { followUser, unfollowUser, isFollowing } from "../services/follow";
@@ -27,7 +35,38 @@ export default function UserCategory() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [following, setFollowing] = useState(false);
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
   const currentUserId = getCurrentUserId();
+
+  const filteredAndSorted = useMemo(() => {
+    let list = [...voglioList];
+
+    if (search) {
+      const q = search.toLowerCase();
+      list = list.filter(
+        (v) =>
+          v.name.toLowerCase().includes(q) ||
+          (v.notes && v.notes.toLowerCase().includes(q))
+      );
+    }
+
+    switch (sortBy) {
+      case "name":
+        list.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "price-asc":
+        list.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+        break;
+      case "price-desc":
+        list.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
+        break;
+      default:
+        list.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
+    }
+
+    return list;
+  }, [voglioList, search, sortBy]);
 
   useEffect(() => {
     if (!username || !categoryId) return;
@@ -138,8 +177,6 @@ export default function UserCategory() {
   if (error) return <div className="mt-8 text-center text-red-500">{error}</div>;
   if (!profile || !category) return <div className="mt-8 text-center text-gray-500">Not found</div>;
 
-  const isOwnProfile = currentUserId === profile.id;
-
   return (
     <>
       <Button
@@ -151,30 +188,41 @@ export default function UserCategory() {
         <ChevronLeft className="mr-1 size-4" /> Back
       </Button>
 
-      <div className="flex items-start gap-3 mt-4">
+      <div className="flex items-center gap-3 mt-4">
         <div className="flex items-center justify-center size-12 rounded-full bg-gray-100">
           <Users className="text-gray-500" />
         </div>
-        <div className="flex-1">
-          <h2 className="text-xl font-bold">{profile.display_name || profile.username}</h2>
-          <p className="text-sm text-gray-500">@{profile.username}</p>
-        </div>
-      </div>
-
-      <div className="flex flex-col items-center mt-6">
-        <div className="flex items-center justify-center size-20 rounded-full bg-gray-100 text-4xl">
-          <span>{category.emoji_code}</span>
-        </div>
-        <h3 className="mt-3 text-2xl font-bold">{category.name}</h3>
-        {category.description && (
-          <p className="mt-1 text-sm text-gray-500 text-center max-w-md">{category.description}</p>
-        )}
+        <h2 className="text-l font-bold">{profile.display_name || profile.username}</h2>
       </div>
 
       <p className="mt-6 h-2 w-full border-b border-gray-300" />
 
-      <div className="mt-6 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {voglioList.map((voglio) => (
+      <div className="mt-3 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+          <Input
+            placeholder="Search voglios..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-8 h-9 text-sm"
+          />
+        </div>
+        <Select value={sortBy} onValueChange={setSortBy}>
+          <SelectTrigger className="w-full sm:w-[160px] h-9 text-sm">
+            <ArrowUpDown className="size-3.5 mr-1" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">Newest</SelectItem>
+            <SelectItem value="name">Name A-Z</SelectItem>
+            <SelectItem value="price-asc">Price low-high</SelectItem>
+            <SelectItem value="price-desc">Price high-low</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="mt-4 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {filteredAndSorted.map((voglio) => (
           <VoglioPreview
             key={voglio.id}
             props={voglio}
@@ -183,10 +231,15 @@ export default function UserCategory() {
             isReadOnly
             isTaken={takenSet.has(voglio.id!)}
             onToggleTaken={() => handleToggleTaken(voglio.id!)}
+            categoryEmoji={category.emoji_code}
           />
         ))}
-        {voglioList.length === 0 && (
-          <p className="col-span-full text-center text-gray-500 mt-8">No public voglios in this category</p>
+        {filteredAndSorted.length === 0 && (
+          <p className="col-span-full text-center text-gray-500 mt-8">
+            {voglioList.length === 0
+              ? "No public voglios in this category"
+              : "No voglios match your search"}
+          </p>
         )}
       </div>
     </>

@@ -6,7 +6,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import { LayoutGrid, User, Users } from "lucide-react";
+import { User, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const navigationMenuItems = [
