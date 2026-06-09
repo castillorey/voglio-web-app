@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Users, UserPlus, UserCheck, ChevronLeft } from "lucide-react";
-import { searchProfiles, getCurrentUserId, IProfile } from "../services/profile";
+import { Search, Users, UserPlus, UserCheck, UserX, ChevronLeft } from "lucide-react";
+import { searchProfiles, getProfile, getCurrentUserId, IProfile } from "../services/profile";
 import { followUser, unfollowUser, getFollowing } from "../services/follow";
 
 export default function Friends() {
@@ -11,17 +11,31 @@ export default function Friends() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<IProfile[]>([]);
   const [followingIds, setFollowingIds] = useState<string[]>([]);
+  const [followingProfiles, setFollowingProfiles] = useState<IProfile[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingFollowing, setLoadingFollowing] = useState(true);
   const [searched, setSearched] = useState(false);
   const currentUserId = getCurrentUserId();
 
   useEffect(() => {
     if (currentUserId) {
-      getFollowing(currentUserId)
-        .then(setFollowingIds)
-        .catch(console.log);
+      loadFollowing();
     }
   }, [currentUserId]);
+
+  const loadFollowing = async () => {
+    if (!currentUserId) return;
+    setLoadingFollowing(true);
+    try {
+      const ids = await getFollowing(currentUserId);
+      setFollowingIds(ids);
+      const profiles = (await Promise.all(ids.map((id) => getProfile(id)))).filter(Boolean) as IProfile[];
+      setFollowingProfiles(profiles);
+    } catch (err) {
+      console.log(err);
+    }
+    setLoadingFollowing(false);
+  };
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -41,9 +55,12 @@ export default function Friends() {
       if (followingIds.includes(userId)) {
         await unfollowUser(userId);
         setFollowingIds(followingIds.filter((id) => id !== userId));
+        setFollowingProfiles(followingProfiles.filter((p) => p.id !== userId));
       } else {
         await followUser(userId);
         setFollowingIds([...followingIds, userId]);
+        const prof = await getProfile(userId);
+        if (prof) setFollowingProfiles([...followingProfiles, prof]);
       }
     } catch (err) {
       console.log(err);
@@ -115,13 +132,48 @@ export default function Friends() {
         </div>
       )}
 
-      {!searched && followingIds.length > 0 && (
+      {!searched && (
         <>
-          <p className="mt-6 mb-3 text-sm text-gray-500">People you follow</p>
+          <p className="mt-6 mb-3 text-sm text-gray-500">
+            {loadingFollowing ? "Loading..." : `${followingProfiles.length} following`}
+          </p>
           <div className="space-y-3">
-            {results.length === 0 && followingIds.map((id) => (
-              <div key={id} className="text-xs text-gray-400">Loading...</div>
-            ))}
+            {loadingFollowing ? (
+              <div className="text-center text-gray-400 text-sm py-4">Loading...</div>
+            ) : followingProfiles.length === 0 ? (
+              <div className="text-center text-gray-400 text-sm py-4">
+                You're not following anyone yet. Search for users above.
+              </div>
+            ) : (
+              followingProfiles.map((profile) => (
+                <div
+                  key={profile.id}
+                  className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50"
+                  onClick={() => navigate(`/u/${profile.username}`)}
+                >
+                  <div className="flex items-center justify-center size-10 rounded-full bg-gray-100">
+                    <Users className="size-5 text-gray-500" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm truncate">
+                      {profile.display_name || profile.username}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">@{profile.username}</p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFollow(profile.id);
+                    }}
+                  >
+                    <UserX className="size-4 mr-1" />
+                    Unfollow
+                  </Button>
+                </div>
+              ))
+            )}
           </div>
         </>
       )}
