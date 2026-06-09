@@ -151,7 +151,7 @@ export default function VoglioPreview({
           </div>
         )}
 
-        <div className="px-4 flex justify-between items-center">
+        <div className="flex justify-between items-center">
           <div>
             <p className="mt-2 font-bold text-sm text-gray-700"> {props.name}</p>
             <p className="mt-1 text-xs text-gray-500"> {props.notes}</p>
