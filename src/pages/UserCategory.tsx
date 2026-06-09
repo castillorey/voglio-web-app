@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import supabase from "../supabase-client";
 import { getProfileByUsername, getCurrentUserId, IProfile } from "../services/profile";
-import { followUser, unfollowUser, isFollowing } from "../services/follow";
+
 import { fetchTakenVoglioIds, toggleVoglioTaken } from "../services/voglioTaken";
 import VoglioPreview from "../components/voglio/VoglioPreview";
 import { IVoglio } from "@/components/voglio/VoglioForm";
@@ -34,7 +34,6 @@ export default function UserCategory() {
   const [takenSet, setTakenSet] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [following, setFollowing] = useState(false);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const currentUserId = getCurrentUserId();
@@ -86,11 +85,6 @@ export default function UserCategory() {
         return;
       }
       setProfile(prof);
-
-      if (currentUserId && prof.id !== currentUserId) {
-        const fol = await isFollowing(currentUserId, prof.id);
-        setFollowing(fol);
-      }
 
       const { data: catData, error: catError } = await supabase
         .from("category")
@@ -158,21 +152,6 @@ export default function UserCategory() {
     });
   };
 
-  const handleFollow = async () => {
-    if (!profile || !currentUserId) return;
-    try {
-      if (following) {
-        await unfollowUser(profile.id);
-        setFollowing(false);
-      } else {
-        await followUser(profile.id);
-        setFollowing(true);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   if (loading) return <div className="mt-8 text-center text-gray-500">Loading...</div>;
   if (error) return <div className="mt-8 text-center text-red-500">{error}</div>;
   if (!profile || !category) return <div className="mt-8 text-center text-gray-500">Not found</div>;
@@ -232,6 +211,7 @@ export default function UserCategory() {
             isTaken={takenSet.has(voglio.id!)}
             onToggleTaken={() => handleToggleTaken(voglio.id!)}
             categoryEmoji={category.emoji_code}
+            categoryName={category.name}
           />
         ))}
         {filteredAndSorted.length === 0 && (

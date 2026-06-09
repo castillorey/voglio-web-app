@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Users, UserPlus, UserCheck, UserX, ChevronLeft } from "lucide-react";
+import { Search, Users, UserPlus, UserCheck, UserX } from "lucide-react";
 import { searchProfiles, getProfile, getCurrentUserId, IProfile } from "../services/profile";
 import { followUser, unfollowUser, getFollowing } from "../services/follow";
 
@@ -69,10 +69,6 @@ export default function Friends() {
 
   return (
     <>
-      <Button variant="secondary" size="icon" className="size-8 self-start" onClick={() => navigate(-1)}>
-        <ChevronLeft />
-      </Button>
-
       <h2 className="text-xl font-bold mt-2">Friends</h2>
 
       <div className="flex gap-2 mt-4">
