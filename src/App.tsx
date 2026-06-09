@@ -21,8 +21,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Wrapper />}>
-            <Route index element={<VogliosFeed />} />
-            <Route path="collections" element={<Collections />} />
+            {/* <Route index element={<VogliosFeed />} /> */}
+            <Route index path="collections" element={<Collections />} />
             <Route path="category/:categoryId" element={<Category />} />
             <Route path="voglio/:voglioId" element={<Voglio />} />
             <Route path="account" element={<Account />} />

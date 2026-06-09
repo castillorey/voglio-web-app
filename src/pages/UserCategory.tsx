@@ -5,6 +5,7 @@ import { ChevronLeft, Users } from "lucide-react";
 import supabase from "../supabase-client";
 import { getProfileByUsername, getCurrentUserId, IProfile } from "../services/profile";
 import { followUser, unfollowUser, isFollowing } from "../services/follow";
+import { fetchTakenVoglioIds, toggleVoglioTaken } from "../services/voglioTaken";
 import VoglioPreview from "../components/voglio/VoglioPreview";
 import { IVoglio } from "@/components/voglio/VoglioForm";
 
@@ -22,6 +23,7 @@ export default function UserCategory() {
   const [profile, setProfile] = useState<IProfile | null>(null);
   const [category, setCategory] = useState<CategoryDetail | null>(null);
   const [voglioList, setVoglioList] = useState<IVoglio[]>([]);
+  const [takenSet, setTakenSet] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [following, setFollowing] = useState(false);
@@ -74,25 +76,47 @@ export default function UserCategory() {
 
       if (voglioError) throw voglioError;
 
-      setVoglioList(
-        (data || []).map((item) => ({
-          id: item.id,
-          name: item.name,
-          notes: item.notes,
-          price: item.price,
-          categoryId: item.category_id?.toString() ?? null,
-          referenceLink: item.reference_link ?? "",
-          sizeId: item.size_id,
-          imageUrl: item.image_url ?? "",
-          quantity: item.quantity,
-          isPrivate: item.is_private,
-          userId: item.user_id,
-        }))
-      );
+      const items = (data || []).map((item) => ({
+        id: item.id,
+        name: item.name,
+        notes: item.notes,
+        price: item.price,
+        categoryId: item.category_id?.toString() ?? null,
+        referenceLink: item.reference_link ?? "",
+        sizeId: item.size_id,
+        imageUrl: item.image_url ?? "",
+        quantity: item.quantity,
+        isPrivate: item.is_private,
+        userId: item.user_id,
+      }));
+      setVoglioList(items);
+
+      if (currentUserId) {
+        const taken = await fetchTakenVoglioIds(
+          items.map((v) => v.id!),
+          currentUserId
+        );
+        setTakenSet(taken);
+      }
     } catch (err: any) {
       setError(err.message);
     }
     setLoading(false);
+  };
+
+  const handleToggleTaken = async (voglioId: number) => {
+    if (!currentUserId) return;
+    const currentlyTaken = takenSet.has(voglioId);
+    const newState = await toggleVoglioTaken(voglioId, currentUserId, currentlyTaken);
+    setTakenSet((prev) => {
+      const next = new Set(prev);
+      if (newState) {
+        next.add(voglioId);
+      } else {
+        next.delete(voglioId);
+      }
+      return next;
+    });
   };
 
   const handleFollow = async () => {
@@ -135,15 +159,6 @@ export default function UserCategory() {
           <h2 className="text-xl font-bold">{profile.display_name || profile.username}</h2>
           <p className="text-sm text-gray-500">@{profile.username}</p>
         </div>
-        {!isOwnProfile && currentUserId && (
-          <Button
-            variant={following ? "outline" : "default"}
-            size="sm"
-            onClick={handleFollow}
-          >
-            {following ? "Unfollow" : "Follow"}
-          </Button>
-        )}
       </div>
 
       <div className="flex flex-col items-center mt-6">
@@ -166,6 +181,8 @@ export default function UserCategory() {
             onDeleteVoglio={() => {}}
             OnEditClick={() => {}}
             isReadOnly
+            isTaken={takenSet.has(voglio.id!)}
+            onToggleTaken={() => handleToggleTaken(voglio.id!)}
           />
         ))}
         {voglioList.length === 0 && (

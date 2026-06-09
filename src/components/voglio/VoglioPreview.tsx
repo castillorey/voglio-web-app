@@ -23,7 +23,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { BookmarkCheck, Ellipsis, Pencil, Delete, Image } from "lucide-react";
+import { BookmarkCheck, Bookmark, Ellipsis, Pencil, Delete, Image } from "lucide-react";
 
 import { useState } from "react";
 import { useMediaQuery } from "@uidotdev/usehooks";
@@ -36,11 +36,15 @@ export default function VoglioPreview({
   onDeleteVoglio,
   OnEditClick,
   isReadOnly,
+  isTaken,
+  onToggleTaken,
 }: {
   props: IVoglio;
   onDeleteVoglio: (voglioId: number) => void;
   OnEditClick: (voglioData: IVoglio) => void;
   isReadOnly?: boolean;
+  isTaken?: boolean;
+  onToggleTaken?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
@@ -159,9 +163,13 @@ export default function VoglioPreview({
           <Button
             size="sm"
             variant="outline"
-            className="mt-2 size-8 rounded-full"
+            className={`mt-2 size-8 rounded-full ${isTaken ? "bg-primary text-primary-foreground" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleTaken?.();
+            }}
           >
-            <BookmarkCheck />
+            {isTaken ? <BookmarkCheck /> : <Bookmark />}
           </Button>
         </div>
       </CardContent>
