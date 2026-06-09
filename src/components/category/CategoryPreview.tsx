@@ -145,7 +145,7 @@ export default function CategoryPreview({
       {!isReadOnly && (isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />)}
       <CardContent
         className="p-0 cursor-pointer"
-        onClick={() => !isReadOnly && navigate(`category/${props.id}`)}
+        onClick={() => !isReadOnly && navigate(`/category/${props.id}`)}
       >
         <div className="text-center">
         <p className="py-4 bg-gray-100 text-6xl">

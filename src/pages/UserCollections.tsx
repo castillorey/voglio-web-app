@@ -6,16 +6,13 @@ import supabase from "../supabase-client";
 import { getProfileByUsername, getCurrentUserId, IProfile } from "../services/profile";
 import { followUser, unfollowUser, isFollowing } from "../services/follow";
 import CategoryPreview from "../components/category/CategoryPreview";
-import VoglioPreview from "../components/voglio/VoglioPreview";
-import { ICategory, IVoglio } from "@/components/voglio/VoglioForm";
+import { ICategory } from "@/components/voglio/VoglioForm";
 
 export default function UserCollections() {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<IProfile | null>(null);
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
-  const [voglioList, setVoglioList] = useState<IVoglio[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [following, setFollowing] = useState(false);
@@ -30,7 +27,6 @@ export default function UserCollections() {
     if (!username) return;
     setLoading(true);
     setError(null);
-    setSelectedCategoryId(null);
 
     try {
       const prof = await getProfileByUsername(username);
@@ -68,38 +64,6 @@ export default function UserCollections() {
       setError(err.message);
     }
     setLoading(false);
-  };
-
-  const selectCategory = async (categoryId: number) => {
-    setSelectedCategoryId(categoryId);
-    setVoglioList([]);
-
-    const { data, error } = await supabase
-      .from("voglio")
-      .select(`*`)
-      .eq("category_id", categoryId)
-      .eq("is_private", false);
-
-    if (error) {
-      console.log("Error fetching voglios: ", error);
-      return;
-    }
-
-    setVoglioList(
-      (data || []).map((item) => ({
-        id: item.id,
-        name: item.name,
-        notes: item.notes,
-        price: item.price,
-        categoryId: item.category_id?.toString() ?? null,
-        referenceLink: item.reference_link ?? "",
-        sizeId: item.size_id,
-        imageUrl: item.image_url ?? "",
-        quantity: item.quantity,
-        isPrivate: item.is_private,
-        userId: item.user_id,
-      }))
-    );
   };
 
   const handleFollow = async () => {
@@ -149,52 +113,32 @@ export default function UserCollections() {
       </div>
 
       <p className="mt-4 h-2 w-full border-b border-gray-300" />
+      <p className="mt-3 text-sm text-gray-500">Public collections</p>
 
-      {selectedCategoryId ? (
-        <>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="mt-3"
-            onClick={() => setSelectedCategoryId(null)}
+      <div className="mt-4 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {categoryList.map((category) => (
+          <div
+            key={category.id}
+            onClick={() =>
+              navigate(
+                isOwnProfile
+                  ? `/category/${category.id}`
+                  : `/u/${username}/category/${category.id}`
+              )
+            }
           >
-            <ChevronLeft className="mr-1 size-4" /> Back to categories
-          </Button>
-          <div className="mt-4 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {voglioList.map((voglio) => (
-              <VoglioPreview
-                key={voglio.id}
-                props={voglio}
-                onDeleteVoglio={() => {}}
-                OnEditClick={() => {}}
-                isReadOnly
-              />
-            ))}
-            {voglioList.length === 0 && (
-              <p className="col-span-full text-center text-gray-500 mt-8">No public voglios in this category</p>
-            )}
+            <CategoryPreview
+              props={category}
+              onDeleteClick={() => {}}
+              OnEditClick={() => {}}
+              isReadOnly
+            />
           </div>
-        </>
-      ) : (
-        <>
-          <p className="mt-3 text-sm text-gray-500">Public collections</p>
-          <div className="mt-4 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {categoryList.map((category) => (
-              <div key={category.id} onClick={() => selectCategory(category.id!)}>
-                <CategoryPreview
-                  props={category}
-                  onDeleteClick={() => {}}
-                  OnEditClick={() => {}}
-                  isReadOnly
-                />
-              </div>
-            ))}
-            {categoryList.length === 0 && (
-              <p className="col-span-full text-center text-gray-500 mt-8">No public collections yet</p>
-            )}
-          </div>
-        </>
-      )}
+        ))}
+        {categoryList.length === 0 && (
+          <p className="col-span-full text-center text-gray-500 mt-8">No public collections yet</p>
+        )}
+      </div>
     </>
   );
 }

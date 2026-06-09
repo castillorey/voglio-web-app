@@ -78,7 +78,7 @@ export default function Category() {
     <>
       <div className="flex flex-col justify-center items-center">
         <Button variant="secondary" size="icon" className="size-8 self-start"
-        onClick={() => navigate("/")}>
+        onClick={() => navigate("/collections")}>
         <ChevronLeft />
       </Button>
         <div className="flex items-center justify-center p-6 text-center text-6xl rounded-full bg-gray-100">
