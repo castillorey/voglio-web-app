@@ -173,7 +173,7 @@ export default function UserCategory() {
         variant="secondary"
         size="sm"
         className="self-start"
-        onClick={() => navigate(`/u/${username}`)}
+        onClick={() => navigate(-1)}
       >
         <ChevronLeft className="mr-1 size-4" /> Back
       </Button>
