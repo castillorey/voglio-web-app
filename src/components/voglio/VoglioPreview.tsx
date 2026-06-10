@@ -23,7 +23,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { BookmarkCheck, Bookmark, Ellipsis, Pencil, Delete, Image } from "lucide-react";
+import { BookmarkCheck, Bookmark, ExternalLink, Ellipsis, Pencil, Delete, Image } from "lucide-react";
 
 import { useState } from "react";
 import { useMediaQuery } from "@uidotdev/usehooks";
@@ -165,7 +165,7 @@ export default function VoglioPreview({
           </div>
         )}
 
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-center">
           <div className="min-w-0 flex-1">
             <p className="mt-2 font-bold text-sm text-gray-700"> {props.name}</p>
             {props.notes && <p className="mt-1 text-xs text-gray-500"> {props.notes}</p>}
@@ -174,31 +174,35 @@ export default function VoglioPreview({
             )}
           </div>
           {!isOwner && (
-            <Button
-              size="sm"
-              variant="outline"
-              className={`mt-2 size-8 rounded-full ${isTaken ? "bg-primary text-primary-foreground" : ""}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleTaken?.();
-              }}
-            >
-              {isTaken ? <BookmarkCheck /> : <Bookmark />}
-            </Button>
+            <div className="flex gap-2 mt-2">
+              {props.referenceLink && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="size-8 rounded-full"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(props.referenceLink, "_blank");
+                  }}
+                >
+                  <ExternalLink className="size-4" />
+                </Button>
+              )}
+              <Button
+                size="sm"
+                variant="outline"
+                className={`size-8 rounded-full ${isTaken ? "bg-primary text-primary-foreground" : ""}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleTaken?.();
+                }}
+              >
+                {isTaken ? <BookmarkCheck /> : <Bookmark />}
+              </Button>
+            </div>
           )}
         </div>
       </CardContent>
-      {props.referenceLink && (
-        <CardFooter className="mt-4 pb-4 flex gap-3">
-          <Button
-            size="sm"
-            className="flex-1 rounded-xl text-[10px]"
-            onClick={() => window.open(props.referenceLink, "_blank")}
-          >
-            Visit Link
-          </Button>
-        </CardFooter>
-      )}
     </Card>
   );
 }
