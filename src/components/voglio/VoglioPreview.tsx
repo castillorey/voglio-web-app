@@ -170,17 +170,19 @@ export default function VoglioPreview({
             <p className="mt-2 font-bold text-sm text-gray-700"> {props.name}</p>
             <p className="mt-1 text-xs text-gray-500"> {props.notes}</p>
           </div>
-          <Button
-            size="sm"
-            variant="outline"
-            className={`mt-2 size-8 rounded-full ${isTaken ? "bg-primary text-primary-foreground" : ""}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleTaken?.();
-            }}
-          >
-            {isTaken ? <BookmarkCheck /> : <Bookmark />}
-          </Button>
+          {!isOwner && (
+            <Button
+              size="sm"
+              variant="outline"
+              className={`mt-2 size-8 rounded-full ${isTaken ? "bg-primary text-primary-foreground" : ""}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleTaken?.();
+              }}
+            >
+              {isTaken ? <BookmarkCheck /> : <Bookmark />}
+            </Button>
+          )}
         </div>
       </CardContent>
       {props.referenceLink && (
