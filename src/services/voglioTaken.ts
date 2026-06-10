@@ -38,6 +38,17 @@ export async function toggleVoglioTaken(
       console.log("Error unmarking voglio: ", error);
       return true;
     }
+
+    const { count } = await supabase
+      .from("voglio_taken")
+      .select("*", { count: "exact", head: true })
+      .eq("voglio_id", voglioId);
+
+    await supabase
+      .from("voglio")
+      .update({ is_taken: (count ?? 0) > 0 })
+      .eq("id", voglioId);
+
     return false;
   } else {
     const { error } = await supabase
@@ -48,6 +59,12 @@ export async function toggleVoglioTaken(
       console.log("Error marking voglio: ", error);
       return false;
     }
+
+    await supabase
+      .from("voglio")
+      .update({ is_taken: true })
+      .eq("id", voglioId);
+
     return true;
   }
 }

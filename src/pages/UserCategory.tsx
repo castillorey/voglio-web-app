@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronLeft, Users, Search, ArrowUpDown } from "lucide-react";
+import { ChevronLeft, Users, Search, ArrowUpDown, BookmarkCheck } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -36,6 +36,7 @@ export default function UserCategory() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("newest");
+  const [takenFilter, setTakenFilter] = useState("all");
   const currentUserId = getCurrentUserId();
 
   const filteredAndSorted = useMemo(() => {
@@ -48,6 +49,12 @@ export default function UserCategory() {
           v.name.toLowerCase().includes(q) ||
           (v.notes && v.notes.toLowerCase().includes(q))
       );
+    }
+
+    if (takenFilter === "taken") {
+      list = list.filter((v) => v.isTaken);
+    } else if (takenFilter === "untaken") {
+      list = list.filter((v) => !v.isTaken);
     }
 
     switch (sortBy) {
@@ -65,7 +72,7 @@ export default function UserCategory() {
     }
 
     return list;
-  }, [voglioList, search, sortBy]);
+  }, [voglioList, search, sortBy, takenFilter]);
 
   useEffect(() => {
     if (!username || !categoryId) return;
@@ -120,6 +127,7 @@ export default function UserCategory() {
         imageUrl: item.image_url ?? "",
         quantity: item.quantity,
         isPrivate: item.is_private,
+        isTaken: item.is_taken ?? false,
         userId: item.user_id,
       }));
       setVoglioList(items);
@@ -150,6 +158,9 @@ export default function UserCategory() {
       }
       return next;
     });
+    setVoglioList((prev) =>
+      prev.map((v) => (v.id === voglioId ? { ...v, isTaken: newState } : v))
+    );
   };
 
   if (loading) return <div className="mt-8 text-center text-gray-500">Loading...</div>;
@@ -196,6 +207,17 @@ export default function UserCategory() {
             <SelectItem value="name">Name A-Z</SelectItem>
             <SelectItem value="price-asc">Price low-high</SelectItem>
             <SelectItem value="price-desc">Price high-low</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={takenFilter} onValueChange={setTakenFilter}>
+          <SelectTrigger className="w-full sm:w-[140px] h-9 text-sm">
+            <BookmarkCheck className="size-3.5 mr-1" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="taken">Taken</SelectItem>
+            <SelectItem value="untaken">Not taken</SelectItem>
           </SelectContent>
         </Select>
       </div>

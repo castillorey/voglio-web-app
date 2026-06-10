@@ -6,11 +6,11 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import { User, Users } from "lucide-react";
+import { User, Users, LayoutGrid } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const navigationMenuItems = [
-  { title: "Voglios", href: "/collections", icon: Users },
+  { title: "Voglios", href: "/collections", icon: LayoutGrid },
   { title: "Friends", href: "/friends", icon: Users },
   { title: "Profile", href: "/account", icon: User },
 ];

@@ -66,6 +66,7 @@ export default function Category() {
           quantity: voglio.quantity,
           price: voglio.price,
           isPrivate: voglio.is_private,
+          isTaken: voglio.is_taken ?? false,
           userId: voglio.user_id,
         };
       });

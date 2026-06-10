@@ -18,6 +18,7 @@ export interface IVoglio {
   imageFile?: File | null;
   quantity: number;
   isPrivate: boolean;
+  isTaken: boolean;
   userId?: string;
 }
 
@@ -76,6 +77,7 @@ export default function VoglioForm({
     quantity: 1,
     price: null,
     isPrivate: false,
+    isTaken: false,
   };
   const [formData, setFormData] = useState<IVoglio>(emptyForm);
   let imageUrl = "";

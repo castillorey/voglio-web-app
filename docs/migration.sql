@@ -82,6 +82,7 @@ ALTER TABLE public.follows OWNER TO postgres;
 -- Add missing columns to voglio
 ALTER TABLE public.voglio ADD COLUMN IF NOT EXISTS is_private BOOLEAN DEFAULT false NOT NULL;
 ALTER TABLE public.voglio ADD COLUMN IF NOT EXISTS price NUMERIC;
+ALTER TABLE public.voglio ADD COLUMN IF NOT EXISTS is_taken BOOLEAN DEFAULT false NOT NULL;
 
 -- 2. ROW LEVEL SECURITY
 
@@ -123,8 +124,8 @@ CREATE POLICY "Voglios are viewable by all authenticated users" ON public.voglio
     FOR SELECT TO authenticated USING (is_private = false OR auth.uid() = user_id);
 
 DROP POLICY IF EXISTS "Policy with authenticated user only" ON public.voglio;
-CREATE POLICY "Policy with authenticated user only" ON public.voglio
-    FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Voglios can be updated by any authenticated user" ON public.voglio
+    FOR UPDATE TO authenticated USING (true);
 
 -- Size policies (read-only for all authenticated users)
 CREATE POLICY "Enable read access for all users" ON public.size
