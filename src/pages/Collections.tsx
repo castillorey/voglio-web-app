@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { CirclePlus } from "lucide-react";
 import {
   Dialog,
@@ -7,7 +7,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -15,7 +14,6 @@ import {
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 
 import CategoryPreview from "../components/category/CategoryPreview";
@@ -88,19 +86,52 @@ export default function Voglios() {
     );
   });
 
-  const DesktopDialog = () => {
+  const NewCategoryCard = () => (
+    <Card
+      className="rounded-md overflow-hidden cursor-pointer border-2 border-dashed border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-colors flex items-center justify-center"
+      onClick={() => {
+        setEditCategoryData(null);
+        setOpen(true);
+      }}
+    >
+        <CirclePlus className="size-16 text-gray-300" />
+    </Card>
+  );
+
+  const DialogForm = () => {
+    if (isSmallDevice) {
+      return (
+        <Drawer open={open} onOpenChange={setOpen}>
+          <DrawerContent className="mb-5 px-5">
+            <DrawerHeader className="text-left">
+              <DrawerTitle>{editCategoryData ? "Edit Category" : "New Category"}</DrawerTitle>
+            </DrawerHeader>
+            <DrawerDescription aria-describedby="Category form" />
+            <CategoryForm
+              editCategoryData={editCategoryData}
+              onCreateCategory={(newCategory) => {
+                setOpen(false);
+                setCategoryList([...categoryList, newCategory]);
+              }}
+              onUpdateCategory={(editedCategory) => {
+                let refreshedCategoryList = categoryList.map((category) =>
+                  category.id === editedCategory.id ? editedCategory : category
+                );
+                setCategoryList(refreshedCategoryList);
+                setOpen(false);
+              }}
+            />
+          </DrawerContent>
+        </Drawer>
+      );
+    }
+
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button onClick={() => setOpen(true)} className="mt-3 sm:mt-0">
-            <CirclePlus size={14} />{" "}
-            <span className="hidden xs:block text-sm">New Category</span>
-          </Button>
-        </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>New Category</DialogTitle>
-            <DialogDescription aria-describedby="New category form" />
+            <DialogTitle>{editCategoryData ? "Edit Category" : "New Category"}</DialogTitle>
+            <DialogDescription aria-describedby="Category form" />
           </DialogHeader>
           <CategoryForm
             editCategoryData={editCategoryData}
@@ -121,43 +152,10 @@ export default function Voglios() {
     );
   };
 
-  const MobileDialog = () => {
-    return (
-      <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerTrigger asChild>
-          <Button>
-            <CirclePlus size={14} /> <span className="hidden xs:block">Add new</span>
-          </Button>
-        </DrawerTrigger>
-        <DrawerContent className="mb-5 px-5">
-          <DrawerHeader className="text-left">
-            <DrawerTitle>New Voglio</DrawerTitle>
-          </DrawerHeader>
-          <DrawerDescription aria-describedby="New voglio form"/>
-          <CategoryForm
-            editCategoryData={editCategoryData}
-            onCreateCategory={(newCategory) => {
-              setOpen(false);
-              setCategoryList([...categoryList, newCategory]);
-            }}
-            onUpdateCategory={(editedCategory) => {
-              let refreshedCategoryList = categoryList.map((category) =>
-                category.id === editedCategory.id ? editedCategory : category
-              );
-              setCategoryList(refreshedCategoryList);
-              setOpen(false);
-            }}
-          />
-        </DrawerContent>
-      </Drawer>
-    );
-  };
-
   return (
     <>
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold">Collections</h2>
-        {isSmallDevice ? <MobileDialog /> : <DesktopDialog />}
       </div>
       <p className="mt-4 h-2 w-full border-b border-gray-300"></p>
       {loading ? (
@@ -168,9 +166,11 @@ export default function Voglios() {
         </div>
       ) : (
         <div className="mt-8 mb-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <NewCategoryCard />
           {categoryListItems}
         </div>
       )}
+      <DialogForm />
     </>
   );
 }
