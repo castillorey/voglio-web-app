@@ -79,15 +79,21 @@ export default function Category() {
   return (
     <>
       <div className="flex flex-col justify-center items-center">
-        <Button variant="secondary" size="icon" className="size-8 self-start"
-        onClick={() => navigate("/collections")}>
-        <ChevronLeft />
-      </Button>
+        <Button
+          variant="secondary"
+          size="icon"
+          className="size-8 self-start"
+          onClick={() => navigate("/collections")}
+        >
+          <ChevronLeft />
+        </Button>
         <div className="flex items-center justify-center p-6 text-center text-6xl rounded-full bg-gray-100">
           <span>{categoryData.emojiCode}</span>
         </div>
         <div className="mt-2">
-          <h2 className="text-3xl font-bold text-center">{categoryData.name}</h2>
+          <h2 className="text-3xl font-bold text-center">
+            {categoryData.name}
+          </h2>
           <p className="mt-2 text-sm text-center">{categoryData.description}</p>
         </div>
       </div>
@@ -102,7 +108,7 @@ export default function Category() {
             setOpenNewVoglioDialog(true);
           }}
         >
-            <Plus strokeWidth="1.5" className="size-16 text-gray-300" />
+          <Plus strokeWidth="1.5" className="size-16 text-gray-300" />
         </Card>
         {voglioList.map((voglio) => (
           <VoglioPreview
@@ -132,10 +138,10 @@ export default function Category() {
           editVoglioData={editVoglioData}
           onUpdateVoglio={(editedVoglio) => {
             let refreshedVoglioList = voglioList.map((voglio) =>
-              voglio.id === editedVoglio.id ? editedVoglio : voglio
+              voglio.id === editedVoglio.id ? editedVoglio : voglio,
             );
             refreshedVoglioList = refreshedVoglioList.filter(
-              (voglio) => categoryData.id?.toString() == voglio.categoryId
+              (voglio) => categoryData.id?.toString() == voglio.categoryId,
             );
             setVoglioList(refreshedVoglioList);
             setOpenNewVoglioDialog(false);

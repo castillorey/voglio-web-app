@@ -171,11 +171,11 @@ export default function UserCategory() {
     <>
       <Button
         variant="secondary"
-        size="sm"
-        className="self-start"
+        size="icon"
+        className="size-8 self-start"
         onClick={() => navigate(-1)}
       >
-        <ChevronLeft className="mr-1 size-4" /> Back
+        <ChevronLeft/>
       </Button>
 
       <div className="flex items-center gap-3 mt-4">

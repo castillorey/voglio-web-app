@@ -3,7 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Users } from "lucide-react";
 import supabase from "../supabase-client";
-import { getProfileByUsername, getCurrentUserId, IProfile } from "../services/profile";
+import {
+  getProfileByUsername,
+  getCurrentUserId,
+  IProfile,
+} from "../services/profile";
 import { followUser, unfollowUser, isFollowing } from "../services/follow";
 import CategoryPreview from "../components/category/CategoryPreview";
 import { ICategory } from "@/components/voglio/VoglioForm";
@@ -58,7 +62,7 @@ export default function UserCollections() {
           description: item.description,
           vogliosCount: item.voglio?.[0]?.count ?? 0,
           isPrivate: item.is_private,
-        }))
+        })),
       );
     } catch (err: any) {
       setError(err.message);
@@ -81,15 +85,23 @@ export default function UserCollections() {
     }
   };
 
-  if (loading) return <div className="mt-8 text-center text-gray-500">Loading...</div>;
-  if (error) return <div className="mt-8 text-center text-red-500">{error}</div>;
-  if (!profile) return <div className="mt-8 text-center text-gray-500">User not found</div>;
+  if (loading)
+    return <div className="mt-8 text-center text-gray-500">Loading...</div>;
+  if (error)
+    return <div className="mt-8 text-center text-red-500">{error}</div>;
+  if (!profile)
+    return <div className="mt-8 text-center text-gray-500">User not found</div>;
 
   const isOwnProfile = currentUserId === profile.id;
 
   return (
     <>
-      <Button variant="secondary" size="icon" className="size-8 self-start" onClick={() => navigate(-1)}>
+      <Button
+        variant="secondary"
+        size="icon"
+        className="size-8 self-start"
+        onClick={() => navigate(-1)}
+      >
         <ChevronLeft />
       </Button>
 
@@ -98,7 +110,9 @@ export default function UserCollections() {
           <Users className="text-gray-500" />
         </div>
         <div className="flex-1">
-          <h2 className="text-xl font-bold">{profile.display_name || profile.username}</h2>
+          <h2 className="text-xl font-bold">
+            {profile.display_name || profile.username}
+          </h2>
           <p className="text-sm text-gray-500">@{profile.username}</p>
         </div>
         {!isOwnProfile && currentUserId && (
@@ -123,7 +137,7 @@ export default function UserCollections() {
               navigate(
                 isOwnProfile
                   ? `/category/${category.id}`
-                  : `/u/${username}/category/${category.id}`
+                  : `/u/${username}/category/${category.id}`,
               )
             }
           >
@@ -136,7 +150,9 @@ export default function UserCollections() {
           </div>
         ))}
         {categoryList.length === 0 && (
-          <p className="col-span-full text-center text-gray-500 mt-8">No public collections yet</p>
+          <p className="col-span-full text-center text-gray-500 mt-8">
+            No public collections yet
+          </p>
         )}
       </div>
     </>
