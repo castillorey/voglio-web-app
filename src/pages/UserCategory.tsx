@@ -187,6 +187,11 @@ export default function UserCategory() {
 
       <p className="mt-6 h-2 w-full border-b border-gray-300" />
 
+      <div className="flex items-center gap-2 mt-4">
+        <span className="text-xl">{category.emoji_code}</span>
+        <h3 className="text-lg font-bold">{category.name}</h3>
+      </div>
+
       <div className="mt-3 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
@@ -232,8 +237,6 @@ export default function UserCategory() {
             isReadOnly
             isTaken={takenSet.has(voglio.id!)}
             onToggleTaken={() => handleToggleTaken(voglio.id!)}
-            categoryEmoji={category.emoji_code}
-            categoryName={category.name}
           />
         ))}
         {filteredAndSorted.length === 0 && (

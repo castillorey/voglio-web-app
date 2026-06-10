@@ -147,12 +147,6 @@ export default function VoglioPreview({
     <Card className="relative rounded-md">
       {isOwner && (isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />)}
       <CardContent>
-        {(categoryEmoji || categoryName) && (
-          <span className="absolute top-1.5 left-1.5 z-10 flex items-center gap-1 bg-gray-200/80 backdrop-blur-sm rounded-full px-2 py-0.5 text-xs font-medium text-gray-700 shadow-sm">
-            {categoryEmoji && <span className="text-sm">{categoryEmoji}</span>}
-            {categoryName && <span className="truncate max-w-[100px]">{categoryName}</span>}
-          </span>
-        )}
         {props.imageUrl ? (
           <img
             src={props.imageUrl}
