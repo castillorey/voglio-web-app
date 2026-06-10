@@ -10,10 +10,9 @@ import { User, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const navigationMenuItems = [
-  // { title: "Voglios", href: "/", icon: LayoutGrid },
-  { title: "My Collections", href: "/collections", icon: Users },
+  { title: "Voglios", href: "/collections", icon: Users },
   { title: "Friends", href: "/friends", icon: Users },
-  { title: "Account", href: "/account", icon: User },
+  { title: "Profile", href: "/account", icon: User },
 ];
 
 export default function Navbar() {

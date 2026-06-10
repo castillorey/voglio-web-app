@@ -5,6 +5,13 @@ export interface IProfile {
   username: string;
   display_name: string | null;
   avatar_url: string | null;
+  birth_date: string | null;
+  gender: string | null;
+  shirt_size: string | null;
+  pants_size: string | null;
+  shoe_size: string | null;
+  favorite_color: string | null;
+  favorite_food: string | null;
   created_at: string;
 }
 
@@ -34,6 +41,13 @@ export const createProfile = async (profile: {
   id: string;
   username: string;
   display_name?: string;
+  birth_date?: string | null;
+  gender?: string | null;
+  shirt_size?: string | null;
+  pants_size?: string | null;
+  shoe_size?: string | null;
+  favorite_color?: string | null;
+  favorite_food?: string | null;
 }) => {
   const { data, error } = await supabase
     .from("profiles")
@@ -47,7 +61,18 @@ export const createProfile = async (profile: {
 
 export const updateProfile = async (
   userId: string,
-  updates: { display_name?: string; avatar_url?: string; username?: string }
+  updates: {
+    display_name?: string;
+    avatar_url?: string;
+    username?: string;
+    birth_date?: string | null;
+    gender?: string | null;
+    shirt_size?: string | null;
+    pants_size?: string | null;
+    shoe_size?: string | null;
+    favorite_color?: string | null;
+    favorite_food?: string | null;
+  }
 ) => {
   const { data, error } = await supabase
     .from("profiles")
