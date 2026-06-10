@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { CirclePlus } from "lucide-react";
+import { Plus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -94,7 +94,7 @@ export default function Voglios() {
         setOpen(true);
       }}
     >
-        <CirclePlus className="size-16 text-gray-300" />
+        <Plus strokeWidth="1.5" className="size-16 text-gray-300" />
     </Card>
   );
 

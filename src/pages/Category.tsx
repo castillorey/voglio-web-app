@@ -3,7 +3,8 @@ import { useNavigate } from "react-router";
 import supabase from "../supabase-client";
 import { useLocation, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
-import { CirclePlus, ChevronLeft } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Plus, ChevronLeft } from "lucide-react";
 
 import VoglioForm, {
   ICategory,
@@ -92,44 +93,17 @@ export default function Category() {
       </div>
       <p className="mt-2 h-2 w-full border-b border-gray-300"></p>
 
-      <div className="mt-4 flex justify-between items-center">
-        <p className="text-lg font-bold">Voglios</p>
-        <Button
+      {/* Voglio list */}
+      <div className="mt-6 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <Card
+          className="rounded-md overflow-hidden cursor-pointer border-2 border-dashed border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-colors flex items-center justify-center"
           onClick={() => {
             setEditVoglioData(null);
             setOpenNewVoglioDialog(true);
           }}
         >
-          <CirclePlus size={12} />{" "}
-          <span className="hidden xs:block text-xs">Add new</span>
-        </Button>
-        <VoglioDialog
-          open={openNewVoglioDialog}
-          onClose={() => setOpenNewVoglioDialog(false)}
-        >
-          <VoglioForm
-            categoryId={categoryData.id}
-            onCreateVoglio={(newVoglio) => {
-              setVoglioList([...voglioList, newVoglio]);
-              setOpenNewVoglioDialog(false);
-            }}
-            editVoglioData={editVoglioData}
-            onUpdateVoglio={(editedVoglio) => {
-              let refreshedVoglioList = voglioList.map((voglio) =>
-                voglio.id === editedVoglio.id ? editedVoglio : voglio
-              );
-              refreshedVoglioList = refreshedVoglioList.filter(
-                (voglio) => categoryData.id?.toString() == voglio.categoryId
-              );
-              setVoglioList(refreshedVoglioList);
-              setOpenNewVoglioDialog(false);
-            }}
-          />
-        </VoglioDialog>
-      </div>
-
-      {/* Voglio list */}
-      <div className="mt-6 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <Plus strokeWidth="1.5" className="size-16 text-gray-300" />
+        </Card>
         {voglioList.map((voglio) => (
           <VoglioPreview
             key={voglio.id}
@@ -144,6 +118,30 @@ export default function Category() {
           />
         ))}
       </div>
+
+      <VoglioDialog
+        open={openNewVoglioDialog}
+        onClose={() => setOpenNewVoglioDialog(false)}
+      >
+        <VoglioForm
+          categoryId={categoryData.id}
+          onCreateVoglio={(newVoglio) => {
+            setVoglioList([...voglioList, newVoglio]);
+            setOpenNewVoglioDialog(false);
+          }}
+          editVoglioData={editVoglioData}
+          onUpdateVoglio={(editedVoglio) => {
+            let refreshedVoglioList = voglioList.map((voglio) =>
+              voglio.id === editedVoglio.id ? editedVoglio : voglio
+            );
+            refreshedVoglioList = refreshedVoglioList.filter(
+              (voglio) => categoryData.id?.toString() == voglio.categoryId
+            );
+            setVoglioList(refreshedVoglioList);
+            setOpenNewVoglioDialog(false);
+          }}
+        />
+      </VoglioDialog>
     </>
   );
 }
