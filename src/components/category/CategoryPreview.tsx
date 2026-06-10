@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -23,10 +23,10 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { Ellipsis, Pencil, Delete } from "lucide-react";
+import { Ellipsis, Pencil, Delete, Image as ImageIcon } from "lucide-react";
 
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import supabase from "../../supabase-client";
 import { ICategory } from "../voglio/VoglioForm";
@@ -44,7 +44,27 @@ export default function CategoryPreview({
 }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [thumbnails, setThumbnails] = useState<string[]>([]);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
+
+  useEffect(() => {
+    if (props.id === null) return;
+    fetchThumbnails();
+  }, [props.id]);
+
+  const fetchThumbnails = async () => {
+    const { data } = await supabase
+      .from("voglio")
+      .select("image_url")
+      .eq("category_id", props.id)
+      .eq("is_private", false)
+      .not("image_url", "is", null)
+      .limit(4);
+
+    if (data) {
+      setThumbnails(data.map((v) => v.image_url).filter(Boolean));
+    }
+  };
 
   const handleOnDelete = async () => {
     if (props.id === null) return;
@@ -70,7 +90,7 @@ export default function CategoryPreview({
           <Button
             size="sm"
             variant="outline"
-            className="rounded-lg absolute top-2 right-3"
+            className="rounded-lg absolute top-2 right-3 z-10"
           >
             <Ellipsis />
           </Button>
@@ -108,7 +128,7 @@ export default function CategoryPreview({
           <Button
             size="sm"
             variant="outline"
-            className="rounded-lg absolute top-2 right-3"
+            className="rounded-lg absolute top-2 right-3 z-10"
           >
             <Ellipsis />
           </Button>
@@ -140,21 +160,55 @@ export default function CategoryPreview({
       </Drawer>
     );
   };
+
+  const navigateTo = () => {
+    if (isReadOnly) return;
+    navigate(`/category/${props.id}`);
+  };
+
   return (
-    <Card className="relative rounded-md">
+    <Card className="relative rounded-md overflow-hidden">
       {!isReadOnly && (isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />)}
-      <CardContent
-        className="p-0 cursor-pointer"
-        onClick={() => !isReadOnly && navigate(`/category/${props.id}`)}
-      >
-        <div className="text-center">
-        <p className="py-4 bg-gray-100 text-6xl">
-          <span>{props.emojiCode}</span>
-        </p>
-        <h3 className="mt-2 font-bold text-md">{props.name}</h3>
-        <p className="mt-2 mb-2 text-xs text-gray-400">{props.vogliosCount} voglios</p>
+
+      <div className="cursor-pointer" onClick={navigateTo}>
+        {/* Thumbnail grid */}
+        <div className="aspect-[4/3] bg-gray-50 relative">
+          {thumbnails.length > 0 ? (
+            <div className="grid grid-cols-2 w-full h-full">
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className="overflow-hidden">
+                  {thumbnails[i] ? (
+                    <img
+                      src={thumbnails[i]}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-100" />
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <ImageIcon className="size-10 text-gray-300" />
+            </div>
+          )}
+
+          {/* Emoji badge overlapping bottom-center */}
+          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2">
+            <div className="size-12 rounded-full bg-white shadow-md border border-gray-100 flex items-center justify-center text-2xl">
+              <span>{props.emojiCode}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Name and count */}
+        <div className="pt-8 pb-3 px-3 text-center">
+          <h3 className="font-bold text-sm truncate">{props.name}</h3>
+          <p className="text-xs text-gray-400 mt-0.5">{props.vogliosCount} voglios</p>
+        </div>
       </div>
-      </CardContent>
     </Card>
   );
 }

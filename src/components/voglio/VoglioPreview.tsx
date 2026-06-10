@@ -165,10 +165,13 @@ export default function VoglioPreview({
           </div>
         )}
 
-        <div className="flex justify-between items-center">
-          <div>
+        <div className="flex justify-between items-start">
+          <div className="min-w-0 flex-1">
             <p className="mt-2 font-bold text-sm text-gray-700"> {props.name}</p>
-            <p className="mt-1 text-xs text-gray-500"> {props.notes}</p>
+            {props.notes && <p className="mt-1 text-xs text-gray-500"> {props.notes}</p>}
+            {props.price != null && (
+              <p className="mt-2 text-xs font-semibold text-gray-400">${props.price}</p>
+            )}
           </div>
           {!isOwner && (
             <Button
