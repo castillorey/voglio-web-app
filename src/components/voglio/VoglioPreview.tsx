@@ -38,8 +38,6 @@ export default function VoglioPreview({
   isReadOnly,
   isTaken,
   onToggleTaken,
-  categoryEmoji,
-  categoryName,
 }: {
   props: IVoglio;
   onDeleteVoglio: (voglioId: number) => void;
@@ -47,8 +45,6 @@ export default function VoglioPreview({
   isReadOnly?: boolean;
   isTaken?: boolean;
   onToggleTaken?: () => void;
-  categoryEmoji?: string;
-  categoryName?: string;
 }) {
   const [open, setOpen] = useState(false);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");

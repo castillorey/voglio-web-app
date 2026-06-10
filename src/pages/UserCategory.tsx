@@ -189,7 +189,17 @@ export default function UserCategory() {
 
       <div className="flex items-center gap-2 mt-4">
         <span className="text-xl">{category.emoji_code}</span>
-        <h3 className="text-lg font-bold">{category.name}</h3>
+        <div>
+          <h3 className="text-lg font-bold">{category.name}</h3>
+          {!loading && (
+            <p className="text-xs text-gray-400">
+              {voglioList.length} voglios
+              {voglioList.some((v) => v.isTaken) && (
+                <> · {voglioList.filter((v) => v.isTaken).length} taken</>
+              )}
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="mt-3 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
