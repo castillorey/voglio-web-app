@@ -1,7 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Users, ArrowUpDown, BookmarkCheck } from "lucide-react";
+import { ChevronLeft, ArrowUpDown, BookmarkCheck } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -168,9 +169,12 @@ export default function UserCategory() {
       </Button>
 
       <div className="flex items-center gap-3 mt-4">
-        <div className="flex items-center justify-center size-12 rounded-full bg-gray-100">
-          <Users className="text-gray-500" />
-        </div>
+        <Avatar className="size-12">
+          <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || ""} />
+          <AvatarFallback className="text-lg bg-gray-100">
+            {(profile.display_name || profile.username).slice(0, 2).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
         <h2 className="text-l font-bold">{profile.display_name || profile.username}</h2>
       </div>
 

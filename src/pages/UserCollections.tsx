@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Users } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import supabase from "../supabase-client";
 import {
   getProfileByUsername,
@@ -106,9 +107,12 @@ export default function UserCollections() {
       </Button>
 
       <div className="flex items-start gap-3 mt-4">
-        <div className="flex items-center justify-center size-12 rounded-full bg-gray-100">
-          <Users className="text-gray-500" />
-        </div>
+        <Avatar className="size-12">
+          <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || ""} />
+          <AvatarFallback className="text-lg bg-gray-100">
+            {(profile.display_name || profile.username).slice(0, 2).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
         <div className="flex-1">
           <h2 className="text-xl font-bold">
             {profile.display_name || profile.username}

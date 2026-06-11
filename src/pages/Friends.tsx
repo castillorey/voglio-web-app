@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Users, UserPlus, UserCheck, UserX } from "lucide-react";
+import { Search, UserPlus, UserCheck, UserX } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { searchProfiles, getProfile, getCurrentUserId, IProfile } from "../services/profile";
 import { followUser, unfollowUser, getFollowing } from "../services/follow";
 
@@ -100,9 +101,12 @@ export default function Friends() {
               className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50"
               onClick={() => navigate(`/u/${profile.username}`)}
             >
-              <div className="flex items-center justify-center size-10 rounded-full bg-gray-100">
-                <Users className="size-5 text-gray-500" />
-              </div>
+              <Avatar className="size-10">
+                <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || ""} />
+                <AvatarFallback className="text-xs bg-gray-100">
+                  {(profile.display_name || profile.username).slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-sm truncate">
                   {profile.display_name || profile.username}
@@ -147,9 +151,12 @@ export default function Friends() {
                   className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50"
                   onClick={() => navigate(`/u/${profile.username}`)}
                 >
-                  <div className="flex items-center justify-center size-10 rounded-full bg-gray-100">
-                    <Users className="size-5 text-gray-500" />
-                  </div>
+                  <Avatar className="size-10">
+                    <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || ""} />
+                    <AvatarFallback className="text-xs bg-gray-100">
+                      {(profile.display_name || profile.username).slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm truncate">
                       {profile.display_name || profile.username}
