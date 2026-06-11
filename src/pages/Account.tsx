@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import supabase from "../supabase-client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import { Camera } from "lucide-react";
 import { getProfile, createProfile, updateProfile, getCurrentUserId, IProfile } from "../services/profile";
 import { getFollowing } from "../services/follow";
 
@@ -28,6 +30,9 @@ export default function Perfil() {
     const [followingCount, setFollowingCount] = useState(0);
     const [saving, setSaving] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [uploading, setUploading] = useState(false);
+    const avatarInputRef = useRef<HTMLInputElement>(null);
+    const CDNURL = import.meta.env.VITE_CDNURL;
 
     useEffect(() => {
         if (!currentUserId) return;
@@ -103,6 +108,31 @@ export default function Perfil() {
         setSaving(false);
     };
 
+    const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || !currentUserId || !profile) return;
+
+        setUploading(true);
+        try {
+            const fileName = "avatars/" + currentUserId + "/" + uuidv4();
+            const { error } = await supabase.storage
+                .from("images")
+                .upload(fileName, file);
+
+            if (error) {
+                console.log(error);
+                return;
+            }
+
+            const avatarUrl = CDNURL + fileName;
+            const updated = await updateProfile(currentUserId, { avatar_url: avatarUrl });
+            setProfile(updated);
+        } catch (err) {
+            console.log(err);
+        }
+        setUploading(false);
+    };
+
     const signOut = async () => {
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
@@ -141,10 +171,22 @@ export default function Perfil() {
             <p className="mt-2 h-2 w-full border-b border-gray-300" />
 
             <div className="flex items-start gap-3 mt-4">
-                <Avatar className="size-12">
-                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                    <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
+                <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
+                    <Avatar className="size-16">
+                        <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || ""} />
+                        <AvatarFallback className="text-lg">
+                            {profile.display_name?.slice(0, 2).toUpperCase() || "U"}
+                        </AvatarFallback>
+                    </Avatar>
+                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Camera className="size-5 text-white" />
+                    </div>
+                    {uploading && (
+                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50">
+                            <span className="text-xs text-white">...</span>
+                        </div>
+                    )}
+                </div>
                 <div className="flex flex-col gap-1">
                     <span className="font-semibold tracking-tight leading-none text-lg">
                         {profile.display_name}
@@ -155,6 +197,13 @@ export default function Perfil() {
                     <span className="text-sm text-gray-500">{followingCount} following</span>
                 </div>
             </div>
+            <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/png, image/jpeg, image/webp"
+                onChange={handleAvatarUpload}
+                className="sr-only"
+            />
 
             <div className="mt-6 space-y-5">
                 <div>

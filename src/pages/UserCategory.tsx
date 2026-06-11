@@ -1,8 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ChevronLeft, Users, Search, ArrowUpDown, BookmarkCheck } from "lucide-react";
+import { ChevronLeft, Users, ArrowUpDown, BookmarkCheck } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -34,22 +33,12 @@ export default function UserCategory() {
   const [takenSet, setTakenSet] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const [takenFilter, setTakenFilter] = useState("all");
   const currentUserId = getCurrentUserId();
 
   const filteredAndSorted = useMemo(() => {
     let list = [...voglioList];
-
-    if (search) {
-      const q = search.toLowerCase();
-      list = list.filter(
-        (v) =>
-          v.name.toLowerCase().includes(q) ||
-          (v.notes && v.notes.toLowerCase().includes(q))
-      );
-    }
 
     if (takenFilter === "taken") {
       list = list.filter((v) => v.isTaken);
@@ -72,7 +61,7 @@ export default function UserCategory() {
     }
 
     return list;
-  }, [voglioList, search, sortBy, takenFilter]);
+  }, [voglioList, sortBy, takenFilter]);
 
   useEffect(() => {
     if (!username || !categoryId) return;
@@ -202,16 +191,7 @@ export default function UserCategory() {
         </div>
       </div>
 
-      <div className="mt-3 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
-          <Input
-            placeholder="Search voglios..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-8 h-9 text-sm"
-          />
-        </div>
+      <div className="mt-3 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center sm:justify-end">
         <Select value={sortBy} onValueChange={setSortBy}>
           <SelectTrigger className="w-full sm:w-[160px] h-9 text-sm">
             <ArrowUpDown className="size-3.5 mr-1" />
@@ -253,7 +233,7 @@ export default function UserCategory() {
           <p className="col-span-full text-center text-gray-500 mt-8">
             {voglioList.length === 0
               ? "No public voglios in this category"
-              : "No voglios match your search"}
+              : "No voglios match this filter"}
           </p>
         )}
       </div>
