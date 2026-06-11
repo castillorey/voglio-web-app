@@ -114,13 +114,14 @@ export default function Perfil() {
 
         setUploading(true);
         try {
-            const fileName = "avatars/" + currentUserId + "/" + uuidv4();
+            const fileName = currentUserId + "/avatars/" + uuidv4();
             const { error } = await supabase.storage
                 .from("images")
                 .upload(fileName, file);
 
             if (error) {
-                console.log(error);
+                console.error(error);
+                setUploading(false);
                 return;
             }
 
@@ -128,7 +129,7 @@ export default function Perfil() {
             const updated = await updateProfile(currentUserId, { avatar_url: avatarUrl });
             setProfile(updated);
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
         setUploading(false);
     };
@@ -144,7 +145,7 @@ export default function Perfil() {
     if (!profile) {
         return (
             <>
-                <h2 className="text-xl font-bold">Perfil</h2>
+                <h2 className="text-xl font-bold">Profile</h2>
                 <p className="mt-2 text-sm text-gray-500">Set up your profile to get started</p>
                 <div className="mt-4 space-y-3">
                     <div>
