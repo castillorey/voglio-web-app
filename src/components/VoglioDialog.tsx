@@ -27,7 +27,7 @@ type voglioFormProps = {
   }>;
 };
 export default function VoglioDialog(props: voglioFormProps) {
-  const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
 
   const MobileDrawerForm = () => {
     return (

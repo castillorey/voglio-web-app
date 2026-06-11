@@ -29,7 +29,7 @@ export default function Voglios() {
   const [editCategoryData, setEditCategoryData] = useState<ICategory | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
   const currentUserId = getCurrentUserId();
 
   useEffect(() => {

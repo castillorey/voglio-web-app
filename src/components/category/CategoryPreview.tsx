@@ -45,7 +45,7 @@ export default function CategoryPreview({
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [thumbnails, setThumbnails] = useState<string[]>([]);
-  const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
 
   useEffect(() => {
     if (props.id === null) return;

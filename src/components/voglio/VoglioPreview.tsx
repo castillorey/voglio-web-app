@@ -47,7 +47,7 @@ export default function VoglioPreview({
   onToggleTaken?: () => void;
 }) {
   const [open, setOpen] = useState(false);
-  const isSmallDevice = useMediaQuery("only screen and (max-width : 400px)");
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
   const currentUserId = getCurrentUserId();
   const isOwner = !isReadOnly && !!currentUserId && currentUserId === props.userId;
 
