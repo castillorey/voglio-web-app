@@ -141,7 +141,7 @@ export default function UserCollections() {
               navigate(
                 isOwnProfile
                   ? `/category/${category.id}`
-                  : `/u/${username}/category/${category.id}`,
+                  : `/friends/u/${username}/category/${category.id}`,
               )
             }
           >

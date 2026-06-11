@@ -95,7 +95,7 @@ export default function VogliosFeed() {
                 <CardContent className="p-0">
                   <div
                     className="flex items-center gap-2 px-3 py-2 border-b border-gray-100 cursor-pointer hover:bg-gray-50"
-                    onClick={() => profile && navigate(`/u/${profile.username}`)}
+                    onClick={() => profile && navigate(`/friends/u/${profile.username}`)}
                   >
                     <div className="flex items-center justify-center size-7 rounded-full bg-gray-200 shrink-0">
                       <Users className="size-3 text-gray-500" />
@@ -106,7 +106,7 @@ export default function VogliosFeed() {
                   </div>
                   <div
                     className="text-center cursor-pointer"
-                    onClick={() => profile && navigate(`/u/${profile.username}/category/${category.id}`)}
+                    onClick={() => profile && navigate(`/friends/u/${profile.username}/category/${category.id}`)}
                   >
                     <p className="pt-4 pb-3 bg-gray-100 text-5xl">
                       <span>{category.emoji_code}</span>

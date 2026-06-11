@@ -43,7 +43,7 @@ export default function Wrapper() {
     if (authenticated) {
       return (
         <div className="flex flex-col min-h-screen">
-          <main className="flex-grow px-6 pt-5 lg:px-8 box-border border-b-[70px]">
+          <main className="flex-grow px-6 pt-5 lg:px-8 box-border pb-28">
             <Outlet></Outlet>
           </main>
           <Navbar></Navbar>

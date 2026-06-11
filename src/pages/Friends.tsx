@@ -99,7 +99,7 @@ export default function Friends() {
             <div
               key={profile.id}
               className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50"
-              onClick={() => navigate(`/u/${profile.username}`)}
+              onClick={() => navigate(`/friends/u/${profile.username}`)}
             >
               <Avatar className="size-10">
                 <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || ""} />
@@ -149,7 +149,7 @@ export default function Friends() {
                 <div
                   key={profile.id}
                   className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-gray-50"
-                  onClick={() => navigate(`/u/${profile.username}`)}
+                  onClick={() => navigate(`/friends/u/${profile.username}`)}
                 >
                   <Avatar className="size-10">
                     <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || ""} />

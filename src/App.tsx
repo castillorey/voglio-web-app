@@ -27,8 +27,8 @@ function App() {
             <Route path="voglio/:voglioId" element={<Voglio />} />
             <Route path="account" element={<Account />} />
             <Route path="friends" element={<Friends />} />
-            <Route path="u/:username" element={<UserCollections />} />
-            <Route path="u/:username/category/:categoryId" element={<UserCategory />} />
+            <Route path="friends/u/:username" element={<UserCollections />} />
+            <Route path="friends/u/:username/category/:categoryId" element={<UserCategory />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
