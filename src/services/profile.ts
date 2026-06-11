@@ -12,6 +12,7 @@ export interface IProfile {
   shoe_size: string | null;
   favorite_color: string | null;
   favorite_food: string | null;
+  zodiac_sign: string | null;
   created_at: string;
 }
 
@@ -48,6 +49,7 @@ export const createProfile = async (profile: {
   shoe_size?: string | null;
   favorite_color?: string | null;
   favorite_food?: string | null;
+  zodiac_sign?: string | null;
 }) => {
   const { data, error } = await supabase
     .from("profiles")
@@ -72,6 +74,7 @@ export const updateProfile = async (
     shoe_size?: string | null;
     favorite_color?: string | null;
     favorite_food?: string | null;
+    zodiac_sign?: string | null;
   }
 ) => {
   const { data, error } = await supabase
@@ -101,3 +104,13 @@ export const getCurrentUserId = () => {
   if (!session) return null;
   return JSON.parse(session)?.user?.id as string | null;
 };
+
+export async function fetchColorOptions(): Promise<{ name: string; hex: string }[]> {
+  const { data, error } = await supabase
+    .from("color_options")
+    .select("name, hex")
+    .order("id");
+
+  if (error) throw error;
+  return data || [];
+}
