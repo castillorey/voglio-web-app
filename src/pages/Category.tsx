@@ -102,9 +102,9 @@ export default function Category() {
         </div>
       </div>
 
-      <div className="mt-6 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="mt-6 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2">
         <Card
-          className="rounded-[20px] overflow-hidden cursor-pointer border-2 border-dashed border-[#E0E1E8] hover:border-[#7B61FF]/40 hover:bg-[#F5F3FF] transition-all flex items-center justify-center min-h-[200px]"
+          className="rounded-[20px] overflow-hidden cursor-pointer border-2 border-dashed border-[#E0E1E8] hover:border-[#7B61FF]/40 hover:bg-[#F5F3FF] transition-all flex items-center justify-center min-h-[240px]"
           onClick={() => {
             setEditVoglioData(null);
             setOpenNewVoglioDialog(true);

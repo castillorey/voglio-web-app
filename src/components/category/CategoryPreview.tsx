@@ -170,7 +170,7 @@ export default function CategoryPreview({
       {!isReadOnly && (isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />)}
 
       <div className="cursor-pointer" onClick={navigateTo}>
-        <div className="aspect-[4/3] bg-[#F8F7FC] relative">
+        <div className="aspect-[1/1] bg-[#F8F7FC] relative">
           {thumbnails.length > 0 ? (
             <div className="grid grid-cols-2 w-full h-full">
               {[0, 1, 2, 3].map((i) => (

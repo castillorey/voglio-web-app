@@ -87,7 +87,7 @@ export default function VogliosFeed() {
           <p className="text-xs text-[#6B6E85] mt-1">Follow users to see their public categories here</p>
         </div>
       ) : (
-        <div className="mt-6 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-6 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2">
           {categories.map((category) => {
             const profile = profileMap[category.user_id];
             return (

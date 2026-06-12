@@ -144,7 +144,7 @@ export default function UserCollections() {
         <p className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wide">Public collections</p>
       </div>
 
-      <div className="mt-4 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="mt-4 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2">
         {categoryList.map((category) => (
           <div
             key={category.id}

@@ -143,7 +143,7 @@ export default function VoglioPreview({
       {isOwner && (isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />)}
       <CardContent className="p-0">
         {props.imageUrl ? (
-          <div className="w-full h-36 overflow-hidden bg-[#F8F7FC]">
+          <div className="w-full h-44 overflow-hidden bg-[#F8F7FC]">
             <img
               src={props.imageUrl}
               alt=""
@@ -151,7 +151,7 @@ export default function VoglioPreview({
             />
           </div>
         ) : (
-          <div className="w-full h-36 flex justify-center items-center bg-[#F8F7FC]">
+          <div className="w-full h-44 flex justify-center items-center bg-[#F8F7FC]">
             <Image className="size-8 text-[#C4C7D3]" />
           </div>
         )}
