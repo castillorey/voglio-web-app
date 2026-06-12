@@ -169,7 +169,7 @@ export default function Friends() {
   const displayList = getFilteredProfiles();
 
   return (
-    <div className="min-h-screen relative" style={{ background: "#F8F8FB" }}>
+    <div className="relative">
       {/* Toast notification banner */}
       {toastMessage && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 bg-[#1B1B2D] text-white text-sm rounded-full shadow-lg flex items-center gap-2 border border-white/10 animate-in fade-in slide-in-from-top-4 duration-300">
@@ -178,7 +178,7 @@ export default function Friends() {
         </div>
       )}
 
-      <div className="mx-auto" style={{ maxWidth: 430, padding: "20px 20px 120px 20px" }}>
+      <div>
         
         {/* Search bar with absolute icon */}
         <div className="relative flex items-center mt-5">

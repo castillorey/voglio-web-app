@@ -12,6 +12,9 @@ export default {
             ...defaultTheme.screens
   	},
   	extend: {
+  		fontFamily: {
+  			display: ['"DM Serif Display"', 'serif'],
+  		},
   		colors: {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',

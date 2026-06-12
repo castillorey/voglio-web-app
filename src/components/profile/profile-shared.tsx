@@ -23,8 +23,8 @@ export function ProfileRow({ label, value }: { label: string; value: string | nu
   if (!value) return null;
   return (
     <div className="flex items-center justify-between py-3 border-b border-[#F3F4F7] last:border-b-0">
-      <span className="text-sm text-[#8C8F9E]">{label}</span>
-      <span className="text-sm font-medium text-[#1B1B2D]">{value}</span>
+      <span className="text-sm text-[#6B6E85]">{label}</span>
+      <span className="text-sm font-semibold text-[#1B1B2D]">{value}</span>
     </div>
   );
 }

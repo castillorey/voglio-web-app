@@ -87,53 +87,64 @@ export default function UserCollections() {
   };
 
   if (loading)
-    return <div className="mt-8 text-center text-gray-500">Loading...</div>;
+    return <div className="mt-8 text-center text-[#6B6E85] text-sm">Loading...</div>;
   if (error)
-    return <div className="mt-8 text-center text-red-500">{error}</div>;
+    return <div className="mt-8 text-center text-red-500 text-sm">{error}</div>;
   if (!profile)
-    return <div className="mt-8 text-center text-gray-500">User not found</div>;
+    return <div className="mt-8 text-center text-[#6B6E85] text-sm">User not found</div>;
 
   const isOwnProfile = currentUserId === profile.id;
 
   return (
     <>
       <Button
-        variant="secondary"
+        variant="ghost"
         size="icon"
-        className="size-8 self-start"
+        className="size-8 self-start text-[#6B6E85] hover:text-[#1B1B2D]"
         onClick={() => navigate(-1)}
       >
-        <ChevronLeft />
+        <ChevronLeft className="size-5" />
       </Button>
 
-      <div className="flex items-start gap-3 mt-4">
-        <Avatar className="size-12">
-          <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || ""} />
-          <AvatarFallback className="text-lg bg-gray-100">
-            {(profile.display_name || profile.username).slice(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex-1">
-          <h2 className="text-xl font-bold">
+      <div className="flex items-start gap-4 mt-4">
+        <div className="relative shrink-0">
+          <div className="w-14 h-14 rounded-full p-[2px]" style={{ background: "linear-gradient(135deg, #FF59C7, #7B61FF)" }}>
+            <div className="w-full h-full rounded-full overflow-hidden bg-white">
+              <Avatar className="w-full h-full">
+                <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || ""} />
+                <AvatarFallback className="text-lg font-bold bg-[#F1EEFF] text-[#7B61FF]">
+                  {(profile.display_name || profile.username).slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+          </div>
+        </div>
+        <div className="flex-1 pt-1">
+          <h2 className="font-display text-xl text-[#1B1B2D]">
             {profile.display_name || profile.username}
           </h2>
-          <p className="text-sm text-gray-500">@{profile.username}</p>
+          <p className="text-sm text-[#6B6E85]">@{profile.username}</p>
         </div>
         {!isOwnProfile && currentUserId && (
           <Button
             variant={following ? "outline" : "default"}
             size="sm"
             onClick={handleFollow}
+            className={following
+              ? "rounded-full border-[#E6E2FF] text-[#7B61FF] bg-[#F7F5FF] hover:bg-[#F0ECFF] text-xs font-bold h-9 px-4"
+              : "rounded-full bg-[#7B61FF] hover:bg-[#6B4EFF] text-white shadow-md shadow-[#7B61FF]/10 text-xs font-bold h-9 px-4"
+            }
           >
-            {following ? "Unfollow" : "Follow"}
+            {following ? "Following" : "Follow"}
           </Button>
         )}
       </div>
 
-      <p className="mt-4 h-2 w-full border-b border-gray-300" />
-      <p className="mt-3 text-sm text-gray-500">Public collections</p>
+      <div className="mt-6">
+        <p className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wide">Public collections</p>
+      </div>
 
-      <div className="mt-4 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="mt-4 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {categoryList.map((category) => (
           <div
             key={category.id}
@@ -154,7 +165,7 @@ export default function UserCollections() {
           </div>
         ))}
         {categoryList.length === 0 && (
-          <p className="col-span-full text-center text-gray-500 mt-8">
+          <p className="col-span-full text-center text-[#6B6E85] text-sm mt-8">
             No public collections yet
           </p>
         )}

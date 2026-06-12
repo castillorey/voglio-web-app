@@ -78,38 +78,46 @@ export default function Category() {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col items-center">
         <Button
-          variant="secondary"
+          variant="ghost"
           size="icon"
-          className="size-8 self-start"
+          className="size-8 self-start text-[#6B6E85] hover:text-[#1B1B2D]"
           onClick={() => navigate("/collections")}
         >
-          <ChevronLeft />
+          <ChevronLeft className="size-5" />
         </Button>
-        <div className="flex items-center justify-center p-6 text-center text-6xl rounded-full bg-gray-100">
+
+        <div className="flex items-center justify-center mt-2 w-16 h-16 rounded-full bg-[#F1EEFF] text-3xl">
           <span>{categoryData.emojiCode}</span>
         </div>
-        <div className="mt-2">
-          <h2 className="text-3xl font-bold text-center">
+
+        <div className="mt-3 text-center">
+          <h2 className="font-display text-2xl text-[#1B1B2D]">
             {categoryData.name}
           </h2>
-          <p className="mt-2 text-sm text-center">{categoryData.description}</p>
+          {categoryData.description && (
+            <p className="mt-1 text-sm text-[#6B6E85]">{categoryData.description}</p>
+          )}
         </div>
       </div>
-      <p className="mt-2 h-2 w-full border-b border-gray-300"></p>
 
-      {/* Voglio list */}
-      <div className="mt-6 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="mt-6 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <Card
-          className="rounded-md overflow-hidden cursor-pointer border-2 border-dashed border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-colors flex items-center justify-center"
+          className="rounded-[20px] overflow-hidden cursor-pointer border-2 border-dashed border-[#E0E1E8] hover:border-[#7B61FF]/40 hover:bg-[#F5F3FF] transition-all flex items-center justify-center min-h-[200px]"
           onClick={() => {
             setEditVoglioData(null);
             setOpenNewVoglioDialog(true);
           }}
         >
-          <Plus strokeWidth="1.5" className="size-16 text-gray-300" />
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-12 h-12 rounded-full bg-[#F1EEFF] flex items-center justify-center">
+              <Plus strokeWidth="2" className="size-6 text-[#7B61FF]" />
+            </div>
+            <span className="text-xs font-semibold text-[#6B6E85]">New voglio</span>
+          </div>
         </Card>
+
         {voglioList.map((voglio) => (
           <VoglioPreview
             key={voglio.id}

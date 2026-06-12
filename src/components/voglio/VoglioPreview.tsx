@@ -67,31 +67,30 @@ export default function VoglioPreview({
         <DropdownMenuTrigger asChild>
           <Button
             size="sm"
-            variant="outline"
-            className="rounded-lg absolute top-2 right-3"
+            variant="ghost"
+            className="rounded-full absolute top-2 right-2 z-10 size-8 text-[#6B6E85] hover:text-[#1B1B2D] hover:bg-white/80"
           >
-            <Ellipsis />
+            <Ellipsis className="size-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-[200px] text-sm">
-          <DropdownMenuLabel className="text-xs text-gray-800">
-            Actions
-          </DropdownMenuLabel>
+        <DropdownMenuContent align="start" className="w-[180px] rounded-xl border-[#F0F1F6] shadow-lg">
+          <DropdownMenuLabel className="text-xs text-[#6B6E85] font-semibold">Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem
-              className="text-xs"
+              className="text-xs text-[#1B1B2D]"
               onClick={() => OnEditClick(props)}
             >
-              <Pencil />
+              <Pencil className="size-3.5 mr-2" />
               Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              className="text-xs text-red-600"
+              className="text-xs text-red-500"
               onClick={handleOnDelete}
             >
-              <Delete className="text-red-400" /> Delete
+              <Delete className="size-3.5 mr-2 text-red-400" />
+              Delete
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
@@ -105,16 +104,16 @@ export default function VoglioPreview({
         <DrawerTrigger asChild>
           <Button
             size="sm"
-            variant="outline"
-            className="rounded-lg absolute top-2 right-3"
+            variant="ghost"
+            className="rounded-full absolute top-2 right-2 z-10 size-8 text-[#6B6E85] hover:text-[#1B1B2D] hover:bg-white/80"
           >
-            <Ellipsis />
+            <Ellipsis className="size-4" />
           </Button>
         </DrawerTrigger>
-        <DrawerContent className="mt-4 border-t">
+        <DrawerContent className="mt-4 border-t rounded-t-2xl">
           <DrawerTitle aria-describedby="Mobile actions menu" />
           <DrawerDescription aria-describedby="Mobile actions menu" />
-          <Command className="md:min-w-[450px]">
+          <Command className="md:min-w-[450px] rounded-t-2xl">
             <CommandList>
               <CommandGroup heading="Actions">
                 <CommandItem
@@ -140,57 +139,61 @@ export default function VoglioPreview({
   };
 
   return (
-    <Card className="relative rounded-md">
+    <Card className="relative rounded-[20px] border border-[#F0F1F6] overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.04)]">
       {isOwner && (isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />)}
-      <CardContent>
+      <CardContent className="p-0">
         {props.imageUrl ? (
-          <img
-            src={props.imageUrl}
-            alt=""
-            className="w-full h-32 object-cover rounded-md"
-          />
+          <div className="w-full h-36 overflow-hidden bg-[#F8F7FC]">
+            <img
+              src={props.imageUrl}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          </div>
         ) : (
-          <div className="w-full h-32 flex justify-center items-center">
-            <Image color="gray" />
+          <div className="w-full h-36 flex justify-center items-center bg-[#F8F7FC]">
+            <Image className="size-8 text-[#C4C7D3]" />
           </div>
         )}
 
-        <div className="flex justify-between items-center">
-          <div className="min-w-0 flex-1">
-            <p className="mt-2 font-bold text-sm text-gray-700"> {props.name}</p>
-            {props.notes && <p className="mt-1 text-xs text-gray-500"> {props.notes}</p>}
-            {props.price != null && (
-              <p className="mt-2 text-xs font-semibold text-gray-400">${props.price}</p>
-            )}
-          </div>
-          {!isOwner && (
-            <div className="flex gap-2 mt-2">
-              {props.referenceLink && (
+        <div className="p-4">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <h4 className="font-bold text-sm text-[#1B1B2D] truncate">{props.name}</h4>
+              {props.notes && <p className="mt-1 text-xs text-[#6B6E85] line-clamp-2">{props.notes}</p>}
+              {props.price != null && (
+                <p className="mt-2 text-xs font-semibold text-[#7B61FF]">${props.price}</p>
+              )}
+            </div>
+            {!isOwner && (
+              <div className="flex gap-1.5 shrink-0">
+                {props.referenceLink && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="size-8 rounded-full text-[#6B6E85] hover:text-[#7B61FF] hover:bg-[#F1EEFF]"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.open(props.referenceLink, "_blank");
+                    }}
+                  >
+                    <ExternalLink className="size-4" />
+                  </Button>
+                )}
                 <Button
                   size="sm"
-                  variant="outline"
-                  className="size-8 rounded-full"
+                  variant="ghost"
+                  className={`size-8 rounded-full ${isTaken ? "text-[#7B61FF] bg-[#F1EEFF]" : "text-[#6B6E85] hover:text-[#7B61FF] hover:bg-[#F1EEFF]"}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    window.open(props.referenceLink, "_blank");
+                    onToggleTaken?.();
                   }}
                 >
-                  <ExternalLink className="size-4" />
+                  {isTaken ? <BookmarkCheck className="size-4" /> : <Bookmark className="size-4" />}
                 </Button>
-              )}
-              <Button
-                size="sm"
-                variant="outline"
-                className={`size-8 rounded-full ${isTaken ? "bg-primary text-primary-foreground" : ""}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleTaken?.();
-                }}
-              >
-                {isTaken ? <BookmarkCheck /> : <Bookmark />}
-              </Button>
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>

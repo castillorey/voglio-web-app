@@ -82,38 +82,37 @@ export default function CategoryPreview({
     }
     setOpen(false);
   };
-  // TODO: Make Desktop and Mobile Dropdowns generic components
-    const DesktopDropdownMenu = () => {
+
+  const DesktopDropdownMenu = () => {
     return (
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
           <Button
             size="sm"
-            variant="outline"
-            className="rounded-lg absolute top-2 right-3 z-10"
+            variant="ghost"
+            className="rounded-full absolute top-2 right-2 z-10 size-8 text-[#6B6E85] hover:text-[#1B1B2D] hover:bg-white/80"
           >
-            <Ellipsis />
+            <Ellipsis className="size-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-[200px] text-sm">
-          <DropdownMenuLabel className="text-xs text-gray-800">
-            Actions
-          </DropdownMenuLabel>
+        <DropdownMenuContent align="start" className="w-[180px] rounded-xl border-[#F0F1F6] shadow-lg">
+          <DropdownMenuLabel className="text-xs text-[#6B6E85] font-semibold">Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem
-              className="text-xs"
+              className="text-xs text-[#1B1B2D]"
               onClick={() => OnEditClick(props)}
             >
-              <Pencil />
+              <Pencil className="size-3.5 mr-2" />
               Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              className="text-xs text-red-600"
+              className="text-xs text-red-500"
               onClick={handleOnDelete}
             >
-              <Delete className="text-red-400" /> Delete
+              <Delete className="size-3.5 mr-2 text-red-400" />
+              Delete
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
@@ -127,16 +126,16 @@ export default function CategoryPreview({
         <DrawerTrigger asChild>
           <Button
             size="sm"
-            variant="outline"
-            className="rounded-lg absolute top-2 right-3 z-10"
+            variant="ghost"
+            className="rounded-full absolute top-2 right-2 z-10 size-8 text-[#6B6E85] hover:text-[#1B1B2D] hover:bg-white/80"
           >
-            <Ellipsis />
+            <Ellipsis className="size-4" />
           </Button>
         </DrawerTrigger>
-        <DrawerContent className="mt-4 border-t">
+        <DrawerContent className="mt-4 border-t rounded-t-2xl">
           <DrawerTitle aria-describedby="Mobile actions menu" />
           <DrawerDescription aria-describedby="Mobile actions menu" />
-          <Command className="md:min-w-[450px]">
+          <Command className="md:min-w-[450px] rounded-t-2xl">
             <CommandList>
               <CommandGroup heading="Actions">
                 <CommandItem
@@ -167,12 +166,11 @@ export default function CategoryPreview({
   };
 
   return (
-    <Card className="relative rounded-md overflow-hidden">
+    <Card className="relative rounded-[20px] overflow-hidden border border-[#F0F1F6] shadow-[0_8px_24px_rgba(0,0,0,0.04)]">
       {!isReadOnly && (isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />)}
 
       <div className="cursor-pointer" onClick={navigateTo}>
-        {/* Thumbnail grid */}
-        <div className="aspect-[4/3] bg-gray-50 relative">
+        <div className="aspect-[4/3] bg-[#F8F7FC] relative">
           {thumbnails.length > 0 ? (
             <div className="grid grid-cols-2 w-full h-full">
               {[0, 1, 2, 3].map((i) => (
@@ -184,29 +182,27 @@ export default function CategoryPreview({
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gray-100" />
+                    <div className="w-full h-full bg-[#F3F4F8]" />
                   )}
                 </div>
               ))}
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <ImageIcon className="size-10 text-gray-300" />
+              <ImageIcon className="size-10 text-[#C4C7D3]" />
             </div>
           )}
 
-          {/* Emoji badge overlapping bottom-center */}
           <div className="absolute -bottom-6 left-1/2 -translate-x-1/2">
-            <div className="size-12 rounded-full bg-white shadow-md border border-gray-100 flex items-center justify-center text-2xl">
+            <div className="size-12 rounded-full bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-[#F0F1F6] flex items-center justify-center text-2xl">
               <span>{props.emojiCode}</span>
             </div>
           </div>
         </div>
 
-        {/* Name and count */}
-        <div className="pt-8 pb-3 px-3 text-center">
-          <h3 className="font-bold text-sm truncate">{props.name}</h3>
-          <p className="text-xs text-gray-400 mt-0.5">{props.vogliosCount} voglios</p>
+        <div className="pt-8 pb-4 px-4 text-center">
+          <h3 className="font-bold text-sm text-[#1B1B2D] truncate">{props.name}</h3>
+          <p className="text-xs text-[#A0A3B5] font-medium mt-0.5">{props.vogliosCount} voglios</p>
         </div>
       </div>
     </Card>

@@ -82,7 +82,7 @@ export default function ProfileEdit({
     <div className="min-h-screen" style={{ background: "#F8F8FB" }}>
       <div className="mx-auto" style={{ maxWidth: 430, padding: 20 }}>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-[#1B1B2D]">Edit Profile</h2>
+          <h2 className="font-display text-2xl text-[#1B1B2D]">Edit profile</h2>
           <Button variant="ghost" size="sm" onClick={onCancel} className="text-[#7B61FF]">
             Cancel
           </Button>

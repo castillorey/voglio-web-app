@@ -51,7 +51,7 @@ export default function ProfileDisplay({
             </div>
           </div>
           <div className="flex-1 min-w-0 pt-2">
-            <h1 className="text-[28px] sm:text-[34px] font-bold leading-tight text-[#1B1B2D] break-words">
+            <h1 className="font-display text-[28px] sm:text-[34px] leading-tight text-[#1B1B2D] break-words">
               @{profile.username}
             </h1>
             <p className="text-[18px] sm:text-[22px] font-medium text-[#55566A] mt-0.5">

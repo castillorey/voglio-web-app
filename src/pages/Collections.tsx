@@ -23,7 +23,7 @@ import { ICategory } from "@/components/voglio/VoglioForm";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { getCurrentUserId } from "../services/profile";
 
-export default function Voglios() {
+export default function Collections() {
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [open, setOpen] = useState(false);
   const [editCategoryData, setEditCategoryData] = useState<ICategory | null>(null);
@@ -88,13 +88,18 @@ export default function Voglios() {
 
   const NewCategoryCard = () => (
     <Card
-      className="rounded-md overflow-hidden cursor-pointer border-2 border-dashed border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-colors flex items-center justify-center"
+      className="rounded-[20px] overflow-hidden cursor-pointer border-2 border-dashed border-[#E0E1E8] hover:border-[#7B61FF]/40 hover:bg-[#F5F3FF] transition-all flex items-center justify-center min-h-[200px]"
       onClick={() => {
         setEditCategoryData(null);
         setOpen(true);
       }}
     >
-        <Plus strokeWidth="1.5" className="size-16 text-gray-300" />
+      <div className="flex flex-col items-center gap-2">
+        <div className="w-12 h-12 rounded-full bg-[#F1EEFF] flex items-center justify-center">
+          <Plus strokeWidth="2" className="size-6 text-[#7B61FF]" />
+        </div>
+        <span className="text-xs font-semibold text-[#6B6E85]">New collection</span>
+      </div>
     </Card>
   );
 
@@ -104,7 +109,7 @@ export default function Voglios() {
         <Drawer open={open} onOpenChange={setOpen}>
           <DrawerContent className="mb-5 px-5">
             <DrawerHeader className="text-left">
-              <DrawerTitle>{editCategoryData ? "Edit Category" : "New Category"}</DrawerTitle>
+              <DrawerTitle className="text-xl">{editCategoryData ? "Edit category" : "New category"}</DrawerTitle>
             </DrawerHeader>
             <DrawerDescription aria-describedby="Category form" />
             <CategoryForm
@@ -130,7 +135,7 @@ export default function Voglios() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editCategoryData ? "Edit Category" : "New Category"}</DialogTitle>
+            <DialogTitle className="text-xl">{editCategoryData ? "Edit category" : "New category"}</DialogTitle>
             <DialogDescription aria-describedby="Category form" />
           </DialogHeader>
           <CategoryForm
@@ -154,18 +159,18 @@ export default function Voglios() {
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold">Collections</h2>
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="font-display text-3xl text-[#1B1B2D]">Collections</h1>
       </div>
-      <p className="mt-4 h-2 w-full border-b border-gray-300"></p>
+
       {loading ? (
-        <div className="mt-8 text-center text-gray-500">Loading...</div>
+        <div className="mt-8 text-center text-[#6B6E85] text-sm">Loading...</div>
       ) : error ? (
-        <div className="mt-8 text-center text-red-500">
-          Failed to load categories: {error}
+        <div className="mt-8 text-center text-red-500 text-sm">
+          Failed to load: {error}
         </div>
       ) : (
-        <div className="mt-8 mb-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-6 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           <NewCategoryCard />
           {categoryListItems}
         </div>

@@ -1,9 +1,10 @@
 export default function NotFound() {
   return (
-    <div className="grid h-screen place-content-center bg-white px-4">
-      <h1 className="uppercase tracking-widest text-gray-500">
-        404 | Not Found
-      </h1>
+    <div className="grid h-screen place-content-center bg-[#F8F7FC] px-4">
+      <div className="text-center">
+        <h1 className="font-display text-6xl text-[#1B1B2D]">404</h1>
+        <p className="mt-2 text-sm text-[#6B6E85]">Page not found</p>
+      </div>
     </div>
   );
 }

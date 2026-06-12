@@ -153,39 +153,45 @@ export default function UserCategory() {
     );
   };
 
-  if (loading) return <div className="mt-8 text-center text-gray-500">Loading...</div>;
-  if (error) return <div className="mt-8 text-center text-red-500">{error}</div>;
-  if (!profile || !category) return <div className="mt-8 text-center text-gray-500">Not found</div>;
+  if (loading) return <div className="mt-8 text-center text-[#6B6E85] text-sm">Loading...</div>;
+  if (error) return <div className="mt-8 text-center text-red-500 text-sm">{error}</div>;
+  if (!profile || !category) return <div className="mt-8 text-center text-[#6B6E85] text-sm">Not found</div>;
 
   return (
     <>
       <Button
-        variant="secondary"
+        variant="ghost"
         size="icon"
-        className="size-8 self-start"
+        className="size-8 self-start text-[#6B6E85] hover:text-[#1B1B2D]"
         onClick={() => navigate(-1)}
       >
-        <ChevronLeft/>
+        <ChevronLeft className="size-5" />
       </Button>
 
       <div className="flex items-center gap-3 mt-4">
-        <Avatar className="size-12">
-          <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || ""} />
-          <AvatarFallback className="text-lg bg-gray-100">
-            {(profile.display_name || profile.username).slice(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <h2 className="text-l font-bold">{profile.display_name || profile.username}</h2>
+        <div className="relative shrink-0">
+          <div className="w-11 h-11 rounded-full p-[2px]" style={{ background: "linear-gradient(135deg, #FF59C7, #7B61FF)" }}>
+            <div className="w-full h-full rounded-full overflow-hidden bg-white">
+              <Avatar className="w-full h-full">
+                <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || ""} />
+                <AvatarFallback className="text-sm font-bold bg-[#F1EEFF] text-[#7B61FF]">
+                  {(profile.display_name || profile.username).slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+          </div>
+        </div>
+        <h2 className="font-display text-lg text-[#1B1B2D]">{profile.display_name || profile.username}</h2>
       </div>
 
-      <p className="mt-6 h-2 w-full border-b border-gray-300" />
-
-      <div className="flex items-center gap-2 mt-4">
-        <span className="text-xl">{category.emoji_code}</span>
+      <div className="flex items-center gap-3 mt-6">
+        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#F1EEFF] text-xl">
+          <span>{category.emoji_code}</span>
+        </div>
         <div>
-          <h3 className="text-lg font-bold">{category.name}</h3>
+          <h3 className="font-bold text-base text-[#1B1B2D]">{category.name}</h3>
           {!loading && (
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-[#A0A3B5] font-medium mt-0.5">
               {voglioList.length} voglios
               {voglioList.some((v) => v.isTaken) && (
                 <> · {voglioList.filter((v) => v.isTaken).length} taken</>
@@ -195,33 +201,33 @@ export default function UserCategory() {
         </div>
       </div>
 
-      <div className="mt-3 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center sm:justify-end">
+      <div className="mt-4 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center sm:justify-end">
         <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className="w-full sm:w-[160px] h-9 text-sm">
-            <ArrowUpDown className="size-3.5 mr-1" />
+          <SelectTrigger className="w-full sm:w-[160px] h-9 text-xs rounded-xl border-[#EFEFF4]">
+            <ArrowUpDown className="size-3.5 mr-1 text-[#6B6E85]" />
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="newest">Newest</SelectItem>
-            <SelectItem value="name">Name A-Z</SelectItem>
-            <SelectItem value="price-asc">Price low-high</SelectItem>
-            <SelectItem value="price-desc">Price high-low</SelectItem>
+          <SelectContent className="rounded-xl border-[#F0F1F6]">
+            <SelectItem value="newest" className="text-xs">Newest</SelectItem>
+            <SelectItem value="name" className="text-xs">Name A-Z</SelectItem>
+            <SelectItem value="price-asc" className="text-xs">Price low-high</SelectItem>
+            <SelectItem value="price-desc" className="text-xs">Price high-low</SelectItem>
           </SelectContent>
         </Select>
         <Select value={takenFilter} onValueChange={setTakenFilter}>
-          <SelectTrigger className="w-full sm:w-[140px] h-9 text-sm">
-            <BookmarkCheck className="size-3.5 mr-1" />
+          <SelectTrigger className="w-full sm:w-[140px] h-9 text-xs rounded-xl border-[#EFEFF4]">
+            <BookmarkCheck className="size-3.5 mr-1 text-[#6B6E85]" />
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="taken">Taken</SelectItem>
-            <SelectItem value="untaken">Not taken</SelectItem>
+          <SelectContent className="rounded-xl border-[#F0F1F6]">
+            <SelectItem value="all" className="text-xs">All</SelectItem>
+            <SelectItem value="taken" className="text-xs">Taken</SelectItem>
+            <SelectItem value="untaken" className="text-xs">Not taken</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <div className="mt-4 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="mt-4 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {filteredAndSorted.map((voglio) => (
           <VoglioPreview
             key={voglio.id}
@@ -234,7 +240,7 @@ export default function UserCategory() {
           />
         ))}
         {filteredAndSorted.length === 0 && (
-          <p className="col-span-full text-center text-gray-500 mt-8">
+          <p className="col-span-full text-center text-[#6B6E85] text-sm mt-8">
             {voglioList.length === 0
               ? "No public voglios in this category"
               : "No voglios match this filter"}
