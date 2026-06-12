@@ -1,24 +1,29 @@
 import { cn } from "@/lib/utils";
-import { User, Users, LayoutGrid } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
-  { title: "Voglios", href: "/collections", icon: LayoutGrid },
-  { title: "Friends", href: "/friends", icon: Users },
-  { title: "Profile", href: "/account", icon: User },
+  { title: "Voglios", href: "/" },
+  { title: "Friends", href: "/friends" },
+  { title: "Profile", href: "/account" },
 ];
 
 export default function Navbar() {
   const { pathname } = useLocation();
 
   const isActive = (href: string) => {
-    if (href === "/collections") return pathname === "/" || pathname.startsWith("/collections");
+    if (href === "/")
+      return (
+        pathname === "/" ||
+        pathname.startsWith("/collections") ||
+        pathname.startsWith("/category") ||
+        pathname.startsWith("/voglio")
+      );
     return pathname.startsWith(href);
   };
 
   return (
-    <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-      <div className="flex items-center gap-1 px-2 py-2 rounded-full bg-white/75 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-white/40">
+    <nav className="sticky top-4 z-50 flex justify-center">
+      <div className="flex bg-[#F1F2F6] p-1 rounded-full gap-1 shadow-sm">
         {navItems.map((item) => {
           const active = isActive(item.href);
           return (
@@ -26,26 +31,18 @@ export default function Navbar() {
               key={item.title}
               to={item.href}
               className={cn(
-                "flex flex-col items-center gap-0.5 px-5 py-2 rounded-full transition-all duration-300",
+                "px-5 py-1.5 rounded-full text-xs font-semibold transition-colors",
                 active
-                  ? "bg-gradient-to-b from-gray-500 to-gray-600 shadow-md shadow-gray-500/30"
-                  : "hover:bg-black/5"
+                  ? "text-[#7B61FF] bg-white shadow-sm"
+                  : "text-[#8C8F9E] hover:text-[#1B1B2D]"
               )}
+              style={
+                active
+                  ? { boxShadow: "0 2px 8px rgba(123, 97, 255, 0.08)" }
+                  : undefined
+              }
             >
-              <item.icon
-                className={cn(
-                  "h-5 w-5 transition-colors duration-300",
-                  active ? "text-white" : "text-gray-500"
-                )}
-              />
-              <span
-                className={cn(
-                  "text-[11px] font-medium tracking-tight transition-colors duration-300",
-                  active ? "text-white" : "text-gray-500"
-                )}
-              >
-                {item.title}
-              </span>
+              {item.title}
             </Link>
           );
         })}

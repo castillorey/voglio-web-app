@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import supabase from "../supabase-client";
-import { Navigate, Outlet } from "react-router-dom";
+import { Link, Navigate, Outlet } from "react-router-dom";
+import { Plus } from "lucide-react";
 import Navbar from "../components/Navbar";
 import { createProfile, getProfile } from "../services/profile";
 
@@ -43,10 +44,18 @@ export default function Wrapper() {
     if (authenticated) {
       return (
         <div className="flex flex-col min-h-screen">
-          <main className="flex-grow px-6 pt-5 lg:px-8 box-border pb-28">
-            <Outlet></Outlet>
+          <main className="flex-grow px-6 lg:px-8 box-border pb-24">
+            <Navbar />
+            <div className="mt-6">
+              <Outlet />
+            </div>
           </main>
-          <Navbar></Navbar>
+          <Link
+            to="/collections"
+            className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-br from-[#9E7BFF] to-[#7B61FF] text-white shadow-lg shadow-[#7B61FF]/30 flex items-center justify-center hover:scale-105 active:scale-95 transition-all"
+          >
+            <Plus className="size-6" strokeWidth={2.5} />
+          </Link>
         </div>
       );
     }
