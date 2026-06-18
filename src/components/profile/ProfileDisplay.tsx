@@ -24,7 +24,7 @@ export default function ProfileDisplay({
   signOut,
 }: ProfileDisplayProps) {
   const zodiacSign = profile.zodiac_sign || "";
-  const hasAboutData = profile.birth_date || profile.gender || zodiacSign;
+  const hasAboutData = profile.birth_date || profile.gender || profile.location || zodiacSign;
   const sizeData = [
     { label: "Camisa", value: profile.shirt_size },
     { label: "Pantalón", value: profile.pants_size },
@@ -85,6 +85,7 @@ export default function ProfileDisplay({
             <h3 className="text-sm font-semibold text-[#1B1B2D] mb-1">About me</h3>
             <div className="divide-y divide-[#F3F4F7]">
               <ProfileRow label="Fecha de nacimiento" value={formatDate(profile.birth_date || "")} />
+              <ProfileRow label="Ubicación" value={profile.location} />
               <ProfileRow label="Género" value={profile.gender} />
               <ProfileRow label="Signo zodiacal" value={zodiacSign} />
             </div>

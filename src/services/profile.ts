@@ -10,6 +10,7 @@ export interface IProfile {
   shirt_size: string | null;
   pants_size: string | null;
   shoe_size: string | null;
+  location: string | null;
   favorite_color: string | null;
   favorite_food: string | null;
   zodiac_sign: string | null;
@@ -44,6 +45,7 @@ export const createProfile = async (profile: {
   display_name?: string;
   birth_date?: string | null;
   gender?: string | null;
+  location?: string | null;
   shirt_size?: string | null;
   pants_size?: string | null;
   shoe_size?: string | null;
@@ -64,12 +66,13 @@ export const createProfile = async (profile: {
 export const updateProfile = async (
   userId: string,
   updates: {
-    display_name?: string;
-    avatar_url?: string;
-    username?: string;
-    birth_date?: string | null;
-    gender?: string | null;
-    shirt_size?: string | null;
+  display_name?: string;
+  avatar_url?: string;
+  username?: string;
+  birth_date?: string | null;
+  gender?: string | null;
+  location?: string | null;
+  shirt_size?: string | null;
     pants_size?: string | null;
     shoe_size?: string | null;
     favorite_color?: string | null;

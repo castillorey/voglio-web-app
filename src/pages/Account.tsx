@@ -19,6 +19,7 @@ export default function Perfil() {
     const [displayName, setDisplayName] = useState("");
     const [birthDate, setBirthDate] = useState("");
     const [gender, setGender] = useState("");
+    const [location, setLocation] = useState("");
     const [shirtSize, setShirtSize] = useState("");
     const [pantsSize, setPantsSize] = useState("");
     const [shoeSize, setShoeSize] = useState("");
@@ -49,6 +50,7 @@ export default function Perfil() {
                 setDisplayName(prof.display_name || "");
                 setBirthDate(prof.birth_date || "");
                 setGender(prof.gender || "");
+                setLocation(prof.location || "");
                 setShirtSize(prof.shirt_size || "");
                 setPantsSize(prof.pants_size || "");
                 setShoeSize(prof.shoe_size || "");
@@ -81,6 +83,7 @@ export default function Perfil() {
                 display_name: displayName || undefined,
                 birth_date: birthDate || null,
                 gender: gender || null,
+                location: location || null,
                 shirt_size: shirtSize || null,
                 pants_size: pantsSize || null,
                 shoe_size: shoeSize || null,
@@ -101,6 +104,7 @@ export default function Perfil() {
                 display_name: displayName,
                 birth_date: birthDate || null,
                 gender: gender || null,
+                location: location || null,
                 shirt_size: shirtSize || null,
                 pants_size: pantsSize || null,
                 shoe_size: shoeSize || null,
@@ -181,6 +185,7 @@ export default function Perfil() {
                 displayName={displayName} setDisplayName={setDisplayName}
                 birthDate={birthDate} setBirthDate={setBirthDate}
                 gender={gender} setGender={setGender}
+                location={location} setLocation={setLocation}
                 shirtSize={shirtSize} setShirtSize={setShirtSize}
                 pantsSize={pantsSize} setPantsSize={setPantsSize}
                 shoeSize={shoeSize} setShoeSize={setShoeSize}

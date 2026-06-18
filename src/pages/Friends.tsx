@@ -6,28 +6,6 @@ import supabase from "../supabase-client";
 import { getCurrentUserId, IProfile, searchProfiles, getProfile } from "../services/profile";
 import { followUser, unfollowUser, getFollowing } from "../services/follow";
 
-// Procedurally generate a stable location for the premium visual aesthetic
-const getProfileLocation = (username: string) => {
-  const locations = [
-    "Madrid, España",
-    "Barcelona, España",
-    "Valencia, España",
-    "Sevilla, España",
-    "Bilbao, España",
-    "Zaragoza, España",
-    "Málaga, España",
-    "Murcia, España",
-    "Palma, España",
-    "Alicante, España"
-  ];
-  let hash = 0;
-  for (let i = 0; i < username.length; i++) {
-    hash = username.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const index = Math.abs(hash) % locations.length;
-  return locations[index];
-};
-
 export default function Friends() {
   const navigate = useNavigate();
   const currentUserId = getCurrentUserId();
@@ -257,7 +235,7 @@ export default function Friends() {
                         {profile.display_name || profile.username}
                       </p>
                       <p className="text-[11px] text-[#8C8F9E] mt-0.5 font-medium">
-                        {getProfileLocation(profile.username)}
+                        {profile.location || "Location not set"}
                       </p>
                     </div>
                   </div>

@@ -34,6 +34,8 @@ interface ProfileEditProps {
   setBirthDate: (v: string) => void;
   gender: string;
   setGender: (v: string) => void;
+  location: string;
+  setLocation: (v: string) => void;
   shirtSize: string;
   setShirtSize: (v: string) => void;
   pantsSize: string;
@@ -62,6 +64,7 @@ export default function ProfileEdit({
   displayName, setDisplayName,
   birthDate, setBirthDate,
   gender, setGender,
+  location, setLocation,
   shirtSize, setShirtSize,
   pantsSize, setPantsSize,
   shoeSize, setShoeSize,
@@ -129,6 +132,16 @@ export default function ProfileEdit({
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   className="mt-1 text-sm"
+                />
+              </div>
+              <div>
+                <Label htmlFor="location" className="text-xs text-[#8C8F9E]">Location</Label>
+                <Input
+                  id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="mt-1 text-sm"
+                  placeholder="e.g. Madrid, España"
                 />
               </div>
             </div>
