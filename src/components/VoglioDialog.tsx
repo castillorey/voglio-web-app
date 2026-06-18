@@ -32,15 +32,15 @@ export default function VoglioDialog(props: voglioFormProps) {
   const MobileDrawerForm = () => {
     return (
       <Drawer open={props.open} onOpenChange={props.onClose}>
-        <DrawerContent className="mb-5 px-4">
-          <DrawerHeader className="text-left">
-            <DrawerTitle className="text-2xl">
+        <DrawerContent className="px-5 pb-6">
+          <DrawerHeader className="text-left px-0">
+            <DrawerTitle className="font-display text-xl text-[#1B1B2D]">
               {props.children && props.children.props.editVoglioData
                 ? "Edit voglio"
-                : "Create voglio"}
+                : "New voglio"}
             </DrawerTitle>
           </DrawerHeader>
-          <DrawerDescription aria-describedby="New voglio form"></DrawerDescription>
+          <DrawerDescription aria-describedby="New voglio form" className="sr-only" />
           {props.children}
         </DrawerContent>
       </Drawer>
@@ -52,12 +52,12 @@ export default function VoglioDialog(props: voglioFormProps) {
       <Dialog open={props.open} onOpenChange={props.onClose}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-2xl">
+            <DialogTitle className="font-display text-xl text-[#1B1B2D]">
               {props.children && props.children.props.editVoglioData
                 ? "Edit voglio"
-                : "Create voglio"}
+                : "New voglio"}
             </DialogTitle>
-            <DialogDescription aria-describedby="New voglio form" />
+            <DialogDescription aria-describedby="New voglio form" className="sr-only" />
           </DialogHeader>
           {props.children}
         </DialogContent>

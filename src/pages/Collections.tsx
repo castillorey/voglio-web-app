@@ -107,11 +107,11 @@ export default function Collections() {
     if (isSmallDevice) {
       return (
         <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerContent className="mb-5 px-5">
-            <DrawerHeader className="text-left">
-              <DrawerTitle className="text-xl">{editCategoryData ? "Edit category" : "New category"}</DrawerTitle>
+          <DrawerContent className="px-5 pb-6">
+            <DrawerHeader className="text-left px-0">
+              <DrawerTitle className="font-display text-xl text-[#1B1B2D]">{editCategoryData ? "Edit category" : "New category"}</DrawerTitle>
             </DrawerHeader>
-            <DrawerDescription aria-describedby="Category form" />
+            <DrawerDescription aria-describedby="Category form" className="sr-only" />
             <CategoryForm
               editCategoryData={editCategoryData}
               onCreateCategory={(newCategory) => {
@@ -135,8 +135,8 @@ export default function Collections() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-xl">{editCategoryData ? "Edit category" : "New category"}</DialogTitle>
-            <DialogDescription aria-describedby="Category form" />
+            <DialogTitle className="font-display text-xl text-[#1B1B2D]">{editCategoryData ? "Edit category" : "New category"}</DialogTitle>
+            <DialogDescription aria-describedby="Category form" className="sr-only" />
           </DialogHeader>
           <CategoryForm
             editCategoryData={editCategoryData}

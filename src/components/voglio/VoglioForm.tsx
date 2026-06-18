@@ -173,6 +173,20 @@ export default function VoglioForm({
 
   return (
     <form>
+      {/* Step indicator */}
+      <div className="flex items-center gap-2 mb-5">
+        <span
+          className={`h-1.5 flex-1 rounded-full transition-colors ${
+            step >= 1 ? "bg-[#7B61FF]" : "bg-[#E0E1E8]"
+          }`}
+        />
+        <span
+          className={`h-1.5 flex-1 rounded-full transition-colors ${
+            step >= 2 ? "bg-[#7B61FF]" : "bg-[#E0E1E8]"
+          }`}
+        />
+      </div>
+
       {step === 1 && (
         <VoglioFormStep1
           formData={formData}
@@ -186,13 +200,13 @@ export default function VoglioForm({
           onFormChange={setFormData}
         />
       )}
-      <div className="mt-2 pt-3 xs:flex justify-end gap-4">
+      <div className="mt-6 pt-4 border-t border-[#F0F1F6] xs:flex justify-end gap-3">
         {step > 1 && (
           <Button
             type="button"
             variant="secondary"
             onClick={handlePrevStep}
-            className="w-full xs:w-auto xs:justify-self-start text-xs"
+            className="w-full xs:w-auto text-xs font-bold"
           >
             Previous
           </Button>
@@ -201,7 +215,7 @@ export default function VoglioForm({
           <Button
             type="button"
             onClick={handleNextStep}
-            className="w-full xs:w-auto xs:justify-self-end text-xs"
+            className="w-full xs:w-auto mt-2 xs:mt-0 text-xs font-bold"
           >
             Next
           </Button>
@@ -210,9 +224,9 @@ export default function VoglioForm({
           <Button
             type="button"
             onClick={formDataPublish}
-            className="w-full xs:w-auto mt-3 xs:mt-0 xs:justify-self-end text-xs"
+            className="w-full xs:w-auto mt-2 xs:mt-0 text-xs font-bold"
           >
-            {editVoglioData ? "Update" : "Create"}
+            {editVoglioData ? "Update voglio" : "Create voglio"}
           </Button>
         )}
       </div>

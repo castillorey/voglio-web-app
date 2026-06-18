@@ -70,48 +70,48 @@ export default function CreateDialog({
           <ChevronLeft className="size-5" />
         </Button>
       )}
-      <DialogTitle className="text-xl">{title}</DialogTitle>
+      <DialogTitle className="font-display text-xl text-[#1B1B2D]">{title}</DialogTitle>
     </div>
   );
 
   const content = (
     <>
       {mode === "choose" && (
-        <div className="flex flex-col gap-3 mt-2">
-          <Button
-            variant="outline"
-            className="h-20 gap-3 text-base justify-start px-6 rounded-xl border-2 border-dashed border-[#E0E1E8] hover:border-[#7B61FF]/40 hover:bg-[#F5F3FF] transition-all"
+        <div className="flex flex-col gap-3 mt-1">
+          <button
+            type="button"
+            className="flex items-center gap-4 w-full p-4 rounded-xl border-2 border-dashed border-[#E0E1E8] bg-white hover:border-[#7B61FF]/40 hover:bg-[#F5F3FF] transition-all text-left cursor-pointer"
             onClick={() => setMode("category")}
           >
-            <div className="w-10 h-10 rounded-full bg-[#F1EEFF] flex items-center justify-center shrink-0">
+            <div className="w-11 h-11 rounded-full bg-[#F1EEFF] flex items-center justify-center shrink-0">
               <LayoutGrid className="size-5 text-[#7B61FF]" />
             </div>
-            <div className="text-left">
-              <div className="font-semibold text-sm text-[#1B1B2D]">
+            <div>
+              <p className="font-semibold text-sm text-[#1B1B2D]">
                 New category
-              </div>
-              <div className="text-xs text-[#6B6E85] font-normal mt-0.5">
+              </p>
+              <p className="text-xs text-[#6B6E85] mt-0.5">
                 Create a collection for your wishes
-              </div>
+              </p>
             </div>
-          </Button>
-          <Button
-            variant="outline"
-            className="h-20 gap-3 text-base justify-start px-6 rounded-xl border-2 border-dashed border-[#E0E1E8] hover:border-[#7B61FF]/40 hover:bg-[#F5F3FF] transition-all"
+          </button>
+          <button
+            type="button"
+            className="flex items-center gap-4 w-full p-4 rounded-xl border-2 border-dashed border-[#E0E1E8] bg-white hover:border-[#7B61FF]/40 hover:bg-[#F5F3FF] transition-all text-left cursor-pointer"
             onClick={() => setMode("voglio")}
           >
-            <div className="w-10 h-10 rounded-full bg-[#F1EEFF] flex items-center justify-center shrink-0">
+            <div className="w-11 h-11 rounded-full bg-[#F1EEFF] flex items-center justify-center shrink-0">
               <Package className="size-5 text-[#7B61FF]" />
             </div>
-            <div className="text-left">
-              <div className="font-semibold text-sm text-[#1B1B2D]">
+            <div>
+              <p className="font-semibold text-sm text-[#1B1B2D]">
                 New voglio
-              </div>
-              <div className="text-xs text-[#6B6E85] font-normal mt-0.5">
-                Add a wishlist item
-              </div>
+              </p>
+              <p className="text-xs text-[#6B6E85] mt-0.5">
+                Add a wishlist item to a collection
+              </p>
             </div>
-          </Button>
+          </button>
         </div>
       )}
       {mode === "category" && (
@@ -134,8 +134,8 @@ export default function CreateDialog({
           if (!o) resetAndClose();
         }}
       >
-        <DrawerContent className="mb-5 px-5">
-          <DrawerHeader className="text-left">
+        <DrawerContent className="px-5 pb-6">
+          <DrawerHeader className="text-left px-0">
             <div className="flex items-center gap-2">
               {mode !== "choose" && (
                 <Button
@@ -147,10 +147,10 @@ export default function CreateDialog({
                   <ChevronLeft className="size-5" />
                 </Button>
               )}
-              <DrawerTitle className="text-xl">{title}</DrawerTitle>
+              <DrawerTitle className="font-display text-xl text-[#1B1B2D]">{title}</DrawerTitle>
             </div>
           </DrawerHeader>
-          <DrawerDescription aria-describedby="Create form" />
+          <DrawerDescription aria-describedby="Create form" className="sr-only" />
           {content}
         </DrawerContent>
       </Drawer>
@@ -167,7 +167,7 @@ export default function CreateDialog({
       <DialogContent>
         <DialogHeader>
           <HeaderContent />
-          <DialogDescription aria-describedby="Create form" />
+          <DialogDescription aria-describedby="Create form" className="sr-only" />
         </DialogHeader>
         {content}
       </DialogContent>

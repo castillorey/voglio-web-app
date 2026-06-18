@@ -88,11 +88,11 @@ export default function CategoryForm({
     
   };
   return (
-    <>
+    <div className="space-y-4 mt-2">
       {/* Emoji */}
       {emojiInput && (
-        <div className="mt-5 flex justify-center text-6xl">
-          <p className="w-[120px] group relative text-center">
+        <div className="flex justify-center text-5xl">
+          <p className="w-[100px] group relative text-center">
             <span>{emojiInput}</span>
             <Trash2
               size={14}
@@ -100,7 +100,7 @@ export default function CategoryForm({
                 setEmojiInput("");
                 setFormData({ ...formData, emojiCode: "" });
               }}
-              className="hidden cursor-pointer group-hover:block absolute top-0 right-4 text-red-500"
+              className="hidden cursor-pointer group-hover:block absolute top-0 right-2 text-red-400"
             />
           </p>
         </div>
@@ -109,15 +109,15 @@ export default function CategoryForm({
         <Button
           variant="secondary"
           onClick={() => setOpenEmoji(!openEmoji)}
-          className="mt-2 text-xs rounded-xl  text-gray-500"
+          className="text-xs rounded-full"
         >
-          {!openEmoji ? "Emoji picker" : "Close"}
+          {!openEmoji ? "Choose emoji" : "Close"}
         </Button>
       </div>
 
       {/* Emoji picker */}
       {openEmoji ? (
-        <div className="mt-3 flex justify-center items-center">
+        <div className="flex justify-center items-center">
           <EmojiPicker
             emojiStyle={EmojiStyle.NATIVE}
             previewConfig={{ showPreview: false }}
@@ -128,7 +128,9 @@ export default function CategoryForm({
         <>
           {/* Name */}
           <div>
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
+              Name
+            </Label>
             <Input
               id="name"
               name="name"
@@ -137,33 +139,35 @@ export default function CategoryForm({
                 setFormData({ ...formData, name: event.target.value });
               }}
               value={formData.name}
-              className="mt-2 w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:gray-indigo-600 sm:text-sm/6"
+              className="mt-1.5"
             />
           </div>
 
           {/* description */}
           <div>
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
+              Description
+            </Label>
             <Textarea
               id="description"
               name="description"
-              rows={1}
+              rows={2}
               onChange={(event) => {
                 setFormData({ ...formData, description: event.target.value });
               }}
               value={formData.description}
-              className="mt-2 text-sm"
+              className="mt-1.5"
             />
           </div>
 
           {/* Is private */}
-          <div className="flex justify-between items-center space-x-4">
-            <div>
-              <Label htmlFor="is-private" className="font-medium">
-                Is private
-              </Label>
-              <p className="text-xs text-gray-500">
-                Only you and your friends can see this category
+          <div className="flex justify-between items-center pt-2">
+            <div className="pr-4">
+              <p className="text-sm font-medium text-[#1B1B2D]">
+                Private collection
+              </p>
+              <p className="text-xs text-[#6B6E85] mt-0.5">
+                Only you and your friends can see this
               </p>
             </div>
             <Switch
@@ -175,17 +179,17 @@ export default function CategoryForm({
             />
           </div>
 
-          <div className="xs:flex justify-end">
+          <div className="xs:flex justify-end pt-2">
             <Button
               type="button"
               onClick={formDataPublish}
-              className="w-full mt-5 xs:w-auto justify-self-end text-xs"
+              className="w-full xs:w-auto text-xs font-bold"
             >
-              {editCategoryData ? "Update" : "Create"}
+              {editCategoryData ? "Update category" : "Create category"}
             </Button>
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }
