@@ -59,14 +59,18 @@ export default function Navbar() {
         </div>
       </button>
 
-      {/* Heart (Placeholder / No-op) */}
-      <div
+      {/* Saved items */}
+      <Link
+        to="/bookmarked"
         className={cn(
-          "w-11 h-11 flex items-center justify-center rounded-full transition-all duration-300 text-[#8C8F9E]"
+          "w-11 h-11 flex items-center justify-center rounded-full transition-all duration-300",
+          isActive("/bookmarked")
+            ? "bg-[#F1EEFF] text-[#7B61FF]"
+            : "text-[#8C8F9E] hover:text-[#1B1B2D]"
         )}
       >
         <Heart className="w-5 h-5" strokeWidth={1.8} />
-      </div>
+      </Link>
 
       {/* Profile */}
       <Link

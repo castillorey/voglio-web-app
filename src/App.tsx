@@ -12,6 +12,7 @@ import Account from "./pages/Account";
 import Friends from "./pages/Friends";
 import UserCollections from "./pages/UserCollections";
 import UserCategory from "./pages/UserCategory";
+import Bookmarked from "./pages/Bookmarked";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route index element={<Collections />} />
             <Route path="category/:categoryId" element={<Category />} />
             <Route path="voglio/:voglioId" element={<Voglio />} />
+            <Route path="bookmarked" element={<Bookmarked />} />
             <Route path="account" element={<Account />} />
             <Route path="friends" element={<Friends />} />
             <Route path="friends/u/:username" element={<UserCollections />} />
