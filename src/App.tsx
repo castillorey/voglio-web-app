@@ -4,7 +4,6 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Wrapper from "./pages/Wrapper";
 import Collections from "./pages/Collections";
-import VogliosFeed from "./pages/VogliosFeed";
 import Category from "./pages/Category";
 import NotFound from "./pages/NotFound";
 import Voglio from "./pages/Voglio";
