@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import { Home, Users, Plus, Heart, User } from "lucide-react";
+import CreateDialog from "./CreateDialog";
 
 export default function Navbar() {
   const { pathname } = useLocation();
+  const [createOpen, setCreateOpen] = useState(false);
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -45,16 +48,16 @@ export default function Navbar() {
       </Link>
 
       {/* Create / Plus */}
-      <Link
-        to="/collections"
-        className="w-11 h-11 flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95"
+      <button
+        onClick={() => setCreateOpen(true)}
+        className="w-11 h-11 flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
       >
         <div className="relative p-[1.5px] rounded-full bg-gradient-to-tr from-[#00F2FE] via-[#4FACFE] to-[#F355FF]">
           <div className="bg-white rounded-full w-9 h-9 flex items-center justify-center">
             <Plus className="w-5 h-5 text-[#2D3142]" strokeWidth={2.5} />
           </div>
         </div>
-      </Link>
+      </button>
 
       {/* Heart (Placeholder / No-op) */}
       <div
@@ -77,6 +80,8 @@ export default function Navbar() {
       >
         <User className="w-5 h-5" strokeWidth={1.8} />
       </Link>
+
+      <CreateDialog open={createOpen} onClose={() => setCreateOpen(false)} />
     </nav>
   );
 }

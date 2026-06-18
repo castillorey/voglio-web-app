@@ -83,7 +83,7 @@ export default function Category() {
           variant="ghost"
           size="icon"
           className="size-8 self-start text-[#6B6E85] hover:text-[#1B1B2D]"
-          onClick={() => navigate("/collections")}
+          onClick={() => navigate("/")}
         >
           <ChevronLeft className="size-5" />
         </Button>
