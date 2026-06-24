@@ -169,6 +169,17 @@ export default function Collections() {
         <div className="mt-8 text-center text-red-500 text-sm">
           Failed to load: {error}
         </div>
+      ) : categoryList.length === 0 ? (
+        <div className="mt-16 text-center">
+          <div className="text-5xl mb-5">👋</div>
+          <h2 className="font-display text-2xl text-[#1B1B2D] mb-2">Welcome to Voglio!</h2>
+          <p className="text-sm text-[#6B6E85] mb-8 leading-relaxed max-w-xs mx-auto">
+            Start building your wishlist. Create your first collection and add the things you want.
+          </p>
+          <div className="max-w-[200px] mx-auto">
+            <NewCategoryCard />
+          </div>
+        </div>
       ) : (
         <div className="mt-6 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2">
           <NewCategoryCard />
