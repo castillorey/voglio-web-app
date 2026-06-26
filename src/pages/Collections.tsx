@@ -159,7 +159,7 @@ export default function Collections() {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-1">
+      <div className="sticky top-0 z-10 flex items-center justify-between -mx-5 lg:-mx-8 px-5 lg:px-8 mb-1 bg-[#F8F7FC] py-4">
         <h1 className="font-display text-3xl text-[#1B1B2D]">My Voglios</h1>
       </div>
 
