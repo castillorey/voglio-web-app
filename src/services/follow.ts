@@ -7,10 +7,25 @@ export interface IFollow {
   created_at: string;
 }
 
+export class NoProfileError extends Error {
+  constructor() {
+    super("You need to set up your profile name before you can follow others.");
+    this.name = "NoProfileError";
+  }
+}
+
 export const followUser = async (followingId: string) => {
   const session = localStorage.getItem("session");
   if (!session) throw new Error("Not authenticated");
   const userId = JSON.parse(session).user.id;
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (!profile) throw new NoProfileError();
 
   const { data, error } = await supabase
     .from("follows")

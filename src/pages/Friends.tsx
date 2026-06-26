@@ -4,7 +4,8 @@ import { Search, Sparkles } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import supabase from "../supabase-client";
 import { getCurrentUserId, IProfile, searchProfiles, getProfile } from "../services/profile";
-import { followUser, unfollowUser, getFollowing } from "../services/follow";
+import { followUser, unfollowUser, getFollowing, NoProfileError } from "../services/follow";
+import AlertDialog from "@/components/ui/alert-dialog";
 
 export default function Friends() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ export default function Friends() {
   const [followingProfiles, setFollowingProfiles] = useState<IProfile[]>([]);
   const [followersProfiles, setFollowersProfiles] = useState<IProfile[]>([]);
   
+  const [profileAlertOpen, setProfileAlertOpen] = useState(false);
   // Loading states
   const [loading, setLoading] = useState(true);
 
@@ -118,7 +120,11 @@ export default function Friends() {
         showToast(`¡Ahora sigues a @${username}!`);
       }
     } catch (err) {
-      console.error(err);
+      if (err instanceof NoProfileError) {
+        setProfileAlertOpen(true);
+      } else {
+        console.error(err);
+      }
     }
   };
 
@@ -261,6 +267,16 @@ export default function Friends() {
         </div>
 
       </div>
+
+      <AlertDialog
+        open={profileAlertOpen}
+        onClose={() => {
+          setProfileAlertOpen(false);
+          navigate("/account");
+        }}
+        title="Profile required"
+        message="You need to set up your profile name before you can follow others."
+      />
     </div>
   );
 }

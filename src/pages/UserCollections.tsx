@@ -9,7 +9,8 @@ import {
   getCurrentUserId,
   IProfile,
 } from "../services/profile";
-import { followUser, unfollowUser, isFollowing } from "../services/follow";
+import { followUser, unfollowUser, isFollowing, NoProfileError } from "../services/follow";
+import AlertDialog from "@/components/ui/alert-dialog";
 import CategoryPreview from "../components/category/CategoryPreview";
 import { ICategory } from "@/components/voglio/VoglioForm";
 
@@ -21,6 +22,7 @@ export default function UserCollections() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [following, setFollowing] = useState(false);
+  const [profileAlertOpen, setProfileAlertOpen] = useState(false);
   const currentUserId = getCurrentUserId();
 
   useEffect(() => {
@@ -82,7 +84,11 @@ export default function UserCollections() {
         setFollowing(true);
       }
     } catch (err) {
-      console.log(err);
+      if (err instanceof NoProfileError) {
+        setProfileAlertOpen(true);
+      } else {
+        console.log(err);
+      }
     }
   };
 
@@ -170,6 +176,16 @@ export default function UserCollections() {
           </p>
         )}
       </div>
+
+      <AlertDialog
+        open={profileAlertOpen}
+        onClose={() => {
+          setProfileAlertOpen(false);
+          navigate("/account");
+        }}
+        title="Profile required"
+        message="You need to set up your profile name before you can follow others."
+      />
     </>
   );
 }
