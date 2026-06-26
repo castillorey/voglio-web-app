@@ -183,7 +183,7 @@ export default function VoglioPreview({
                 <Button
                   size="sm"
                   variant="ghost"
-                  className={`size-8 rounded-full ${isTaken ? "text-[#7B61FF] bg-[#F1EEFF]" : "text-[#6B6E85] hover:text-[#7B61FF] hover:bg-[#F1EEFF]"}`}
+                  className={`size-8 rounded-full ${isTaken ? "text-[#7B61FF] bg-[#F1EEFF]" : "text-[#6B6E85] hover:text-[#6B6E85] hover:bg-transparent"}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     onToggleTaken?.();
