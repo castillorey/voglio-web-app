@@ -1,26 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Plus } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
 
 import CategoryPreview from "../components/category/CategoryPreview";
 import supabase from "../supabase-client";
-import CategoryForm from "../components/category/CategoryForm";
+import CreateDialog from "../components/CreateDialog";
 import { ICategory } from "@/components/voglio/VoglioForm";
-import { useMediaQuery } from "@uidotdev/usehooks";
 import { getCurrentUserId } from "../services/profile";
 
 export default function Collections() {
@@ -29,7 +14,6 @@ export default function Collections() {
   const [editCategoryData, setEditCategoryData] = useState<ICategory | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
   const currentUserId = getCurrentUserId();
 
   useEffect(() => {
@@ -103,60 +87,6 @@ export default function Collections() {
     </Card>
   );
 
-  const DialogForm = () => {
-    if (isSmallDevice) {
-      return (
-        <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerContent className="px-5 pb-6">
-            <DrawerHeader className="text-left px-0">
-              <DrawerTitle className="font-display text-xl text-[#1B1B2D]">{editCategoryData ? "Edit category" : "New category"}</DrawerTitle>
-            </DrawerHeader>
-            <DrawerDescription aria-describedby="Category form" className="sr-only" />
-            <CategoryForm
-              editCategoryData={editCategoryData}
-              onCreateCategory={(newCategory) => {
-                setOpen(false);
-                setCategoryList([...categoryList, newCategory]);
-              }}
-              onUpdateCategory={(editedCategory) => {
-                let refreshedCategoryList = categoryList.map((category) =>
-                  category.id === editedCategory.id ? editedCategory : category
-                );
-                setCategoryList(refreshedCategoryList);
-                setOpen(false);
-              }}
-            />
-          </DrawerContent>
-        </Drawer>
-      );
-    }
-
-    return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="font-display text-xl text-[#1B1B2D]">{editCategoryData ? "Edit category" : "New category"}</DialogTitle>
-            <DialogDescription aria-describedby="Category form" className="sr-only" />
-          </DialogHeader>
-          <CategoryForm
-            editCategoryData={editCategoryData}
-            onCreateCategory={(newCategory) => {
-              setOpen(false);
-              setCategoryList([...categoryList, newCategory]);
-            }}
-            onUpdateCategory={(editedCategory) => {
-              let refreshedCategoryList = categoryList.map((category) =>
-                category.id === editedCategory.id ? editedCategory : category
-              );
-              setCategoryList(refreshedCategoryList);
-              setOpen(false);
-            }}
-          />
-        </DialogContent>
-      </Dialog>
-    );
-  };
-
   return (
     <>
       <div className="sticky top-0 z-10 flex items-center justify-between -mx-5 lg:-mx-8 px-5 lg:px-8 mb-1 bg-[#F8F7FC] py-4">
@@ -186,7 +116,30 @@ export default function Collections() {
           {categoryListItems}
         </div>
       )}
-      <DialogForm />
+
+      <CreateDialog
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setEditCategoryData(null);
+        }}
+        category={useMemo(
+          () => ({
+            editData: editCategoryData,
+            onCreate: (newCategory: ICategory) => {
+              setCategoryList((prev) => [...prev, newCategory]);
+            },
+            onUpdate: (editedCategory: ICategory) => {
+              setCategoryList((prev) =>
+                prev.map((c) =>
+                  c.id === editedCategory.id ? editedCategory : c
+                )
+              );
+            },
+          }),
+          [editCategoryData]
+        )}
+      />
     </>
   );
 }

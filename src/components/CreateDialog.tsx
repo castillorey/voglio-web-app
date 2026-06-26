@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, LayoutGrid, Package } from "lucide-react";
 import {
@@ -23,16 +23,30 @@ import { ICategory, IVoglio } from "./voglio/VoglioForm";
 
 type Mode = "choose" | "category" | "voglio";
 
+interface CategoryConfig {
+  editData?: ICategory | null;
+  onCreate?: (category: ICategory) => void;
+  onUpdate?: (category: ICategory) => void;
+}
+
 export default function CreateDialog({
   open,
   onClose,
+  category,
 }: {
   open: boolean;
   onClose: () => void;
+  category?: CategoryConfig;
 }) {
   const navigate = useNavigate();
   const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
-  const [mode, setMode] = useState<Mode>("choose");
+  const [mode, setMode] = useState<Mode>(category ? "category" : "choose");
+
+  useEffect(() => {
+    if (open) {
+      setMode(category ? "category" : "choose");
+    }
+  }, [open, category]);
 
   const resetAndClose = () => {
     setMode("choose");
@@ -40,8 +54,20 @@ export default function CreateDialog({
   };
 
   const handleCategoryCreated = (newCategory: ICategory) => {
-    resetAndClose();
-    navigate(`/category/${newCategory.id}`);
+    if (category?.onCreate) {
+      category.onCreate(newCategory);
+      resetAndClose();
+    } else {
+      resetAndClose();
+      navigate(`/category/${newCategory.id}`);
+    }
+  };
+
+  const handleCategoryUpdated = (editedCategory: ICategory) => {
+    if (category?.onUpdate) {
+      category.onUpdate(editedCategory);
+      resetAndClose();
+    }
   };
 
   const handleVoglioCreated = (newVoglio: IVoglio) => {
@@ -55,12 +81,12 @@ export default function CreateDialog({
     mode === "choose"
       ? "Create new"
       : mode === "category"
-        ? "New category"
+        ? category?.editData ? "Edit category" : "New category"
         : "New voglio";
 
   const HeaderContent = () => (
     <div className="flex items-center gap-2">
-      {mode !== "choose" && (
+      {mode !== "choose" && !category && (
         <Button
           variant="ghost"
           size="icon"
@@ -76,7 +102,7 @@ export default function CreateDialog({
 
   const content = (
     <>
-      {mode === "choose" && (
+      {mode === "choose" && !category && (
         <div className="flex flex-col gap-3 mt-1">
           <button
             type="button"
@@ -116,8 +142,9 @@ export default function CreateDialog({
       )}
       {mode === "category" && (
         <CategoryForm
-          editCategoryData={null}
+          editCategoryData={category?.editData ?? null}
           onCreateCategory={handleCategoryCreated}
+          onUpdateCategory={category?.onUpdate ? handleCategoryUpdated : undefined}
         />
       )}
       {mode === "voglio" && (
@@ -130,6 +157,7 @@ export default function CreateDialog({
     return (
       <Drawer
         open={open}
+        shouldScaleBackground={!category}
         onOpenChange={(o) => {
           if (!o) resetAndClose();
         }}
@@ -137,7 +165,7 @@ export default function CreateDialog({
         <DrawerContent className="px-5 pb-6">
           <DrawerHeader className="text-left px-0">
             <div className="flex items-center gap-2">
-              {mode !== "choose" && (
+              {mode !== "choose" && !category && (
                 <Button
                   variant="ghost"
                   size="icon"
