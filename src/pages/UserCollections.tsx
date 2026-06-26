@@ -141,7 +141,7 @@ export default function UserCollections() {
       </div>
 
       <div className="mt-6">
-        <p className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wide">Public collections</p>
+        <p className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wide">Public categories</p>
       </div>
 
       <div className="mt-4 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2">
@@ -166,7 +166,7 @@ export default function UserCollections() {
         ))}
         {categoryList.length === 0 && (
           <p className="col-span-full text-center text-[#6B6E85] text-sm mt-8">
-            No public collections yet
+            No public categories yet
           </p>
         )}
       </div>

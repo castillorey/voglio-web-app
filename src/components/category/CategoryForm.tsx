@@ -164,7 +164,7 @@ export default function CategoryForm({
           <div className="flex justify-between items-center pt-2">
             <div className="pr-4">
               <p className="text-sm font-medium text-[#1B1B2D]">
-                Private collection
+                Private category
               </p>
               <p className="text-xs text-[#6B6E85] mt-0.5">
                 Only you and your friends can see this

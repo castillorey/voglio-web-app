@@ -98,7 +98,7 @@ export default function Collections() {
         <div className="w-12 h-12 rounded-full bg-[#F1EEFF] flex items-center justify-center">
           <Plus strokeWidth="2" className="size-6 text-[#7B61FF]" />
         </div>
-        <span className="text-xs font-semibold text-[#6B6E85]">New collection</span>
+        <span className="text-xs font-semibold text-[#6B6E85]">New category</span>
       </div>
     </Card>
   );
@@ -174,7 +174,7 @@ export default function Collections() {
           <div className="text-5xl mb-5">👋</div>
           <h2 className="font-display text-2xl text-[#1B1B2D] mb-2">Welcome to Voglio!</h2>
           <p className="text-sm text-[#6B6E85] mb-8 leading-relaxed max-w-xs mx-auto">
-            Start building your wishlist. Create your first collection and add the things you want.
+            Start building your wishlist. Create your first category and add the things you want.
           </p>
           <div className="max-w-[200px] mx-auto">
             <NewCategoryCard />

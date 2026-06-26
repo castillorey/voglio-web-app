@@ -91,7 +91,7 @@ export default function CreateDialog({
                 New category
               </p>
               <p className="text-xs text-[#6B6E85] mt-0.5">
-                Create a collection for your wishes
+                Create a category for your wishes
               </p>
             </div>
           </button>
@@ -108,7 +108,7 @@ export default function CreateDialog({
                 New voglio
               </p>
               <p className="text-xs text-[#6B6E85] mt-0.5">
-                Add a wishlist item to a collection
+                Add a wishlist item to a category
               </p>
             </div>
           </button>

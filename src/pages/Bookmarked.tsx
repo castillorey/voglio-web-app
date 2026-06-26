@@ -134,7 +134,7 @@ export default function Bookmarked() {
             No saved items yet
           </h2>
           <p className="text-sm text-[#6B6E85] mt-2 max-w-xs">
-            Browse your friends' collections and bookmark items you like
+            Browse your friends' categories and bookmark items you like
           </p>
           <Button
             variant="secondary"
