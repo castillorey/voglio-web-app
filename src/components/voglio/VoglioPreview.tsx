@@ -139,7 +139,7 @@ export default function VoglioPreview({
   };
 
   return (
-    <Card className="relative rounded-[20px] border border-[#F0F1F6] overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.04)]">
+    <Card className={`relative rounded-[20px] border overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.04)] ${isTaken ? "border-[#7B61FF]" : "border-[#F0F1F6]"}`}>
       {isOwner && (isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />)}
       <CardContent className="p-0">
         {props.imageUrl ? (
@@ -157,7 +157,7 @@ export default function VoglioPreview({
         )}
 
         <div className="p-4">
-          <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center justify-between gap-2">
             <div className="min-w-0 flex-1">
               <h4 className="font-bold text-sm text-[#1B1B2D] truncate">{props.name}</h4>
               {props.notes && <p className="mt-1 text-xs text-[#6B6E85] line-clamp-2">{props.notes}</p>}
@@ -165,31 +165,29 @@ export default function VoglioPreview({
                 <p className="mt-2 text-xs font-semibold text-[#7B61FF]">${props.price}</p>
               )}
             </div>
-            {!isOwner && (
+             {!isOwner && (
               <div className="flex gap-1.5 shrink-0">
                 {props.referenceLink && (
                   <Button
-                    size="sm"
                     variant="ghost"
-                    className="size-8 rounded-full text-[#6B6E85] hover:text-[#7B61FF] hover:bg-[#F1EEFF]"
+                    className="size-12 rounded-full text-[#6B6E85] p-0 [&_svg]:size-5"
                     onClick={(e) => {
                       e.stopPropagation();
                       window.open(props.referenceLink, "_blank");
                     }}
                   >
-                    <ExternalLink className="size-4" />
+                    <ExternalLink size={28} />
                   </Button>
                 )}
                 <Button
-                  size="sm"
                   variant="ghost"
-                  className={`size-8 rounded-full ${isTaken ? "text-[#7B61FF] bg-[#F1EEFF]" : "text-[#6B6E85] hover:text-[#6B6E85] hover:bg-transparent"}`}
+                  className={`size-12 rounded-full p-0 [&_svg]:size-5 ${isTaken ? "text-[#7B61FF] bg-[#F1EEFF]" : "text-[#6B6E85] hover:text-[#6B6E85] hover:bg-transparent"}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     onToggleTaken?.();
                   }}
                 >
-                  {isTaken ? <BookmarkCheck className="size-4" /> : <Bookmark className="size-4" />}
+                  {isTaken ? <BookmarkCheck /> : <Bookmark />}
                 </Button>
               </div>
             )}
