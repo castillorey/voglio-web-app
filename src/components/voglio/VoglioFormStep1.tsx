@@ -7,9 +7,11 @@ import { IVoglio } from "./VoglioForm";
 
 export default function VoglioFormStep1({
   formData,
+  errors,
   onFormChange,
 }: {
   formData: IVoglio;
+  errors: { name?: string; imageUrl?: string; categoryId?: string };
   onFormChange: (formData: IVoglio) => void;
 }) {
   return (
@@ -27,8 +29,11 @@ export default function VoglioFormStep1({
             onFormChange({ ...formData, name: event.target.value });
           }}
           value={formData.name}
-          className="mt-1.5"
+          className={`mt-1.5 ${errors.name ? "border-red-500" : ""}`}
         />
+        {errors.name && (
+          <p className="mt-1 text-xs text-red-500">{errors.name}</p>
+        )}
       </div>
 
       {/* Description */}
@@ -51,7 +56,7 @@ export default function VoglioFormStep1({
       {/* Reference image */}
       <div>
         <Label htmlFor="image" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-          Reference image <span className="text-xs font-normal normal-case text-[#8C8F9E]">(Optional)</span>
+          Reference image
         </Label>
         <ImageUploader
           formData={formData}
@@ -59,6 +64,9 @@ export default function VoglioFormStep1({
             onFormChange({ ...formData, imageUrl: "", imageFile: newImageFile })
           }
         />
+        {/* {errors.imageUrl && (
+          <p className="mt-1 text-xs text-red-500">{errors.imageUrl}</p>
+        )} */}
       </div>
     </div>
   );

@@ -45,6 +45,12 @@ export interface ICategory {
   isPrivate: boolean;
 }
 
+interface FormErrors {
+  name?: string;
+  imageUrl?: string;
+  categoryId?: string;
+}
+
 export default function VoglioForm({
   categoryId,
   editVoglioData,
@@ -62,8 +68,22 @@ export default function VoglioForm({
 
   const [step, setStep] = useState(1);
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
+  const [errors, setErrors] = useState<FormErrors>({});
 
-  const handleNextStep = () => setStep(step + 1);
+  const handleFormChange = (newFormData: IVoglio) => {
+    setFormData(newFormData);
+    setErrors({});
+  };
+
+  const handleNextStep = () => {
+    const newErrors: FormErrors = {};
+    if (!formData.name.trim()) newErrors.name = "Title is required";
+    //if (!formData.imageUrl && !formData.imageFile) newErrors.imageUrl = "Image is required";
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+    setStep(step + 1);
+  };
+
   const handlePrevStep = () => setStep(step > 1 ? step - 1 : 1);
 
   const emptyForm = {
@@ -119,6 +139,17 @@ export default function VoglioForm({
   };
 
   const formDataPublish = async () => {
+    const newErrors: FormErrors = {};
+    if (!formData.name.trim()) newErrors.name = "Title is required";
+    if (!formData.imageUrl && !formData.imageFile) newErrors.imageUrl = "Image is required";
+    if (!formData.categoryId) newErrors.categoryId = "Category is required";
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      if (newErrors.name || newErrors.imageUrl) setStep(1);
+      return;
+    }
+
     if (formData.imageFile) {
       await uploadImage(formData.imageFile);
     } else {
@@ -190,14 +221,16 @@ export default function VoglioForm({
       {step === 1 && (
         <VoglioFormStep1
           formData={formData}
-          onFormChange={setFormData}
+          errors={errors}
+          onFormChange={handleFormChange}
         />
       )}
       {step === 2 && (
         <VoglioFormStep2
           formData={formData}
+          errors={errors}
           categoryList={categoryList}
-          onFormChange={setFormData}
+          onFormChange={handleFormChange}
         />
       )}
       <div className="mt-6 pt-4 border-t border-[#F0F1F6] xs:flex justify-end gap-3">

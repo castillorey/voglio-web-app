@@ -18,10 +18,12 @@ import { ICategory, IVoglio } from "./VoglioForm";
 
 export default function VoglioFormStep2({
   formData,
+  errors,
   categoryList,
   onFormChange,
 }: {
   formData: IVoglio;
+  errors: { name?: string; imageUrl?: string; categoryId?: string };
   categoryList: ICategory[];
   onFormChange: (formData: IVoglio) => void;
 }) {
@@ -62,7 +64,7 @@ export default function VoglioFormStep2({
             if (value) return onFormChange({ ...formData, categoryId: value });
           }}
         >
-          <SelectTrigger className="mt-1.5 w-full">
+          <SelectTrigger className={`mt-1.5 w-full ${errors.categoryId ? "border-red-500" : ""}`}>
             <SelectValue placeholder="Select a category" />
           </SelectTrigger>
           <SelectContent>
@@ -78,6 +80,9 @@ export default function VoglioFormStep2({
             </SelectGroup>
           </SelectContent>
         </Select>
+        {errors.categoryId && (
+          <p className="mt-1 text-xs text-red-500">{errors.categoryId}</p>
+        )}
       </div>
 
       {/* Visibility */}
