@@ -75,6 +75,12 @@ export default function VoglioForm({
     setErrors({});
   };
 
+  const handleQuickCreateCategory = (newCategory: ICategory) => {
+    setCategoryList((prev) => [...prev, newCategory]);
+    setFormData((prev) => ({ ...prev, categoryId: newCategory.id?.toString() ?? null }));
+    setErrors((prev) => ({ ...prev, categoryId: undefined }));
+  };
+
   const handleNextStep = () => {
     const newErrors: FormErrors = {};
     if (!formData.name.trim()) newErrors.name = "Title is required";
@@ -232,6 +238,7 @@ export default function VoglioForm({
           errors={errors}
           categoryList={categoryList}
           onFormChange={handleFormChange}
+          onQuickCreateCategory={handleQuickCreateCategory}
         />
       )}
       <div className="mt-6 pt-4 border-t border-[#F0F1F6] xs:flex justify-end gap-3">
