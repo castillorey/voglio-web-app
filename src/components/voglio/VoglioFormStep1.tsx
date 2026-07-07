@@ -16,6 +16,22 @@ export default function VoglioFormStep1({
 }) {
   return (
     <div className="space-y-4 mt-2">
+      {/* Reference image */}
+      <div>
+        <Label htmlFor="image" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
+          Reference image
+        </Label>
+        <ImageUploader
+          formData={formData}
+          onImageChange={(newImageFile) =>
+            onFormChange({ ...formData, imageUrl: "", imageFile: newImageFile })
+          }
+        />
+        {/* {errors.imageUrl && (
+          <p className="mt-1 text-xs text-red-500">{errors.imageUrl}</p>
+        )} */}
+      </div>
+      
       {/* Title */}
       <div>
         <Label htmlFor="name" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
@@ -51,22 +67,6 @@ export default function VoglioFormStep1({
           value={formData.notes}
           className="mt-1.5"
         />
-      </div>
-
-      {/* Reference image */}
-      <div>
-        <Label htmlFor="image" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-          Reference image
-        </Label>
-        <ImageUploader
-          formData={formData}
-          onImageChange={(newImageFile) =>
-            onFormChange({ ...formData, imageUrl: "", imageFile: newImageFile })
-          }
-        />
-        {/* {errors.imageUrl && (
-          <p className="mt-1 text-xs text-red-500">{errors.imageUrl}</p>
-        )} */}
       </div>
     </div>
   );

@@ -115,6 +115,7 @@ export default function VoglioForm({
     const { data, error } = await supabase
       .from("category")
       .select("*")
+      .eq("user_id", user.id)
       .order("id", { ascending: true });
 
     if (error) {
@@ -141,7 +142,7 @@ export default function VoglioForm({
   const formDataPublish = async () => {
     const newErrors: FormErrors = {};
     if (!formData.name.trim()) newErrors.name = "Title is required";
-    if (!formData.imageUrl && !formData.imageFile) newErrors.imageUrl = "Image is required";
+    // if (!formData.imageUrl && !formData.imageFile) newErrors.imageUrl = "Image is required";
     if (!formData.categoryId) newErrors.categoryId = "Category is required";
     setErrors(newErrors);
 
