@@ -30,6 +30,7 @@ export default function CategoryForm({
   const [formData, setFormData] = useState<ICategory>(emptyForm);
   const [emojiInput, setEmojiInput] = useState("");
   const [openEmoji, setOpenEmoji] = useState(false);
+  const [nameError, setNameError] = useState("");
 
   useEffect(() => {
     if (editCategoryData) {
@@ -46,6 +47,11 @@ export default function CategoryForm({
   };
 
   const formDataPublish = async () => {
+    if (!formData.name.trim()) {
+      setNameError("Name is required");
+      return;
+    }
+
     const categoryInfo = {
       id: formData.id,
       name: formData.name,
@@ -137,10 +143,14 @@ export default function CategoryForm({
               type="text"
               onChange={(event) => {
                 setFormData({ ...formData, name: event.target.value });
+                setNameError("");
               }}
               value={formData.name}
-              className="mt-1.5"
+              className={`mt-1.5 ${nameError ? "border-red-500" : ""}`}
             />
+            {nameError && (
+              <p className="mt-1 text-xs text-red-500">{nameError}</p>
+            )}
           </div>
 
           {/* description */}
