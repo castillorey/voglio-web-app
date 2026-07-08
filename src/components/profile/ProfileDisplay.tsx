@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
+import { Settings, Cake, MapPin, Shirt, Palette } from "lucide-react";
 import { IProfile } from "@/services/profile";
 import { PreferenceMap } from "@/services/preferences";
 import { Card, Chip, ProfileRow } from "./profile-shared";
@@ -78,6 +78,44 @@ export default function ProfileDisplay({
             Edit
           </Button>
         </div>
+
+        {/* Empty state */}
+        {!hasAboutData && !hasSizeData && Object.keys(preferences).length === 0 && (
+          <div className="mt-8 rounded-xl border border-dashed border-[#E0E1E8] p-6 text-center">
+            <p className="text-sm font-medium text-[#1B1B2D]">
+              Your profile is looking empty
+            </p>
+            <p className="text-xs text-[#6B6E85] mt-1">
+              Tap Edit to add your info and help friends find the perfect gift for you
+            </p>
+            <div className="flex justify-center gap-4 mt-5">
+              <div className="flex flex-col items-center gap-1.5">
+                <div className="w-10 h-10 rounded-full bg-[#FFF0F5] flex items-center justify-center">
+                  <Cake className="size-4 text-[#FF59C7]" />
+                </div>
+                <span className="text-[10px] text-[#8C8F9E]">Birthday</span>
+              </div>
+              <div className="flex flex-col items-center gap-1.5">
+                <div className="w-10 h-10 rounded-full bg-[#EEF4FF] flex items-center justify-center">
+                  <MapPin className="size-4 text-[#4A8CFF]" />
+                </div>
+                <span className="text-[10px] text-[#8C8F9E]">Location</span>
+              </div>
+              <div className="flex flex-col items-center gap-1.5">
+                <div className="w-10 h-10 rounded-full bg-[#F0FFF4] flex items-center justify-center">
+                  <Shirt className="size-4 text-[#34C759]" />
+                </div>
+                <span className="text-[10px] text-[#8C8F9E]">Sizes</span>
+              </div>
+              <div className="flex flex-col items-center gap-1.5">
+                <div className="w-10 h-10 rounded-full bg-[#FFF8EE] flex items-center justify-center">
+                  <Palette className="size-4 text-[#FF9F0A]" />
+                </div>
+                <span className="text-[10px] text-[#8C8F9E]">Colors</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* About Me Card */}
         {hasAboutData && (

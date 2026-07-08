@@ -11,6 +11,7 @@ import { fetchPreferences, PreferenceMap } from "../services/preferences";
 import ProfileDisplay from "@/components/profile/ProfileDisplay";
 import ProfileEdit from "@/components/profile/ProfileEdit";
 import { getZodiacSign } from "@/components/profile/profile-utils";
+import { Cake, MapPin, Shirt, Palette, User } from "lucide-react";
 
 export default function Perfil() {
     const navigate = useNavigate();
@@ -156,20 +157,67 @@ export default function Perfil() {
         return (
             <div className="min-h-screen" style={{ background: "#F8F8FB" }}>
               <div className="mx-auto" style={{ maxWidth: 430, padding: 20 }}>
-                <h2 className="text-xl font-bold text-[#1B1B2D]">Profile</h2>
-                <p className="mt-2 text-sm text-[#5E6173]">Set up your profile to get started</p>
-                <div className="mt-6 space-y-4">
+                <div className="flex flex-col items-center pt-8 pb-6">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#FF59C7] to-[#7B61FF] flex items-center justify-center mb-4">
+                    <User className="size-9 text-white" />
+                  </div>
+                  <h2 className="font-display text-2xl text-[#1B1B2D]">Welcome to your profile</h2>
+                  <p className="mt-1 text-sm text-[#5E6173] text-center">
+                    Set up your profile so your friends can find you
+                  </p>
+                </div>
+
+                <div className="space-y-3 mb-8">
+                  <div className="flex items-center gap-3 rounded-xl bg-white border border-[#F0F1F6] px-4 py-3">
+                    <div className="w-9 h-9 rounded-full bg-[#FFF0F5] flex items-center justify-center shrink-0">
+                      <Cake className="size-4 text-[#FF59C7]" />
+                    </div>
                     <div>
-                        <Label htmlFor="displayName" className="text-xs text-[#8C8F9E]">Display name</Label>
+                      <p className="text-sm font-medium text-[#1B1B2D]">Birth date</p>
+                      <p className="text-xs text-[#8C8F9E]">Share your birthday &amp; zodiac sign</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 rounded-xl bg-white border border-[#F0F1F6] px-4 py-3">
+                    <div className="w-9 h-9 rounded-full bg-[#EEF4FF] flex items-center justify-center shrink-0">
+                      <MapPin className="size-4 text-[#4A8CFF]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-[#1B1B2D]">Location</p>
+                      <p className="text-xs text-[#8C8F9E]">Let others know where you&apos;re from</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 rounded-xl bg-white border border-[#F0F1F6] px-4 py-3">
+                    <div className="w-9 h-9 rounded-full bg-[#F0FFF4] flex items-center justify-center shrink-0">
+                      <Shirt className="size-4 text-[#34C759]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-[#1B1B2D]">Clothing sizes</p>
+                      <p className="text-xs text-[#8C8F9E]">Shirt, pants &amp; shoe sizes for gifts</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 rounded-xl bg-white border border-[#F0F1F6] px-4 py-3">
+                    <div className="w-9 h-9 rounded-full bg-[#FFF8EE] flex items-center justify-center shrink-0">
+                      <Palette className="size-4 text-[#FF9F0A]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-[#1B1B2D]">Favorite colors &amp; preferences</p>
+                      <p className="text-xs text-[#8C8F9E]">Add your favorite colors and custom interests</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                    <div>
+                        <Label htmlFor="displayName" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">Display name</Label>
                         <Input
                             id="displayName"
                             value={displayName}
                             onChange={(e) => setDisplayName(e.target.value)}
-                            className="mt-1 text-sm"
+                            className="mt-1.5 text-sm"
                             placeholder="Your name"
                         />
                     </div>
-                    <Button size="sm" onClick={handleCreate} disabled={saving}>
+                    <Button size="sm" onClick={handleCreate} disabled={saving} className="w-full text-xs font-bold">
                         {saving ? "Creating..." : "Create profile"}
                     </Button>
                 </div>
