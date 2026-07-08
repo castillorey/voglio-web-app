@@ -38,6 +38,17 @@ export default function VoglioFormStep2({
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [creating, setCreating] = useState(false);
 
+const presetCategories = [
+  { name: "Birthday", emoji: "🎂" },
+  { name: "Christmas", emoji: "🎄" },
+  { name: "Baby Shower", emoji: "🍼" },
+  { name: "Wedding", emoji: "💍" },
+  { name: "Housewarming", emoji: "🏠" },
+  { name: "Graduation", emoji: "🎓" },
+  { name: "Valentine", emoji: "💝" },
+  { name: "Just Because", emoji: "✨" },
+];
+
   const handleCreateCategory = async () => {
     if (!newCategoryName.trim()) return;
     setCreating(true);
@@ -109,6 +120,22 @@ export default function VoglioFormStep2({
             Category
           </Label>
           <div className="mt-1.5 space-y-3 rounded-xl border border-[#E0E1E8] p-4">
+            <div className="flex flex-wrap gap-1.5">
+              {presetCategories.map((preset) => (
+                <button
+                  key={preset.name}
+                  type="button"
+                  onClick={() => {
+                    setNewCategoryName(preset.name);
+                    setNewCategoryEmoji(preset.emoji);
+                  }}
+                  className="flex items-center gap-1 rounded-full border border-[#E0E1E8] px-2.5 py-1 text-xs text-[#6B6E85] hover:border-[#7B61FF] hover:text-[#7B61FF] hover:bg-[#F5F3FF] transition-colors"
+                >
+                  <span>{preset.emoji}</span>
+                  {preset.name}
+                </button>
+              ))}
+            </div>
             <div className="flex items-center gap-3">
               <button
                 type="button"
