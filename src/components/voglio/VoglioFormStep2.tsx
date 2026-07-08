@@ -241,26 +241,6 @@ const presetCategories = [
 
   return (
     <div className="space-y-4 mt-2">
-      {/* Reference link */}
-      <div className="relative">
-        <Label htmlFor="referenceLink" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-          Reference link <span className="text-xs font-normal normal-case text-[#8C8F9E]">(Optional)</span>
-        </Label>
-        <Input
-          id="referenceLink"
-          name="referenceLink"
-          type="text"
-          onChange={(event) => {
-            onFormChange({ ...formData, referenceLink: event.target.value });
-          }}
-          value={formData.referenceLink}
-          placeholder="https://..."
-          className="mt-1.5 pr-10"
-        />
-        <span className="absolute inset-y-0 top-8 end-3 grid place-content-center pointer-events-none">
-          <LinkIcon className="size-4 text-[#C4C7D3]" />
-        </span>
-      </div>
 
       {/* Category */}
       {categorySection()}
@@ -297,66 +277,90 @@ const presetCategories = [
       </button>
 
       {showMore && (
-        <div className="flex gap-4">
-          {/* Price */}
-          <div className="flex-1">
-            <Label htmlFor="price" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-              Price <span className="text-xs font-normal normal-case text-[#8C8F9E]">(Optional)</span>
+        <div>
+          {/* Reference link */}
+          <div className="relative">
+            <Label htmlFor="referenceLink" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
+              Reference link <span className="text-xs font-normal normal-case text-[#8C8F9E]">(Optional)</span>
             </Label>
-
             <Input
-              id="price"
-              name="price"
-              type="number"
+              id="referenceLink"
+              name="referenceLink"
+              type="text"
               onChange={(event) => {
-                onFormChange({ ...formData, price: +event.target.value });
+                onFormChange({ ...formData, referenceLink: event.target.value });
               }}
-              value={formData.price ?? ""}
-              placeholder="0.00"
-              className="mt-1.5"
+              value={formData.referenceLink}
+              placeholder="https://..."
+              className="mt-1.5 pr-10"
             />
+            <span className="absolute inset-y-0 top-8 end-3 grid place-content-center pointer-events-none">
+              <LinkIcon className="size-4 text-[#C4C7D3]" />
+            </span>
           </div>
 
-          {/* Quantity */}
-          <div className="flex-1">
-            <Label htmlFor="quantity" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-              Quantity
-            </Label>
+          <div className="mt-2 flex gap-4">
 
-            <div className="mt-2 flex items-center gap-1.5">
-              <Button
-                variant="secondary"
-                size="icon"
-                type="button"
-                onClick={() => {
-                  if (formData.quantity > 1) {
+            {/* Price */}
+            <div className="flex-1">
+              <Label htmlFor="price" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
+                Price <span className="text-xs font-normal normal-case text-[#8C8F9E]">(Optional)</span>
+              </Label>
+
+              <Input
+                id="price"
+                name="price"
+                type="number"
+                onChange={(event) => {
+                  onFormChange({ ...formData, price: +event.target.value });
+                }}
+                value={formData.price ?? ""}
+                placeholder="0.00"
+                className="mt-1.5"
+              />
+            </div>
+
+            {/* Quantity */}
+            <div className="flex-1">
+              <Label htmlFor="quantity" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
+                Quantity <span className="text-xs font-normal normal-case text-[#8C8F9E]">(Optional)</span>
+              </Label>
+
+              <div className="mt-2 flex items-center gap-1.5">
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  type="button"
+                  onClick={() => {
+                    if (formData.quantity > 1) {
+                      onFormChange({
+                        ...formData,
+                        quantity: formData.quantity - 1,
+                      });
+                    }
+                  }}
+                  className="size-8 rounded-lg"
+                >
+                  <Minus size={14} />
+                </Button>
+                <span className="w-14 text-sm text-center rounded-xl border border-[#E8E9EE] bg-white px-3 py-2 text-[#1B1B2D]">
+                  {formData.quantity}
+                </span>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  type="button"
+                  onClick={() => {
                     onFormChange({
                       ...formData,
-                      quantity: formData.quantity - 1,
+                      quantity: formData.quantity + 1,
                     });
-                  }
-                }}
-                className="size-8 rounded-lg"
-              >
-                <Minus size={14} />
-              </Button>
-              <span className="w-14 text-sm text-center rounded-xl border border-[#E8E9EE] bg-white px-3 py-2 text-[#1B1B2D]">
-                {formData.quantity}
-              </span>
-              <Button
-                variant="secondary"
-                size="icon"
-                type="button"
-                onClick={() => {
-                  onFormChange({
-                    ...formData,
-                    quantity: formData.quantity + 1,
-                  });
-                }}
-                className="size-8 rounded-lg"
-              >
-                <Plus size={14} />
-              </Button>
+                  }}
+                  className="size-8 rounded-lg"
+                >
+                  <Plus size={14} />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
