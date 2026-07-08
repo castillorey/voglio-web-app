@@ -16,4 +16,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      "/api/functions": {
+        target: "https://useejgiprosrfiabgukn.supabase.co",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/functions/, "/functions/v1"),
+      },
+    },
+  },
 })
