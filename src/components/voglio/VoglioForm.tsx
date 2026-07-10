@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import supabase from "../../supabase-client";
 import VoglioFormStep1 from "./VoglioFormStep1";
 import VoglioFormStep2 from "./VoglioFormStep2";
+import VoglioFormStep3 from "./VoglioFormStep3";
 
 export interface IVoglio {
   id: number | null;
@@ -83,8 +84,12 @@ export default function VoglioForm({
 
   const handleNextStep = () => {
     const newErrors: FormErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Title is required";
-    //if (!formData.imageUrl && !formData.imageFile) newErrors.imageUrl = "Image is required";
+    if (step === 1) {
+      // search step — no required validation
+    }
+    if (step === 2) {
+      if (!formData.name.trim()) newErrors.name = "Title is required";
+    }
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
     setStep(step + 1);
@@ -148,12 +153,12 @@ export default function VoglioForm({
   const formDataPublish = async () => {
     const newErrors: FormErrors = {};
     if (!formData.name.trim()) newErrors.name = "Title is required";
-    // if (!formData.imageUrl && !formData.imageFile) newErrors.imageUrl = "Image is required";
     if (!formData.categoryId) newErrors.categoryId = "Category is required";
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
-      if (newErrors.name || newErrors.imageUrl) setStep(1);
+      if (newErrors.name) setStep(2);
+      else if (newErrors.categoryId) setStep(3);
       return;
     }
 
@@ -223,6 +228,11 @@ export default function VoglioForm({
             step >= 2 ? "bg-[#7B61FF]" : "bg-[#E0E1E8]"
           }`}
         />
+        <span
+          className={`h-1.5 flex-1 rounded-full transition-colors ${
+            step >= 3 ? "bg-[#7B61FF]" : "bg-[#E0E1E8]"
+          }`}
+        />
       </div>
 
       {step === 1 && (
@@ -234,6 +244,13 @@ export default function VoglioForm({
       )}
       {step === 2 && (
         <VoglioFormStep2
+          formData={formData}
+          errors={errors}
+          onFormChange={handleFormChange}
+        />
+      )}
+      {step === 3 && (
+        <VoglioFormStep3
           formData={formData}
           errors={errors}
           categoryList={categoryList}
@@ -252,16 +269,16 @@ export default function VoglioForm({
             Previous
           </Button>
         )}
-        {step < 2 && (
+        {step < 3 && (
           <Button
             type="button"
             onClick={handleNextStep}
             className="w-full xs:w-auto mt-2 xs:mt-0 text-xs font-bold"
           >
-            Next
+            {step === 1 ? "Add manually" : "Next"}
           </Button>
         )}
-        {step == 2 && (
+        {step === 3 && (
           <Button
             type="button"
             onClick={formDataPublish}

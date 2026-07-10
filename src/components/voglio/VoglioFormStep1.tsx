@@ -1,17 +1,14 @@
 import { useState, useRef } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Search, Loader2 } from "lucide-react";
-import ImageUploader from "../ImageUploader";
 
 import { IVoglio } from "./VoglioForm";
 import { searchProducts, ProductResult } from "../../services/productSearch";
 
 export default function VoglioFormStep1({
   formData,
-  errors,
   onFormChange,
 }: {
   formData: IVoglio;
@@ -50,14 +47,12 @@ export default function VoglioFormStep1({
 
   return (
     <div className="space-y-4 mt-2">
-      {/* Product search */}
       <div>
-        <Label className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-          Browse product
-        </Label>
-        <p className="text-xs text-[#8C8F9E] mt-0.5 mb-2">
-          Search for a product to auto-fill the form
-        </p>
+        <div className="flex flex-col items-center pt-4 pb-2">
+          <p className="text-sm text-[#6B6E85] text-center">
+            Search for a product to get started, or skip and fill in details manually
+          </p>
+        </div>
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Input
@@ -118,58 +113,6 @@ export default function VoglioFormStep1({
             ))}
           </div>
         )}
-      </div>
-
-      <div className="border-t border-[#F0F1F6]" />
-
-      {/* Reference image */}
-      <div>
-        <Label htmlFor="image" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-          Reference image
-        </Label>
-        <ImageUploader
-          formData={formData}
-          onImageChange={(newImageFile) =>
-            onFormChange({ ...formData, imageUrl: "", imageFile: newImageFile })
-          }
-        />
-      </div>
-
-      {/* Title */}
-      <div>
-        <Label htmlFor="name" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-          Title
-        </Label>
-        <Input
-          id="name"
-          name="name"
-          type="text"
-          onChange={(event) => {
-            onFormChange({ ...formData, name: event.target.value });
-          }}
-          value={formData.name}
-          className={`mt-1.5 ${errors.name ? "border-red-500" : ""}`}
-        />
-        {errors.name && (
-          <p className="mt-1 text-xs text-red-500">{errors.name}</p>
-        )}
-      </div>
-
-      {/* Description */}
-      <div>
-        <Label htmlFor="notes" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-          Description
-        </Label>
-        <Textarea
-          id="notes"
-          name="notes"
-          rows={2}
-          onChange={(event) => {
-            onFormChange({ ...formData, notes: event.target.value });
-          }}
-          value={formData.notes}
-          className="mt-1.5"
-        />
       </div>
     </div>
   );

@@ -37,7 +37,7 @@ serve(async (req) => {
     const results = data.shopping_results.map((item: any) => ({
       title: item.title ?? "",
       price: item.price ?? "",
-      link: item.link ?? "",
+      link: item.link || item.product_link || item.merchant_link || "",
       thumbnail: item.thumbnail ?? "",
       source: item.source ?? "",
       description: item.extracted_description ?? item.description ?? "",
