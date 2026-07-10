@@ -1,0 +1,53 @@
+<svg width="900" height="280" viewBox="0 0 900 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <linearGradient id="voglio" x1="60" y1="40" x2="220" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF8F7D"/>
+      <stop offset="100%" stop-color="#FF6F61"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Icon -->
+  <g transform="translate(20 20)">
+    <rect
+      x="0"
+      y="0"
+      width="240"
+      height="240"
+      rx="64"
+      fill="#FFFDFB"
+    />
+
+    <!-- Heart + V -->
+    <path
+      d="
+      M120 190
+      C95 160 60 125 60 85
+      C60 55 82 35 110 35
+      C128 35 143 43 152 58
+
+      C161 43 176 35 194 35
+      C222 35 244 55 244 85
+      C244 125 209 160 184 190
+
+      L152 228
+      Z"
+      transform="translate(-32 0)"
+      fill="url(#voglio)"
+    />
+
+    <!-- Inner V cut -->
+    <path
+      d="
+      M90 85
+      L120 180
+      L150 85
+      "
+      fill="none"
+      stroke="#FFFDFB"
+      stroke-width="18"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </g>
+</svg>
