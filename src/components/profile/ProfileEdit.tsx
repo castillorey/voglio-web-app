@@ -375,7 +375,7 @@ export default function ProfileEdit({
               />
               <Button
                 size="sm"
-                className="shrink-0 bg-[#7B61FF] hover:bg-[#6B4EFF] text-white"
+                className="shrink-0 h-9 bg-[#7B61FF] hover:bg-[#6B4EFF] text-white"
                 onClick={async () => {
                   const name = newPrefCategory.trim();
                   if (!name || preferences[name]) return;
