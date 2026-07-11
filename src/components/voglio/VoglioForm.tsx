@@ -76,6 +76,12 @@ export default function VoglioForm({
     setErrors({});
   };
 
+  const handleProductSelected = (data: IVoglio) => {
+    setFormData(data);
+    setErrors({});
+    setStep(2);
+  };
+
   const handleQuickCreateCategory = (newCategory: ICategory) => {
     setCategoryList((prev) => [...prev, newCategory]);
     setFormData((prev) => ({ ...prev, categoryId: newCategory.id?.toString() ?? null }));
@@ -240,6 +246,7 @@ export default function VoglioForm({
           formData={formData}
           errors={errors}
           onFormChange={handleFormChange}
+          onProductSelected={handleProductSelected}
         />
       )}
       {step === 2 && (

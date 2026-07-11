@@ -8,11 +8,12 @@ import { searchProducts, ProductResult } from "../../services/productSearch";
 
 export default function VoglioFormStep1({
   formData,
-  onFormChange,
+  onProductSelected,
 }: {
   formData: IVoglio;
   errors: { name?: string; imageUrl?: string; categoryId?: string };
   onFormChange: (formData: IVoglio) => void;
+  onProductSelected?: (data: IVoglio) => void;
 }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<ProductResult[]>([]);
@@ -30,7 +31,7 @@ export default function VoglioFormStep1({
   };
 
   const handleSelectResult = (item: ProductResult) => {
-    onFormChange({
+    onProductSelected?.({
       ...formData,
       name: item.title,
       notes: item.description,
