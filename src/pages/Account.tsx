@@ -11,6 +11,7 @@ import { fetchPreferences, PreferenceMap } from "../services/preferences";
 import ProfileDisplay from "@/components/profile/ProfileDisplay";
 import ProfileEdit from "@/components/profile/ProfileEdit";
 import { getZodiacSign } from "@/components/profile/profile-utils";
+import { SizingFormat } from "@/components/profile/profile-sizes";
 import { Cake, MapPin, Shirt, Palette, User } from "lucide-react";
 
 export default function Perfil() {
@@ -32,6 +33,7 @@ export default function Perfil() {
     const [preferences, setPreferences] = useState<PreferenceMap>({});
     const [newPrefItem, setNewPrefItem] = useState<Record<string, string>>({});
     const [newPrefCategory, setNewPrefCategory] = useState("");
+    const [sizingFormat, setSizingFormat] = useState<SizingFormat>("US");
     const [colorOptions, setColorOptions] = useState<{ name: string; hex: string }[]>([]);
     const avatarInputRef = useRef<HTMLInputElement>(null);
     const CDNURL = import.meta.env.VITE_CDNURL;
@@ -237,6 +239,7 @@ export default function Perfil() {
                 shirtSize={shirtSize} setShirtSize={setShirtSize}
                 pantsSize={pantsSize} setPantsSize={setPantsSize}
                 shoeSize={shoeSize} setShoeSize={setShoeSize}
+                sizingFormat={sizingFormat} setSizingFormat={setSizingFormat}
                 preferences={preferences} setPreferences={setPreferences}
                 newPrefItem={newPrefItem} setNewPrefItem={setNewPrefItem}
                 newPrefCategory={newPrefCategory} setNewPrefCategory={setNewPrefCategory}

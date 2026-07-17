@@ -20,11 +20,9 @@ import {
 } from "@/services/preferences";
 import { Card } from "./profile-shared";
 import { getColorHex } from "./profile-utils";
+import { SIZES, SIZING_FORMATS, SizingFormat } from "./profile-sizes";
 
 const GENDER_OPTIONS = ["", "Male", "Female", "Non-binary", "Other", "Prefer not to say"];
-const SHIRT_SIZES = ["", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
-const PANTS_SIZES = ["", "28", "30", "32", "34", "36", "38", "40"];
-const SHOE_SIZES = ["", "5", "5.5", "6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12", "13"];
 
 interface ProfileEditProps {
   profile: IProfile;
@@ -42,6 +40,8 @@ interface ProfileEditProps {
   setPantsSize: (v: string) => void;
   shoeSize: string;
   setShoeSize: (v: string) => void;
+  sizingFormat: SizingFormat;
+  setSizingFormat: (v: SizingFormat) => void;
   preferences: PreferenceMap;
   setPreferences: (p: PreferenceMap | ((prev: PreferenceMap) => PreferenceMap)) => void;
   newPrefItem: Record<string, string>;
@@ -68,6 +68,7 @@ export default function ProfileEdit({
   shirtSize, setShirtSize,
   pantsSize, setPantsSize,
   shoeSize, setShoeSize,
+  sizingFormat, setSizingFormat,
   preferences, setPreferences,
   newPrefItem, setNewPrefItem,
   newPrefCategory, setNewPrefCategory,
@@ -177,7 +178,25 @@ export default function ProfileEdit({
           </Card>
 
           <Card>
-            <h3 className="text-sm font-semibold text-[#1B1B2D] mb-4">Sizes</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold text-[#1B1B2D]">Sizes</h3>
+              <div className="flex rounded-lg border border-[#E8E9EE] overflow-hidden">
+                {SIZING_FORMATS.map((fmt) => (
+                  <button
+                    key={fmt.value}
+                    type="button"
+                    onClick={() => { setSizingFormat(fmt.value); setShirtSize(""); setPantsSize(""); setShoeSize(""); }}
+                    className={`px-3 py-1 text-xs font-medium transition-colors ${
+                      sizingFormat === fmt.value
+                        ? "bg-[#1B1B2D] text-white"
+                        : "bg-white text-[#8C8F9E] hover:text-[#1B1B2D]"
+                    }`}
+                  >
+                    {fmt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <Label htmlFor="shirtSize" className="text-xs text-[#8C8F9E]">Shirt</Label>
@@ -187,8 +206,9 @@ export default function ProfileEdit({
                   onChange={(e) => setShirtSize(e.target.value)}
                   className="mt-1 flex h-9 w-full rounded-md border border-[#F0F1F6] bg-transparent px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#7B61FF]"
                 >
-                  {SHIRT_SIZES.map((opt) => (
-                    <option key={opt} value={opt}>{opt || "Select..."}</option>
+                  <option value="">Select...</option>
+                  {SIZES[sizingFormat].shirt.map((opt) => (
+                    <option key={opt} value={opt}>{opt}</option>
                   ))}
                 </select>
               </div>
@@ -200,8 +220,9 @@ export default function ProfileEdit({
                   onChange={(e) => setPantsSize(e.target.value)}
                   className="mt-1 flex h-9 w-full rounded-md border border-[#F0F1F6] bg-transparent px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#7B61FF]"
                 >
-                  {PANTS_SIZES.map((opt) => (
-                    <option key={opt} value={opt}>{opt || "Select..."}</option>
+                  <option value="">Select...</option>
+                  {SIZES[sizingFormat].pants.map((opt) => (
+                    <option key={opt} value={opt}>{opt}</option>
                   ))}
                 </select>
               </div>
@@ -213,8 +234,9 @@ export default function ProfileEdit({
                   onChange={(e) => setShoeSize(e.target.value)}
                   className="mt-1 flex h-9 w-full rounded-md border border-[#F0F1F6] bg-transparent px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#7B61FF]"
                 >
-                  {SHOE_SIZES.map((opt) => (
-                    <option key={opt} value={opt}>{opt || "Select..."}</option>
+                  <option value="">Select...</option>
+                  {SIZES[sizingFormat].shoe.map((opt) => (
+                    <option key={opt} value={opt}>{opt}</option>
                   ))}
                 </select>
               </div>
