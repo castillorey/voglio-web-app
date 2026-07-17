@@ -4,15 +4,20 @@ export function getColorHex(color: string, colors: { name: string; hex: string }
   return found?.hex || "#CBD5E1";
 }
 
+function parseLocalDate(dateStr: string): Date {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
 export function formatDate(dateStr: string): string {
   if (!dateStr) return "";
-  const date = new Date(dateStr);
+  const date = parseLocalDate(dateStr);
   return date.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
 }
 
 export function getZodiacSign(dateStr: string): string {
   if (!dateStr) return "";
-  const date = new Date(dateStr);
+  const date = parseLocalDate(dateStr);
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
