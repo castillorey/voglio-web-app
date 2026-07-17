@@ -57,6 +57,7 @@ export default function Perfil() {
                 setShirtSize(prof.shirt_size || "");
                 setPantsSize(prof.pants_size || "");
                 setShoeSize(prof.shoe_size || "");
+                setSizingFormat((prof.sizing_format as SizingFormat) || "US");
                 const following = await getFollowing(currentUserId);
                 setFollowingCount(following.length);
                 const prefs = await fetchPreferences(currentUserId);
@@ -90,6 +91,7 @@ export default function Perfil() {
                 shirt_size: shirtSize || null,
                 pants_size: pantsSize || null,
                 shoe_size: shoeSize || null,
+                sizing_format: sizingFormat,
                 zodiac_sign: getZodiacSign(birthDate) || null,
             });
             setProfile(prof);
@@ -111,6 +113,7 @@ export default function Perfil() {
                 shirt_size: shirtSize || null,
                 pants_size: pantsSize || null,
                 shoe_size: shoeSize || null,
+                sizing_format: sizingFormat,
                 zodiac_sign: getZodiacSign(birthDate) || null,
             });
             setProfile(updated);
