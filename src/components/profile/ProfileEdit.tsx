@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Camera, Plus, Trash2, LogOut } from "lucide-react";
 import { RefObject } from "react";
 import {
@@ -151,16 +152,12 @@ export default function ProfileEdit({
           <Card>
             <h3 className="text-sm font-semibold text-[#1B1B2D] mb-4">Personal</h3>
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="birthDate" className="text-xs text-[#8C8F9E]">Birth date</Label>
-                <Input
-                  id="birthDate"
-                  type="date"
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
-                  className="mt-1 text-sm"
-                />
-              </div>
+              <DatePicker
+                id="birthDate"
+                label="Birth date"
+                value={birthDate}
+                onChange={setBirthDate}
+              />
               <div>
                 <Label htmlFor="gender" className="text-xs text-[#8C8F9E]">Gender</Label>
                 <select
