@@ -8,13 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+import { MobileSheet } from "@/components/ui/mobile-sheet";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { Button } from "@/components/ui/button";
 import CategoryForm from "./category/CategoryForm";
@@ -155,33 +149,22 @@ export default function CreateDialog({
 
   if (isSmallDevice) {
     return (
-      <Drawer
-        open={open}
-        shouldScaleBackground={!category}
-        onOpenChange={(o) => {
-          if (!o) resetAndClose();
-        }}
-      >
-        <DrawerContent className="px-5 pb-6">
-          <DrawerHeader className="text-left px-0">
-            <div className="flex items-center gap-2">
-              {mode !== "choose" && !category && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8 shrink-0 text-[#6B6E85] hover:text-[#1B1B2D]"
-                  onClick={() => setMode("choose")}
-                >
-                  <ChevronLeft className="size-5" />
-                </Button>
-              )}
-              <DrawerTitle className="font-display text-xl text-[#1B1B2D]">{title}</DrawerTitle>
-            </div>
-          </DrawerHeader>
-          <DrawerDescription aria-describedby="Create form" className="sr-only" />
-          {content}
-        </DrawerContent>
-      </Drawer>
+      <MobileSheet open={open} onClose={resetAndClose}>
+        <div className="flex items-center gap-2 mb-4">
+          {mode !== "choose" && !category && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8 shrink-0 text-[#6B6E85] hover:text-[#1B1B2D]"
+              onClick={() => setMode("choose")}
+            >
+              <ChevronLeft className="size-5" />
+            </Button>
+          )}
+          <h2 className="font-display text-xl text-[#1B1B2D]">{title}</h2>
+        </div>
+        {content}
+      </MobileSheet>
     );
   }
 
