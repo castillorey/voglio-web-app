@@ -11,6 +11,7 @@ import { fetchPreferences, PreferenceMap } from "../services/preferences";
 import ProfileDisplay from "@/components/profile/ProfileDisplay";
 import ProfileEdit from "@/components/profile/ProfileEdit";
 import { getZodiacSign } from "@/components/profile/profile-utils";
+import { SizingFormat } from "@/components/profile/profile-sizes";
 import { Cake, MapPin, Shirt, Palette, User } from "lucide-react";
 
 export default function Perfil() {
@@ -32,6 +33,7 @@ export default function Perfil() {
     const [preferences, setPreferences] = useState<PreferenceMap>({});
     const [newPrefItem, setNewPrefItem] = useState<Record<string, string>>({});
     const [newPrefCategory, setNewPrefCategory] = useState("");
+    const [sizingFormat, setSizingFormat] = useState<SizingFormat>("US");
     const [colorOptions, setColorOptions] = useState<{ name: string; hex: string }[]>([]);
     const avatarInputRef = useRef<HTMLInputElement>(null);
     const CDNURL = import.meta.env.VITE_CDNURL;
@@ -55,6 +57,7 @@ export default function Perfil() {
                 setShirtSize(prof.shirt_size || "");
                 setPantsSize(prof.pants_size || "");
                 setShoeSize(prof.shoe_size || "");
+                setSizingFormat((prof.sizing_format as SizingFormat) || "US");
                 const following = await getFollowing(currentUserId);
                 setFollowingCount(following.length);
                 const prefs = await fetchPreferences(currentUserId);
@@ -88,6 +91,7 @@ export default function Perfil() {
                 shirt_size: shirtSize || null,
                 pants_size: pantsSize || null,
                 shoe_size: shoeSize || null,
+                sizing_format: sizingFormat,
                 zodiac_sign: getZodiacSign(birthDate) || null,
             });
             setProfile(prof);
@@ -109,6 +113,7 @@ export default function Perfil() {
                 shirt_size: shirtSize || null,
                 pants_size: pantsSize || null,
                 shoe_size: shoeSize || null,
+                sizing_format: sizingFormat,
                 zodiac_sign: getZodiacSign(birthDate) || null,
             });
             setProfile(updated);
@@ -237,6 +242,7 @@ export default function Perfil() {
                 shirtSize={shirtSize} setShirtSize={setShirtSize}
                 pantsSize={pantsSize} setPantsSize={setPantsSize}
                 shoeSize={shoeSize} setShoeSize={setShoeSize}
+                sizingFormat={sizingFormat} setSizingFormat={setSizingFormat}
                 preferences={preferences} setPreferences={setPreferences}
                 newPrefItem={newPrefItem} setNewPrefItem={setNewPrefItem}
                 newPrefCategory={newPrefCategory} setNewPrefCategory={setNewPrefCategory}

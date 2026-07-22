@@ -25,6 +25,7 @@ export default function ProfileDisplay({
 }: ProfileDisplayProps) {
   const zodiacSign = profile.zodiac_sign || "";
   const hasAboutData = profile.birth_date || profile.gender || profile.location || zodiacSign;
+  const sizingFormat = profile.sizing_format || "US";
   const sizeData = [
     { label: "Camisa", value: profile.shirt_size },
     { label: "Pantalón", value: profile.pants_size },
@@ -134,7 +135,10 @@ export default function ProfileDisplay({
         <div className="grid grid-cols-2 gap-4 mt-6">
           {hasSizeData && (
             <Card className="p-4">
-              <h3 className="text-xs font-semibold text-[#1B1B2D] mb-3 uppercase tracking-wide">Tallas</h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-xs font-semibold text-[#1B1B2D] uppercase tracking-wide">Tallas</h3>
+                <span className="text-[10px] font-medium text-[#8C8F9E] bg-[#F0F1F6] px-2 py-0.5 rounded">{sizingFormat}</span>
+              </div>
               <div className="space-y-2.5">
                 {sizeData.map((s) => (
                   <div key={s.label} className="flex items-center justify-between">

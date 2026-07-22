@@ -68,6 +68,7 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS shoe_size TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS favorite_color TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS favorite_food TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS zodiac_sign TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS sizing_format TEXT;
 
 -- Follows table
 CREATE TABLE IF NOT EXISTS public.follows (
