@@ -115,6 +115,7 @@ export default function VoglioForm({
     price: null,
     isPrivate: false,
     isTaken: false,
+    userId: user?.id ?? "",
   };
   const [formData, setFormData] = useState<IVoglio>(emptyForm);
   let imageUrl = "";
