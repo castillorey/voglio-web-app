@@ -11,7 +11,7 @@ export default function Friends() {
   const navigate = useNavigate();
   const currentUserId = getCurrentUserId();
   
-  const [activeTab, setActiveTab] = useState<"todos" | "siguiendo" | "seguidores">("todos");
+  const [activeTab, setActiveTab] = useState<"todos" | "siguiendo" | "seguidores">("siguiendo");
   const [query, setQuery] = useState("");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   
@@ -96,7 +96,7 @@ export default function Friends() {
       // Filter out self
       const filtered = results.filter((p) => p.id !== currentUserId);
       setAllProfiles(filtered);
-      setActiveTab("todos"); // Switch to search/discovery tab
+      setActiveTab("todos");
     } catch (err) {
       console.error(err);
     }
@@ -138,8 +138,11 @@ export default function Friends() {
     const q = query.toLowerCase().trim();
     let baseList: IProfile[] = [];
 
-    if (activeTab === "todos") baseList = allProfiles;
-    else if (activeTab === "siguiendo") baseList = followingProfiles;
+    if (activeTab === "todos") {
+      // Only show search results when there's a query
+      if (!q) return [];
+      baseList = allProfiles;
+    } else if (activeTab === "siguiendo") baseList = followingProfiles;
     else if (activeTab === "seguidores") baseList = followersProfiles;
 
     if (!q) return baseList;
