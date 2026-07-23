@@ -103,7 +103,7 @@ export default function Bookmarked() {
 
   const handleUnmark = async (voglioId: number) => {
     if (!currentUserId) return;
-    await toggleVoglioTaken(voglioId, currentUserId, true);
+    await toggleVoglioTaken(voglioId, currentUserId);
     setItems((prev) =>
       prev.filter((item) => item.voglio.id !== voglioId),
     );
