@@ -112,7 +112,10 @@ export default function UserCollections() {
         <ChevronLeft className="size-5" />
       </Button>
 
-      <div className="flex items-start gap-4 mt-4">
+      <div
+        className="flex items-start gap-4 mt-4 cursor-pointer hover:opacity-80 transition-opacity"
+        onClick={() => navigate(`/friends/u/${username}/profile`)}
+      >
         <div className="relative shrink-0">
           <div className="w-14 h-14 rounded-full p-[2px]" style={{ background: "linear-gradient(135deg, #FF59C7, #7B61FF)" }}>
             <div className="w-full h-full rounded-full overflow-hidden bg-white">
