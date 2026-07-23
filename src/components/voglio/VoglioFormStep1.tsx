@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Loader2 } from "lucide-react";
@@ -9,24 +9,36 @@ import { searchProducts, ProductResult } from "../../services/productSearch";
 export default function VoglioFormStep1({
   formData,
   onProductSelected,
+  searchQuery,
+  setSearchQuery,
+  searchResults,
+  setSearchResults,
+  searching,
+  setSearching,
+  searched,
+  setSearched,
 }: {
   formData: IVoglio;
   errors: { name?: string; imageUrl?: string; categoryId?: string };
   onFormChange: (formData: IVoglio) => void;
   onProductSelected?: (data: IVoglio) => void;
+  searchQuery: string;
+  setSearchQuery: (v: string) => void;
+  searchResults: ProductResult[];
+  setSearchResults: (v: ProductResult[]) => void;
+  searching: boolean;
+  setSearching: (v: boolean) => void;
+  searched: boolean;
+  setSearched: (v: boolean) => void;
 }) {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<ProductResult[]>([]);
-  const [searching, setSearching] = useState(false);
-  const [searched, setSearched] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = async () => {
-    if (!query.trim()) return;
+    if (!searchQuery.trim()) return;
     setSearching(true);
     setSearched(true);
-    const data = await searchProducts(query.trim());
-    setResults(data);
+    const data = await searchProducts(searchQuery.trim());
+    setSearchResults(data);
     setSearching(false);
   };
 
@@ -40,9 +52,6 @@ export default function VoglioFormStep1({
       imageFile: null,
       price: item.price ? parseFloat(item.price.replace(/[^0-9.]/g, "")) || null : null,
     });
-    setQuery("");
-    setResults([]);
-    setSearched(false);
   };
 
   return (
@@ -57,8 +66,8 @@ export default function VoglioFormStep1({
           <div className="relative flex-1">
             <Input
               ref={searchInputRef}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSearch();
               }}
@@ -74,20 +83,20 @@ export default function VoglioFormStep1({
             variant="secondary"
             size="icon"
             onClick={handleSearch}
-            disabled={!query.trim() || searching}
+            disabled={!searchQuery.trim() || searching}
             className="shrink-0"
           >
             <Search className="size-4" />
           </Button>
         </div>
 
-        {searched && !searching && results.length === 0 && (
+        {searched && !searching && searchResults.length === 0 && (
           <p className="mt-2 text-xs text-[#8C8F9E]">No products found. Try a different search.</p>
         )}
 
-        {results.length > 0 && (
+        {searchResults.length > 0 && (
           <div className="mt-3 grid grid-cols-2 gap-2 max-h-72 overflow-y-auto">
-            {results.map((item, i) => (
+            {searchResults.map((item, i) => (
               <button
                 key={i}
                 type="button"
