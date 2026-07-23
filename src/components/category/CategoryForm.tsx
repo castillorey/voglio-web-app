@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Trash2 } from "lucide-react";
 
 import { ICategory } from "../voglio/VoglioForm";
+import { useTranslation } from "react-i18next";
 
 export default function CategoryForm({
   editCategoryData,
@@ -20,6 +21,7 @@ export default function CategoryForm({
   onCreateCategory?: (newCategory: ICategory) => void;
   onUpdateCategory?: (editedCategory: ICategory) => void;
 }) {
+  const { t } = useTranslation();
   const emptyForm = {
     id: null,
     name: "",
@@ -48,7 +50,7 @@ export default function CategoryForm({
 
   const formDataPublish = async () => {
     if (!formData.name.trim()) {
-      setNameError("Name is required");
+      setNameError(t("categoryForm.nameRequired"));
       return;
     }
 
@@ -117,7 +119,7 @@ export default function CategoryForm({
           onClick={() => setOpenEmoji(!openEmoji)}
           className="text-xs rounded-full"
         >
-          {!openEmoji ? "Choose emoji" : "Close"}
+          {!openEmoji ? t("categoryForm.chooseEmoji") : t("common.close")}
         </Button>
       </div>
 
@@ -135,7 +137,7 @@ export default function CategoryForm({
           {/* Name */}
           <div>
             <Label htmlFor="name" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-              Name
+              {t("categoryForm.name")}
             </Label>
             <Input
               id="name"
@@ -156,7 +158,7 @@ export default function CategoryForm({
           {/* description */}
           <div>
             <Label htmlFor="description" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-              Description
+              {t("categoryForm.description")}
             </Label>
             <Textarea
               id="description"
@@ -174,10 +176,10 @@ export default function CategoryForm({
           <div className="flex justify-between items-center pt-2">
             <div className="pr-4">
               <p className="text-sm font-medium text-[#1B1B2D]">
-                Private category
+                {t("categoryForm.privateCategory")}
               </p>
               <p className="text-xs text-[#6B6E85] mt-0.5">
-                Only you and your friends can see this
+                {t("categoryForm.onlyFriends")}
               </p>
             </div>
             <Switch
@@ -195,7 +197,7 @@ export default function CategoryForm({
               onClick={formDataPublish}
               className="w-full xs:w-auto text-xs font-bold"
             >
-              {editCategoryData ? "Update category" : "Create category"}
+              {editCategoryData ? t("categoryForm.updateCategory") : t("categoryForm.createCategory")}
             </Button>
           </div>
         </>

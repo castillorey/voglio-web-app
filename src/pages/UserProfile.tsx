@@ -17,10 +17,12 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getProfileByUsername, IProfile } from "../services/profile";
 import { formatDate, getZodiacSign } from "@/components/profile/profile-utils";
+import { useTranslation } from "react-i18next";
 
 export default function UserProfile() {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [profile, setProfile] = useState<IProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +40,7 @@ export default function UserProfile() {
     try {
       const prof = await getProfileByUsername(username);
       if (!prof) {
-        setError("User not found");
+        setError(t("friends.profileRequired"));
         setLoading(false);
         return;
       }
@@ -51,7 +53,7 @@ export default function UserProfile() {
 
   if (loading)
     return (
-      <div className="mt-8 text-center text-[#6B6E85] text-sm">Loading...</div>
+      <div className="mt-8 text-center text-[#6B6E85] text-sm">{t("common.loading")}</div>
     );
   if (error)
     return (
@@ -60,7 +62,7 @@ export default function UserProfile() {
   if (!profile)
     return (
       <div className="mt-8 text-center text-[#6B6E85] text-sm">
-        User not found
+        {t("common.error")}
       </div>
     );
 
@@ -112,7 +114,7 @@ export default function UserProfile() {
                 <MapPin className="size-5 text-[#7B61FF]" />
               </div>
               <div>
-                <p className="text-xs text-[#6B6E85] font-medium">Location</p>
+                <p className="text-xs text-[#6B6E85] font-medium">{t("userProfile.location")}</p>
                 <p className="text-sm font-semibold text-[#1B1B2D]">
                   {profile.location}
                 </p>
@@ -129,7 +131,7 @@ export default function UserProfile() {
                 <Calendar className="size-5 text-[#7B61FF]" />
               </div>
               <div>
-                <p className="text-xs text-[#6B6E85] font-medium">Birthday</p>
+                <p className="text-xs text-[#6B6E85] font-medium">{t("userProfile.birthday")}</p>
                 <p className="text-sm font-semibold text-[#1B1B2D]">
                   {formattedDate}
                 </p>
@@ -154,7 +156,7 @@ export default function UserProfile() {
                 <User className="size-5 text-[#7B61FF]" />
               </div>
               <div>
-                <p className="text-xs text-[#6B6E85] font-medium">Gender</p>
+                <p className="text-xs text-[#6B6E85] font-medium">{t("userProfile.gender")}</p>
                 <p className="text-sm font-semibold text-[#1B1B2D]">
                   {profile.gender}
                 </p>
@@ -172,7 +174,7 @@ export default function UserProfile() {
                   <Shirt className="size-5 text-[#7B61FF]" />
                 </div>
                 <div>
-                  <p className="text-xs text-[#6B6E85] font-medium">Sizes</p>
+                  <p className="text-xs text-[#6B6E85] font-medium">{t("userProfile.sizes")}</p>
                   {profile.sizing_format && (
                     <span className="inline-block mt-0.5 px-2 py-0.5 text-[10px] font-bold text-[#7B61FF] bg-[#F1EEFF] rounded-full">
                       {profile.sizing_format.toUpperCase()}
@@ -184,7 +186,7 @@ export default function UserProfile() {
                 {profile.shirt_size && (
                   <div className="text-center p-2 bg-[#F8F8FB] rounded-xl">
                     <Shirt className="size-4 mx-auto text-[#6B6E85] mb-1" />
-                    <p className="text-[10px] text-[#6B6E85]">Shirt</p>
+                    <p className="text-[10px] text-[#6B6E85]">{t("profile.shirt")}</p>
                     <p className="text-sm font-bold text-[#1B1B2D]">
                       {profile.shirt_size}
                     </p>
@@ -193,7 +195,7 @@ export default function UserProfile() {
                 {profile.pants_size && (
                   <div className="text-center p-2 bg-[#F8F8FB] rounded-xl">
                     <Footprints className="size-4 mx-auto text-[#6B6E85] mb-1" />
-                    <p className="text-[10px] text-[#6B6E85]">Pants</p>
+                    <p className="text-[10px] text-[#6B6E85]">{t("profile.pants")}</p>
                     <p className="text-sm font-bold text-[#1B1B2D]">
                       {profile.pants_size}
                     </p>
@@ -202,7 +204,7 @@ export default function UserProfile() {
                 {profile.shoe_size && (
                   <div className="text-center p-2 bg-[#F8F8FB] rounded-xl">
                     <Footprints className="size-4 mx-auto text-[#6B6E85] mb-1" />
-                    <p className="text-[10px] text-[#6B6E85]">Shoes</p>
+                    <p className="text-[10px] text-[#6B6E85]">{t("profile.shoe")}</p>
                     <p className="text-sm font-bold text-[#1B1B2D]">
                       {profile.shoe_size}
                     </p>
@@ -221,7 +223,7 @@ export default function UserProfile() {
                 <div className="w-10 h-10 rounded-full bg-[#F1EEFF] flex items-center justify-center shrink-0">
                   <Heart className="size-5 text-[#7B61FF]" />
                 </div>
-                <p className="text-xs text-[#6B6E85] font-medium">Favorites</p>
+                <p className="text-xs text-[#6B6E85] font-medium">{t("userProfile.favorites")}</p>
               </div>
               <div className="ml-[52px] space-y-2">
                 {profile.favorite_color && (
@@ -255,7 +257,7 @@ export default function UserProfile() {
           !profile.favorite_color &&
           !profile.favorite_food && (
             <p className="text-center text-[#6B6E85] text-sm mt-8">
-              No personal details added yet
+              {t("userProfile.noDetails")}
             </p>
           )}
       </div>

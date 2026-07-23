@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import CategoryForm from "./category/CategoryForm";
 import VoglioForm from "./voglio/VoglioForm";
 import { ICategory, IVoglio } from "./voglio/VoglioForm";
+import { useTranslation } from "react-i18next";
 
 type Mode = "choose" | "category" | "voglio";
 
@@ -35,6 +36,7 @@ export default function CreateDialog({
   const navigate = useNavigate();
   const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
   const [mode, setMode] = useState<Mode>(category ? "category" : "choose");
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (open) {
@@ -73,10 +75,10 @@ export default function CreateDialog({
 
   const title =
     mode === "choose"
-      ? "Create new"
+      ? t("common.createNew")
       : mode === "category"
-        ? category?.editData ? "Edit category" : "New category"
-        : "New voglio";
+        ? category?.editData ? t("common.editCategory") : t("common.newCategory")
+        : t("common.newVoglio");
 
   const HeaderContent = () => (
     <div className="flex items-center gap-2">
@@ -108,10 +110,10 @@ export default function CreateDialog({
             </div>
             <div>
               <p className="font-semibold text-sm text-[#1B1B2D]">
-                New category
+                {t("common.newCategory")}
               </p>
               <p className="text-xs text-[#6B6E85] mt-0.5">
-                Create a category for your wishes
+                {t("common.createCategoryForWishes")}
               </p>
             </div>
           </button>
@@ -125,10 +127,10 @@ export default function CreateDialog({
             </div>
             <div>
               <p className="font-semibold text-sm text-[#1B1B2D]">
-                New voglio
+                {t("common.newVoglio")}
               </p>
               <p className="text-xs text-[#6B6E85] mt-0.5">
-                Add a wishlist item to a category
+                {t("common.addWishlistItem")}
               </p>
             </div>
           </button>

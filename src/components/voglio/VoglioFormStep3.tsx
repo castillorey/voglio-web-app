@@ -16,6 +16,7 @@ import EmojiPicker, { EmojiStyle } from "emoji-picker-react";
 
 import supabase from "../../supabase-client";
 import { ICategory, IVoglio } from "./VoglioForm";
+import { useTranslation } from "react-i18next";
 
 const presetCategories = [
   { name: "Birthday", emoji: "🎂" },
@@ -47,6 +48,7 @@ export default function VoglioFormStep3({
   const [newCategoryEmoji, setNewCategoryEmoji] = useState("❔");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [creating, setCreating] = useState(false);
+  const { t } = useTranslation();
 
   const handleCreateCategory = async () => {
     if (!newCategoryName.trim()) return;
@@ -89,11 +91,11 @@ export default function VoglioFormStep3({
       return (
         <div>
           <Label className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-            Category
+            {t("voglioForm.category")}
           </Label>
           <div className="mt-1.5 rounded-xl border border-dashed border-[#E0E1E8] p-5 text-center">
             <p className="text-sm text-[#6B6E85]">
-              You don&apos;t have any categories yet
+              {t("voglioForm.noCategoriesYet")}
             </p>
             <Button
               type="button"
@@ -102,7 +104,7 @@ export default function VoglioFormStep3({
               className="mt-3 text-xs font-bold"
             >
               <LayoutGrid className="size-3.5 mr-1.5" />
-              Create a category
+              {t("voglioForm.createCategory")}
             </Button>
           </div>
           {errors.categoryId && (
@@ -116,7 +118,7 @@ export default function VoglioFormStep3({
       return (
         <div>
           <Label className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-            Category
+            {t("voglioForm.category")}
           </Label>
           <div className="mt-1.5 space-y-3 rounded-xl border border-[#E0E1E8] p-4">
             <div className="flex flex-wrap gap-1.5">
@@ -146,7 +148,7 @@ export default function VoglioFormStep3({
               <Input
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
-                placeholder="Category name"
+                placeholder={t("voglioForm.categoryName")}
                 className="flex-1"
               />
             </div>
@@ -175,7 +177,7 @@ export default function VoglioFormStep3({
                 }}
                 className="text-xs"
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
               <Button
                 type="button"
@@ -184,7 +186,7 @@ export default function VoglioFormStep3({
                 disabled={!newCategoryName.trim() || creating}
                 className="text-xs"
               >
-                {creating ? "Creating..." : "Create"}
+                {creating ? t("common.creating") : t("common.create")}
               </Button>
             </div>
           </div>
@@ -198,7 +200,7 @@ export default function VoglioFormStep3({
     return (
       <div>
         <Label htmlFor="category" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-          Category
+          {t("voglioForm.category")}
         </Label>
         <Select
           name="category"
@@ -208,7 +210,7 @@ export default function VoglioFormStep3({
           }}
         >
           <SelectTrigger className={`mt-1.5 w-full ${errors.categoryId ? "border-red-500" : ""}`}>
-            <SelectValue placeholder="Select a category" />
+            <SelectValue placeholder={t("voglioForm.selectCategory")} />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -232,7 +234,7 @@ export default function VoglioFormStep3({
           className="mt-1.5 flex items-center gap-1 text-xs text-[#7B61FF] font-semibold hover:underline"
         >
           <LayoutGrid className="size-3" />
-          Create new category
+          {t("voglioForm.createNewCategory")}
         </button>
       </div>
     );
@@ -247,10 +249,10 @@ export default function VoglioFormStep3({
       <div className="flex items-center justify-between pt-2">
         <div className="pr-4">
           <p className="text-sm font-medium text-[#1B1B2D]">
-            Private voglio
+            {t("voglioForm.privateVoglio")}
           </p>
           <p className="text-xs text-[#6B6E85] mt-0.5">
-            Only visible to you and your friends
+            {t("voglioForm.onlyVisibleToYouAndFriends")}
           </p>
         </div>
         <Switch
@@ -271,7 +273,7 @@ export default function VoglioFormStep3({
           size={14}
           className={`transition-transform ${showMore ? "rotate-180" : ""}`}
         />
-        {showMore ? "Less" : "More options"}
+        {showMore ? t("common.less") : t("common.moreOptions")}
       </button>
 
       {showMore && (
@@ -279,7 +281,7 @@ export default function VoglioFormStep3({
           {/* Price */}
           <div className="flex-1">
             <Label htmlFor="price" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-              Price <span className="text-xs font-normal normal-case text-[#8C8F9E]">(Optional)</span>
+              {t("voglioForm.price")} <span className="text-xs font-normal normal-case text-[#8C8F9E]">({t("common.optional")})</span>
             </Label>
 
             <Input
@@ -298,7 +300,7 @@ export default function VoglioFormStep3({
           {/* Quantity */}
           <div className="flex-1">
             <Label htmlFor="quantity" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-              Quantity <span className="text-xs font-normal normal-case text-[#8C8F9E]">(Optional)</span>
+              {t("voglioForm.quantity")} <span className="text-xs font-normal normal-case text-[#8C8F9E]">({t("common.optional")})</span>
             </Label>
 
             <div className="mt-2 flex items-center gap-1.5">

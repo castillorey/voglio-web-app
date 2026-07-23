@@ -30,6 +30,7 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import supabase from "../../supabase-client";
 import { IVoglio } from "./VoglioForm";
 import { getCurrentUserId } from "../../services/profile";
+import { useTranslation } from "react-i18next";
 
 export default function VoglioPreview({
   props,
@@ -52,6 +53,7 @@ export default function VoglioPreview({
   const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
   const currentUserId = getCurrentUserId();
   const isOwner = !isReadOnly && !!currentUserId && currentUserId === props.userId;
+  const { t } = useTranslation();
 
   const handleOnDelete = async () => {
     const { error } = await supabase.from("voglio").delete().eq("id", props.id);
@@ -76,7 +78,7 @@ export default function VoglioPreview({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-[180px] rounded-xl border-[#F0F1F6] shadow-lg">
-          <DropdownMenuLabel className="text-xs text-[#6B6E85] font-semibold">Actions</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-xs text-[#6B6E85] font-semibold">{t("common.actions")}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem
@@ -84,7 +86,7 @@ export default function VoglioPreview({
               onClick={() => OnEditClick(props)}
             >
               <Pencil className="size-3.5 mr-2" />
-              Edit
+              {t("common.edit")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -92,7 +94,7 @@ export default function VoglioPreview({
               onClick={handleOnDelete}
             >
               <Delete className="size-3.5 mr-2 text-red-400" />
-              Delete
+              {t("common.delete")}
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
@@ -117,7 +119,7 @@ export default function VoglioPreview({
           <DrawerDescription aria-describedby="Mobile actions menu" />
           <Command className="md:min-w-[450px] rounded-t-2xl">
             <CommandList>
-              <CommandGroup heading="Actions">
+              <CommandGroup heading={t("common.actions")}>
                 <CommandItem
                   onSelect={() => {
                     setOpen(false);
@@ -125,12 +127,12 @@ export default function VoglioPreview({
                   }}
                 >
                   <Pencil />
-                  <span>Edit</span>
+                  <span>{t("common.edit")}</span>
                 </CommandItem>
                 <CommandSeparator />
                 <CommandItem onSelect={handleOnDelete}>
                   <Delete className="text-red-400" />
-                  <span className="text-red-500">Delete</span>
+                  <span className="text-red-500">{t("common.delete")}</span>
                 </CommandItem>
               </CommandGroup>
             </CommandList>

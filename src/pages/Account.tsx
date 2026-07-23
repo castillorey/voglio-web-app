@@ -13,10 +13,12 @@ import ProfileEdit from "@/components/profile/ProfileEdit";
 import { getZodiacSign } from "@/components/profile/profile-utils";
 import { SizingFormat } from "@/components/profile/profile-sizes";
 import { Cake, MapPin, Shirt, Palette, User } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Perfil() {
     const navigate = useNavigate();
     const currentUserId = getCurrentUserId();
+    const { t, i18n } = useTranslation();
     const [profile, setProfile] = useState<IProfile | null>(null);
     const [displayName, setDisplayName] = useState("");
     const [birthDate, setBirthDate] = useState("");
@@ -156,7 +158,7 @@ export default function Perfil() {
         navigate("/login");
     };
 
-    if (loading) return <div className="mt-8 text-center text-gray-500">Loading...</div>;
+    if (loading) return <div className="mt-8 text-center text-gray-500">{t("common.loading")}</div>;
 
     if (!profile) {
         return (
@@ -166,9 +168,9 @@ export default function Perfil() {
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#FF59C7] to-[#7B61FF] flex items-center justify-center mb-4">
                     <User className="size-9 text-white" />
                   </div>
-                  <h2 className="font-display text-2xl text-[#1B1B2D]">Welcome to your profile</h2>
+                  <h2 className="font-display text-2xl text-[#1B1B2D]">{t("account.welcomeToProfile")}</h2>
                   <p className="mt-1 text-sm text-[#5E6173] text-center">
-                    Set up your profile so your friends can find you
+                    {t("account.setUpProfile")}
                   </p>
                 </div>
 
@@ -178,8 +180,8 @@ export default function Perfil() {
                       <Cake className="size-4 text-[#FF59C7]" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#1B1B2D]">Birth date</p>
-                      <p className="text-xs text-[#8C8F9E]">Share your birthday &amp; zodiac sign</p>
+                      <p className="text-sm font-medium text-[#1B1B2D]">{t("account.birthDate")}</p>
+                      <p className="text-xs text-[#8C8F9E]">{t("account.shareBirthday")}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 rounded-xl bg-white border border-[#F0F1F6] px-4 py-3">
@@ -187,8 +189,8 @@ export default function Perfil() {
                       <MapPin className="size-4 text-[#4A8CFF]" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#1B1B2D]">Location</p>
-                      <p className="text-xs text-[#8C8F9E]">Let others know where you&apos;re from</p>
+                      <p className="text-sm font-medium text-[#1B1B2D]">{t("account.location")}</p>
+                      <p className="text-xs text-[#8C8F9E]">{t("account.letOthersKnow")}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 rounded-xl bg-white border border-[#F0F1F6] px-4 py-3">
@@ -196,8 +198,8 @@ export default function Perfil() {
                       <Shirt className="size-4 text-[#34C759]" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#1B1B2D]">Clothing sizes</p>
-                      <p className="text-xs text-[#8C8F9E]">Shirt, pants &amp; shoe sizes for gifts</p>
+                      <p className="text-sm font-medium text-[#1B1B2D]">{t("account.clothingSizes")}</p>
+                      <p className="text-xs text-[#8C8F9E]">{t("account.shirtPantsShoe")}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 rounded-xl bg-white border border-[#F0F1F6] px-4 py-3">
@@ -205,25 +207,25 @@ export default function Perfil() {
                       <Palette className="size-4 text-[#FF9F0A]" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#1B1B2D]">Favorite colors &amp; preferences</p>
-                      <p className="text-xs text-[#8C8F9E]">Add your favorite colors and custom interests</p>
+                      <p className="text-sm font-medium text-[#1B1B2D]">{t("account.favoriteColorsPreferences")}</p>
+                      <p className="text-xs text-[#8C8F9E]">{t("account.addFavoriteColors")}</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                     <div>
-                        <Label htmlFor="displayName" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">Display name</Label>
+                        <Label htmlFor="displayName" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">{t("profile.displayName")}</Label>
                         <Input
                             id="displayName"
                             value={displayName}
                             onChange={(e) => setDisplayName(e.target.value)}
                             className="mt-1.5 text-sm"
-                            placeholder="Your name"
+                            placeholder={t("account.yourName")}
                         />
                     </div>
                     <Button size="sm" onClick={handleCreate} disabled={saving} className="w-full text-xs font-bold">
-                        {saving ? "Creating..." : "Create profile"}
+                        {saving ? t("common.creating") : t("account.createProfile")}
                     </Button>
                 </div>
               </div>

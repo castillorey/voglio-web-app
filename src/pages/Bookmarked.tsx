@@ -7,6 +7,7 @@ import { getCurrentUserId } from "../services/profile";
 import { toggleVoglioTaken } from "../services/voglioTaken";
 import VoglioPreview from "../components/voglio/VoglioPreview";
 import { IVoglio } from "@/components/voglio/VoglioForm";
+import { useTranslation } from "react-i18next";
 
 interface BookmarkedVoglio {
   voglio: IVoglio;
@@ -19,6 +20,7 @@ interface BookmarkedVoglio {
 
 export default function Bookmarked() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [items, setItems] = useState<BookmarkedVoglio[]>([]);
   const [loading, setLoading] = useState(true);
   const currentUserId = getCurrentUserId();
@@ -118,12 +120,12 @@ export default function Bookmarked() {
         >
           <ChevronLeft className="size-5" />
         </Button>
-        <h1 className="font-display text-2xl text-[#1B1B2D]">Saved items</h1>
+        <h1 className="font-display text-2xl text-[#1B1B2D]">{t("bookmark.savedItems")}</h1>
       </div>
 
       {loading ? (
         <div className="mt-8 text-center text-[#6B6E85] text-sm">
-          Loading...
+          {t("common.loading")}
         </div>
       ) : items.length === 0 ? (
         <div className="mt-16 flex flex-col items-center text-center">
@@ -131,17 +133,17 @@ export default function Bookmarked() {
             <Heart className="size-7 text-[#C4C7D3]" />
           </div>
           <h2 className="font-display text-lg text-[#1B1B2D]">
-            No saved items yet
+            {t("bookmark.noSavedItems")}
           </h2>
           <p className="text-sm text-[#6B6E85] mt-2 max-w-xs">
-            Browse your friends' categories and bookmark items you like
+            {t("bookmark.browseFriends")}
           </p>
           <Button
             variant="secondary"
             className="mt-6 text-xs"
             onClick={() => navigate("/friends")}
           >
-            Find friends
+            {t("bookmark.findFriends")}
           </Button>
         </div>
       ) : (

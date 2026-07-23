@@ -1,3 +1,5 @@
+import i18n from "../../i18n";
+
 export function getColorHex(color: string, colors: { name: string; hex: string }[]): string {
   const trimmed = color.trim().toLowerCase();
   const found = colors.find((c) => c.name.toLowerCase() === trimmed);
@@ -12,7 +14,13 @@ function parseLocalDate(dateStr: string): Date {
 export function formatDate(dateStr: string): string {
   if (!dateStr) return "";
   const date = parseLocalDate(dateStr);
-  return date.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
+  const lang = i18n.language || "en";
+  const localeMap: Record<string, string> = {
+    en: "en-US",
+    es: "es-ES",
+    pt: "pt-BR",
+  };
+  return date.toLocaleDateString(localeMap[lang] || "en-US", { day: "numeric", month: "long", year: "numeric" });
 }
 
 export function getZodiacSign(dateStr: string): string {

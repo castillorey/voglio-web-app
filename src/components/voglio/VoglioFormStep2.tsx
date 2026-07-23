@@ -6,6 +6,7 @@ import { Link, ChevronDown } from "lucide-react";
 import ImageUploader from "../ImageUploader";
 
 import { IVoglio } from "./VoglioForm";
+import { useTranslation } from "react-i18next";
 
 export default function VoglioFormStep2({
   formData,
@@ -17,13 +18,14 @@ export default function VoglioFormStep2({
   onFormChange: (formData: IVoglio) => void;
 }) {
   const [showDescription, setShowDescription] = useState(!!formData.notes);
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-4 mt-2">
       {/* Reference image */}
       <div>
         <Label htmlFor="image" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-          Reference image
+          {t("voglioForm.referenceImage")}
         </Label>
         <ImageUploader
           formData={formData}
@@ -36,7 +38,7 @@ export default function VoglioFormStep2({
       {/* Title */}
       <div>
         <Label htmlFor="name" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-          Title
+          {t("voglioForm.title")}
         </Label>
         <Input
           id="name"
@@ -64,12 +66,12 @@ export default function VoglioFormStep2({
             size={14}
             className={`transition-transform ${showDescription ? "rotate-180" : ""}`}
           />
-          {showDescription ? "Hide description" : "Add description"}
+          {showDescription ? t("voglioForm.hideDescription") : t("voglioForm.addDescription")}
         </button>
         {showDescription && (
           <div className="mt-3">
             <Label htmlFor="notes" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-              Description
+              {t("voglioForm.description")}
             </Label>
             <Textarea
               id="notes"
@@ -88,7 +90,7 @@ export default function VoglioFormStep2({
       {/* Reference link */}
       <div className="relative">
         <Label htmlFor="referenceLink" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">
-          Reference link <span className="text-xs font-normal normal-case text-[#8C8F9E]">(Optional)</span>
+          {t("voglioForm.referenceLink")} <span className="text-xs font-normal normal-case text-[#8C8F9E]">({t("common.optional")})</span>
         </Label>
         <Input
           id="referenceLink"

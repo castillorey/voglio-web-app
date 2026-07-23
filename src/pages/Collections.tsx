@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import CategoryPreview from "../components/category/CategoryPreview";
 import supabase from "../supabase-client";
@@ -9,6 +10,7 @@ import { ICategory } from "@/components/voglio/VoglioForm";
 import { getCurrentUserId } from "../services/profile";
 
 export default function Collections() {
+  const { t } = useTranslation();
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [open, setOpen] = useState(false);
   const [editCategoryData, setEditCategoryData] = useState<ICategory | null>(null);
@@ -25,7 +27,7 @@ export default function Collections() {
     setError(null);
 
     if (!currentUserId) {
-      setError("Not authenticated");
+      setError(t("common.notAuthenticated"));
       setLoading(false);
       return;
     }
@@ -82,7 +84,7 @@ export default function Collections() {
         <div className="w-12 h-12 rounded-full bg-[#F1EEFF] flex items-center justify-center">
           <Plus strokeWidth="2" className="size-6 text-[#7B61FF]" />
         </div>
-        <span className="text-xs font-semibold text-[#6B6E85]">New category</span>
+        <span className="text-xs font-semibold text-[#6B6E85]">{t("collections.newCategory")}</span>
       </div>
     </Card>
   );
@@ -90,21 +92,21 @@ export default function Collections() {
   return (
     <>
       <div className="sticky top-0 z-10 flex items-center justify-between -mx-5 lg:-mx-8 px-5 lg:px-8 mb-1 bg-[#F8F7FC] py-4">
-        <h1 className="font-display text-3xl text-[#1B1B2D]">My Voglios</h1>
+        <h1 className="font-display text-3xl text-[#1B1B2D]">{t("collections.title")}</h1>
       </div>
 
       {loading ? (
-        <div className="mt-8 text-center text-[#6B6E85] text-sm">Loading...</div>
+        <div className="mt-8 text-center text-[#6B6E85] text-sm">{t("common.loading")}</div>
       ) : error ? (
         <div className="mt-8 text-center text-red-500 text-sm">
-          Failed to load: {error}
+          {t("common.failedToLoad")}: {error}
         </div>
       ) : categoryList.length === 0 ? (
         <div className="mt-16 text-center">
           <div className="text-5xl mb-5">👋</div>
-          <h2 className="font-display text-2xl text-[#1B1B2D] mb-2">Welcome to Voglio!</h2>
+          <h2 className="font-display text-2xl text-[#1B1B2D] mb-2">{t("collections.welcome")}</h2>
           <p className="text-sm text-[#6B6E85] mb-8 leading-relaxed max-w-xs mx-auto">
-            Start building your wishlist. Create your first category and add the things you want.
+            {t("collections.startBuilding")}
           </p>
           <div className="max-w-[200px] mx-auto">
             <NewCategoryCard />

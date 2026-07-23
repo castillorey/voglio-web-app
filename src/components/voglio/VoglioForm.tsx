@@ -7,6 +7,7 @@ import { ProductResult } from "../../services/productSearch";
 import VoglioFormStep1 from "./VoglioFormStep1";
 import VoglioFormStep2 from "./VoglioFormStep2";
 import VoglioFormStep3 from "./VoglioFormStep3";
+import { useTranslation } from "react-i18next";
 
 export interface IVoglio {
   id: number | null;
@@ -67,6 +68,7 @@ export default function VoglioForm({
   const CDNURL = import.meta.env.VITE_CDNURL;
   const session: string = localStorage.getItem("session")!;
   const user = session && JSON.parse(session)?.user;
+  const { t } = useTranslation();
 
   const [step, setStep] = useState(1);
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
@@ -99,7 +101,7 @@ export default function VoglioForm({
       // search step — no required validation
     }
     if (step === 2) {
-      if (!formData.name.trim()) newErrors.name = "Title is required";
+      if (!formData.name.trim()) newErrors.name = t("voglioForm.titleRequired");
     }
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
@@ -164,8 +166,8 @@ export default function VoglioForm({
 
   const formDataPublish = async () => {
     const newErrors: FormErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Title is required";
-    if (!formData.categoryId) newErrors.categoryId = "Category is required";
+    if (!formData.name.trim()) newErrors.name = t("voglioForm.titleRequired");
+    if (!formData.categoryId) newErrors.categoryId = t("voglioForm.categoryRequired");
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
@@ -288,7 +290,7 @@ export default function VoglioForm({
             onClick={handlePrevStep}
             className="w-full xs:w-auto text-xs font-bold"
           >
-            Previous
+            {t("common.previous")}
           </Button>
         )}
         {step < 3 && (
@@ -297,7 +299,7 @@ export default function VoglioForm({
             onClick={handleNextStep}
             className="w-full xs:w-auto mt-2 xs:mt-0 text-xs font-bold"
           >
-            Next
+            {t("common.next")}
           </Button>
         )}
         {step === 3 && (
@@ -306,7 +308,7 @@ export default function VoglioForm({
             onClick={formDataPublish}
             className="w-full xs:w-auto mt-2 xs:mt-0 text-xs font-bold"
           >
-            {editVoglioData ? "Update voglio" : "Create voglio"}
+            {editVoglioData ? t("voglioForm.updateVoglio") : t("voglioForm.createVoglio")}
           </Button>
         )}
       </div>
