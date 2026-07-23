@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 export default function Perfil() {
     const navigate = useNavigate();
     const currentUserId = getCurrentUserId();
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const [profile, setProfile] = useState<IProfile | null>(null);
     const [displayName, setDisplayName] = useState("");
     const [birthDate, setBirthDate] = useState("");
