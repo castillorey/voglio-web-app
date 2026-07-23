@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ArrowUpDown, BookmarkCheck } from "lucide-react";
+import { ChevronLeft, BookmarkCheck } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   Select,
@@ -34,7 +34,6 @@ export default function UserCategory() {
   const [takenSet, setTakenSet] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState("newest");
   const [takenFilter, setTakenFilter] = useState("all");
   const currentUserId = getCurrentUserId();
 
@@ -42,27 +41,15 @@ export default function UserCategory() {
     let list = [...voglioList];
 
     if (takenFilter === "taken") {
-      list = list.filter((v) => v.isTaken);
+      list = list.filter((v) => takenSet.has(v.id!));
     } else if (takenFilter === "untaken") {
-      list = list.filter((v) => !v.isTaken);
+      list = list.filter((v) => !takenSet.has(v.id!));
     }
 
-    switch (sortBy) {
-      case "name":
-        list.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "price-asc":
-        list.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
-        break;
-      case "price-desc":
-        list.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
-        break;
-      default:
-        list.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
-    }
+    list.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
 
     return list;
-  }, [voglioList, sortBy, takenFilter]);
+  }, [voglioList, takenFilter, takenSet]);
 
   useEffect(() => {
     if (!username || !categoryId) return;
@@ -202,18 +189,6 @@ export default function UserCategory() {
       </div>
 
       <div className="mt-4 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center sm:justify-end">
-        <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className="w-full sm:w-[160px] h-9 text-xs rounded-xl border-[#EFEFF4]">
-            <ArrowUpDown className="size-3.5 mr-1 text-[#6B6E85]" />
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="rounded-xl border-[#F0F1F6]">
-            <SelectItem value="newest" className="text-xs">Newest</SelectItem>
-            <SelectItem value="name" className="text-xs">Name A-Z</SelectItem>
-            <SelectItem value="price-asc" className="text-xs">Price low-high</SelectItem>
-            <SelectItem value="price-desc" className="text-xs">Price high-low</SelectItem>
-          </SelectContent>
-        </Select>
         <Select value={takenFilter} onValueChange={setTakenFilter}>
           <SelectTrigger className="w-full sm:w-[140px] h-9 text-xs rounded-xl border-[#EFEFF4]">
             <BookmarkCheck className="size-3.5 mr-1 text-[#6B6E85]" />

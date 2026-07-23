@@ -271,7 +271,7 @@ export default function VoglioFormStep3({
           size={14}
           className={`transition-transform ${showMore ? "rotate-180" : ""}`}
         />
-        {showMore ? "Less" : "Add more"}
+        {showMore ? "Less" : "More options"}
       </button>
 
       {showMore && (

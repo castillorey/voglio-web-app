@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { v4 as uuidv4 } from "uuid";
 
 import supabase from "../../supabase-client";
+import { ProductResult } from "../../services/productSearch";
 import VoglioFormStep1 from "./VoglioFormStep1";
 import VoglioFormStep2 from "./VoglioFormStep2";
 import VoglioFormStep3 from "./VoglioFormStep3";
@@ -70,8 +71,12 @@ export default function VoglioForm({
   const [step, setStep] = useState(1);
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<ProductResult[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [searched, setSearched] = useState(false);
 
-  const handleFormChange = (newFormData: IVoglio) => {
+  const handleFormChange = (newFormData: IVoglio) => {  
     setFormData(newFormData);
     setErrors({});
   };
@@ -115,6 +120,7 @@ export default function VoglioForm({
     price: null,
     isPrivate: false,
     isTaken: false,
+    userId: user?.id ?? "",
   };
   const [formData, setFormData] = useState<IVoglio>(emptyForm);
   let imageUrl = "";
@@ -247,6 +253,15 @@ export default function VoglioForm({
           errors={errors}
           onFormChange={handleFormChange}
           onProductSelected={handleProductSelected}
+          searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      searchResults={searchResults}
+      setSearchResults={setSearchResults}
+      searching={searching}
+      setSearching={setSearching}
+      searched={searched}
+      setSearched={setSearched}
+
         />
       )}
       {step === 2 && (
@@ -282,7 +297,7 @@ export default function VoglioForm({
             onClick={handleNextStep}
             className="w-full xs:w-auto mt-2 xs:mt-0 text-xs font-bold"
           >
-            {step === 1 ? "Add manually" : "Next"}
+            Next
           </Button>
         )}
         {step === 3 && (
