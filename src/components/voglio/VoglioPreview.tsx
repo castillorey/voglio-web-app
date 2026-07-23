@@ -37,6 +37,7 @@ export default function VoglioPreview({
   OnEditClick,
   isReadOnly,
   isTaken,
+  takenBy,
   onToggleTaken,
 }: {
   props: IVoglio;
@@ -44,6 +45,7 @@ export default function VoglioPreview({
   OnEditClick: (voglioData: IVoglio) => void;
   isReadOnly?: boolean;
   isTaken?: boolean;
+  takenBy?: string | null;
   onToggleTaken?: () => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -181,7 +183,14 @@ export default function VoglioPreview({
                 )}
                 <Button
                   variant="ghost"
-                  className={`size-12 rounded-full p-0 [&_svg]:size-5 ${isTaken ? "text-[#7B61FF] bg-[#F1EEFF]" : "text-[#6B6E85] hover:text-[#6B6E85] hover:bg-transparent"}`}
+                  disabled={isTaken && takenBy !== currentUserId}
+                  className={`size-12 rounded-full p-0 [&_svg]:size-5 ${
+                    isTaken
+                      ? takenBy === currentUserId
+                        ? "text-[#7B61FF] bg-[#F1EEFF]"
+                        : "text-[#7B61FF] bg-[#F1EEFF] opacity-60 cursor-not-allowed"
+                      : "text-[#6B6E85] hover:text-[#6B6E85] hover:bg-transparent"
+                  }`}
                   onClick={(e) => {
                     e.stopPropagation();
                     onToggleTaken?.();

@@ -12,6 +12,8 @@ import VoglioForm, {
 } from "../components/voglio/VoglioForm";
 import VoglioPreview from "../components/voglio/VoglioPreview";
 import VoglioDialog from "@/components/VoglioDialog";
+import { fetchTakenVoglioIds, toggleVoglioTaken } from "../services/voglioTaken";
+import { getCurrentUserId } from "../services/profile";
 
 export default function Category() {
   const navigate = useNavigate();
@@ -21,6 +23,8 @@ export default function Category() {
   const [voglioList, setVoglioList] = useState<IVoglio[]>([]);
   const [openNewVoglioDialog, setOpenNewVoglioDialog] = useState(false);
   const [editVoglioData, setEditVoglioData] = useState<IVoglio | null>(null);
+  const [takenMap, setTakenMap] = useState<Map<number, string>>(new Map());
+  const currentUserId = getCurrentUserId();
 
   const fetchCategory = async () => {
     if (state) {
@@ -73,7 +77,27 @@ export default function Category() {
       });
 
       setVoglioList(transformedVoglios);
+
+      const voglioIds = transformedVoglios.map((v) => v.id!).filter(Boolean);
+      const map = await fetchTakenVoglioIds(voglioIds);
+      setTakenMap(map);
     }
+  };
+
+  const handleToggleTaken = async (voglioId: number) => {
+    if (!currentUserId) return;
+
+    const result = await toggleVoglioTaken(voglioId, currentUserId);
+
+    setTakenMap((prev) => {
+      const next = new Map(prev);
+      if (result.taken) {
+        next.set(voglioId, result.taker!);
+      } else {
+        next.delete(voglioId);
+      }
+      return next;
+    });
   };
 
   return (
@@ -129,6 +153,9 @@ export default function Category() {
               setEditVoglioData(voglio);
               setOpenNewVoglioDialog(true);
             }}
+            isTaken={takenMap.has(voglio.id!)}
+            takenBy={takenMap.get(voglio.id!) || null}
+            onToggleTaken={() => handleToggleTaken(voglio.id!)}
           />
         ))}
       </div>

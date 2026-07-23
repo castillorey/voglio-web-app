@@ -31,7 +31,7 @@ export default function UserCategory() {
   const [profile, setProfile] = useState<IProfile | null>(null);
   const [category, setCategory] = useState<CategoryDetail | null>(null);
   const [voglioList, setVoglioList] = useState<IVoglio[]>([]);
-  const [takenSet, setTakenSet] = useState<Set<number>>(new Set());
+  const [takenMap, setTakenMap] = useState<Map<number, string>>(new Map());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [takenFilter, setTakenFilter] = useState("all");
@@ -41,15 +41,15 @@ export default function UserCategory() {
     let list = [...voglioList];
 
     if (takenFilter === "taken") {
-      list = list.filter((v) => takenSet.has(v.id!));
+      list = list.filter((v) => takenMap.has(v.id!));
     } else if (takenFilter === "untaken") {
-      list = list.filter((v) => !takenSet.has(v.id!));
+      list = list.filter((v) => !takenMap.has(v.id!));
     }
 
     list.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
 
     return list;
-  }, [voglioList, takenFilter, takenSet]);
+  }, [voglioList, takenFilter, takenMap]);
 
   useEffect(() => {
     if (!username || !categoryId) return;
@@ -109,13 +109,9 @@ export default function UserCategory() {
       }));
       setVoglioList(items);
 
-      if (currentUserId) {
-        const taken = await fetchTakenVoglioIds(
-          items.map((v) => v.id!),
-          currentUserId
-        );
-        setTakenSet(taken);
-      }
+      const voglioIds = items.map((v) => v.id!).filter(Boolean);
+      const map = await fetchTakenVoglioIds(voglioIds);
+      setTakenMap(map);
     } catch (err: any) {
       setError(err.message);
     }
@@ -124,20 +120,18 @@ export default function UserCategory() {
 
   const handleToggleTaken = async (voglioId: number) => {
     if (!currentUserId) return;
-    const currentlyTaken = takenSet.has(voglioId);
-    const newState = await toggleVoglioTaken(voglioId, currentUserId, currentlyTaken);
-    setTakenSet((prev) => {
-      const next = new Set(prev);
-      if (newState) {
-        next.add(voglioId);
+
+    const result = await toggleVoglioTaken(voglioId, currentUserId);
+
+    setTakenMap((prev) => {
+      const next = new Map(prev);
+      if (result.taken) {
+        next.set(voglioId, result.taker!);
       } else {
         next.delete(voglioId);
       }
       return next;
     });
-    setVoglioList((prev) =>
-      prev.map((v) => (v.id === voglioId ? { ...v, isTaken: newState } : v))
-    );
   };
 
   if (loading) return <div className="mt-8 text-center text-[#6B6E85] text-sm">Loading...</div>;
@@ -210,7 +204,8 @@ export default function UserCategory() {
             onDeleteVoglio={() => {}}
             OnEditClick={() => {}}
             isReadOnly
-            isTaken={takenSet.has(voglio.id!)}
+            isTaken={takenMap.has(voglio.id!)}
+            takenBy={takenMap.get(voglio.id!) || null}
             onToggleTaken={() => handleToggleTaken(voglio.id!)}
           />
         ))}
