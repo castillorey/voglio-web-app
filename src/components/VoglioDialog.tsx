@@ -9,6 +9,7 @@ import { MobileSheet } from "@/components/ui/mobile-sheet";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { ReactElement } from "react";
 import { IVoglio } from "./voglio/VoglioForm";
+import { useTranslation } from "react-i18next";
 
 type voglioFormProps = {
   open: boolean;
@@ -22,14 +23,15 @@ type voglioFormProps = {
 };
 export default function VoglioDialog(props: voglioFormProps) {
   const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
+  const { t } = useTranslation();
 
   const MobileDrawerForm = () => {
     return (
       <MobileSheet open={props.open} onClose={props.onClose}>
         <h2 className="font-display text-xl text-[#1B1B2D] mb-4">
           {props.children && props.children.props.editVoglioData
-            ? "Edit voglio"
-            : "New voglio"}
+            ? t("common.editVoglio")
+            : t("common.newVoglio")}
         </h2>
         {props.children}
       </MobileSheet>
@@ -43,8 +45,8 @@ export default function VoglioDialog(props: voglioFormProps) {
           <DialogHeader>
             <DialogTitle className="font-display text-xl text-[#1B1B2D]">
               {props.children && props.children.props.editVoglioData
-                ? "Edit voglio"
-                : "New voglio"}
+                ? t("common.editVoglio")
+                : t("common.newVoglio")}
             </DialogTitle>
             <DialogDescription aria-describedby="New voglio form" className="sr-only" />
           </DialogHeader>

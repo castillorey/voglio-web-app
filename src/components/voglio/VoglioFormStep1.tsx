@@ -5,6 +5,7 @@ import { Search, Loader2 } from "lucide-react";
 
 import { IVoglio } from "./VoglioForm";
 import { searchProducts, ProductResult } from "../../services/productSearch";
+import { useTranslation } from "react-i18next";
 
 export default function VoglioFormStep1({
   formData,
@@ -32,6 +33,7 @@ export default function VoglioFormStep1({
   setSearched: (v: boolean) => void;
 }) {
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation();
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -59,7 +61,7 @@ export default function VoglioFormStep1({
       <div>
         <div className="flex flex-col items-center pt-4 pb-2">
           <p className="text-sm text-[#6B6E85] text-center">
-            Search for a product to get started, or skip and fill in details manually
+            {t("voglioForm.searchSubtitle")}
           </p>
         </div>
         <div className="flex gap-2">
@@ -71,7 +73,7 @@ export default function VoglioFormStep1({
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSearch();
               }}
-              placeholder="Search Google Shopping..."
+              placeholder={t("voglioForm.searchPlaceholder")}
               className="pr-9"
             />
             {searching && (
@@ -91,7 +93,7 @@ export default function VoglioFormStep1({
         </div>
 
         {searched && !searching && searchResults.length === 0 && (
-          <p className="mt-2 text-xs text-[#8C8F9E]">No products found. Try a different search.</p>
+          <p className="mt-2 text-xs text-[#8C8F9E]">{t("voglioForm.noProducts")}</p>
         )}
 
         {searchResults.length > 0 && (

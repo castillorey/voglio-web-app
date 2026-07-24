@@ -4,6 +4,7 @@ import { Users } from "lucide-react";
 import supabase from "../supabase-client";
 import { getProfile, getCurrentUserId, IProfile } from "../services/profile";
 import { getFollowing } from "../services/follow";
+import { useTranslation } from "react-i18next";
 
 interface FeedCategory {
   id: number;
@@ -17,6 +18,7 @@ interface FeedCategory {
 export default function VogliosFeed() {
   const navigate = useNavigate();
   const currentUserId = getCurrentUserId();
+  const { t } = useTranslation();
   const [categories, setCategories] = useState<FeedCategory[]>([]);
   const [profileMap, setProfileMap] = useState<Record<string, IProfile>>({});
   const [loading, setLoading] = useState(true);
@@ -66,25 +68,25 @@ export default function VogliosFeed() {
   if (!currentUserId) {
     return (
       <div className="mt-16 text-center">
-        <h1 className="font-display text-3xl text-[#1B1B2D]">Voglios</h1>
-        <p className="mt-2 text-sm text-[#6B6E85]">Sign in to see your feed</p>
+        <h1 className="font-display text-3xl text-[#1B1B2D]">{t("feed.voglios")}</h1>
+        <p className="mt-2 text-sm text-[#6B6E85]">{t("feed.signInToSeeFeed")}</p>
       </div>
     );
   }
 
   return (
     <>
-      <h1 className="font-display text-3xl text-[#1B1B2D] mb-1">Voglios</h1>
+      <h1 className="font-display text-3xl text-[#1B1B2D] mb-1">{t("feed.voglios")}</h1>
 
       {loading ? (
-        <div className="mt-8 text-center text-[#6B6E85] text-sm">Loading...</div>
+        <div className="mt-8 text-center text-[#6B6E85] text-sm">{t("common.loading")}</div>
       ) : categories.length === 0 ? (
         <div className="mt-16 text-center">
           <div className="w-16 h-16 rounded-full bg-[#F1EEFF] flex items-center justify-center mx-auto mb-4">
             <Users className="size-7 text-[#7B61FF]" />
           </div>
-          <p className="text-sm font-medium text-[#1B1B2D]">No categories from friends yet</p>
-          <p className="text-xs text-[#6B6E85] mt-1">Follow users to see their public categories here</p>
+          <p className="text-sm font-medium text-[#1B1B2D]">{t("feed.noCategoriesFromFriends")}</p>
+          <p className="text-xs text-[#6B6E85] mt-1">{t("feed.followUsers")}</p>
         </div>
       ) : (
         <div className="mt-6 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2">
@@ -118,7 +120,7 @@ export default function VogliosFeed() {
                       </p>
                     )}
                     <p className="mt-2 text-xs text-[#A0A3B5] font-medium">
-                      {category.voglio?.[0]?.count ?? 0} voglios
+                      {category.voglio?.[0]?.count ?? 0} {t("common.voglios")}
                     </p>
                   </div>
                 </div>

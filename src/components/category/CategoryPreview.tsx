@@ -30,6 +30,7 @@ import { useEffect, useState } from "react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import supabase from "../../supabase-client";
 import { ICategory } from "../voglio/VoglioForm";
+import { useTranslation } from "react-i18next";
 
 export default function CategoryPreview({
   props,
@@ -43,6 +44,7 @@ export default function CategoryPreview({
   isReadOnly?: boolean;
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [thumbnails, setThumbnails] = useState<string[]>([]);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
@@ -96,7 +98,7 @@ export default function CategoryPreview({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-[180px] rounded-xl border-[#F0F1F6] shadow-lg">
-          <DropdownMenuLabel className="text-xs text-[#6B6E85] font-semibold">Actions</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-xs text-[#6B6E85] font-semibold">{t("common.actions")}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem
@@ -104,7 +106,7 @@ export default function CategoryPreview({
               onClick={() => OnEditClick(props)}
             >
               <Pencil className="size-3.5 mr-2" />
-              Edit
+              {t("common.edit")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -112,7 +114,7 @@ export default function CategoryPreview({
               onClick={handleOnDelete}
             >
               <Delete className="size-3.5 mr-2 text-red-400" />
-              Delete
+              {t("common.delete")}
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
@@ -137,7 +139,7 @@ export default function CategoryPreview({
           <DrawerDescription aria-describedby="Mobile actions menu" />
           <Command className="md:min-w-[450px] rounded-t-2xl">
             <CommandList>
-              <CommandGroup heading="Actions">
+              <CommandGroup heading={t("common.actions")}>
                 <CommandItem
                   onSelect={() => {
                     setOpen(false);
@@ -145,12 +147,12 @@ export default function CategoryPreview({
                   }}
                 >
                   <Pencil />
-                  <span>Edit</span>
+                  <span>{t("common.edit")}</span>
                 </CommandItem>
                 <CommandSeparator />
                 <CommandItem onSelect={handleOnDelete}>
                   <Delete className="text-red-400" />
-                  <span className="text-red-500">Delete</span>
+                  <span className="text-red-500">{t("common.delete")}</span>
                 </CommandItem>
               </CommandGroup>
             </CommandList>
@@ -202,7 +204,7 @@ export default function CategoryPreview({
 
         <div className="pt-8 pb-4 px-4 text-center">
           <h3 className="font-bold text-sm text-[#1B1B2D] truncate">{props.name}</h3>
-          <p className="text-xs text-[#A0A3B5] font-medium mt-0.5">{props.vogliosCount} voglios</p>
+          <p className="text-xs text-[#A0A3B5] font-medium mt-0.5">{props.vogliosCount} {t("common.voglios")}</p>
         </div>
       </div>
     </Card>

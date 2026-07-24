@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "react-i18next";
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -18,6 +19,7 @@ function GoogleIcon({ className }: { className?: string }) {
 }
 
 export default function Register() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -76,7 +78,7 @@ export default function Register() {
             voglio
           </h1>
           <p className="text-sm text-[#6B6E85] mt-2">
-            Create your account
+            {t("auth.createAccount")}
           </p>
         </div>
 
@@ -85,7 +87,7 @@ export default function Register() {
             <div className="space-y-5">
               <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wide">
-                  Email
+                  {t("auth.email")}
                 </Label>
                 <Input
                   id="email"
@@ -100,7 +102,7 @@ export default function Register() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="password" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wide">
-                  Password
+                  {t("auth.password")}
                 </Label>
                 <Input
                   id="password"
@@ -120,7 +122,7 @@ export default function Register() {
               className="w-full mt-6 h-11 rounded-xl bg-[#7B61FF] hover:bg-[#6B4EFF] text-white font-semibold shadow-md shadow-[#7B61FF]/15"
             >
               {loading && <Spinner />}
-              {loading ? "Creating..." : "Create account"}
+              {loading ? t("auth.creating") : t("auth.createAccount")}
             </Button>
 
             {message && (
@@ -133,7 +135,7 @@ export default function Register() {
               <div className="w-full border-t border-[#F0F1F6]" />
             </div>
             <div className="relative flex justify-center text-xs text-[#6B6E85]">
-              <span className="bg-white px-2">or sign up with</span>
+              <span className="bg-white px-2">{t("auth.orSignUpWith")}</span>
             </div>
           </div>
 
@@ -150,15 +152,15 @@ export default function Register() {
               ) : (
                 <GoogleIcon className="w-5 h-5 mr-2 shrink-0" />
               )}
-              {oauthLoading === "google" ? "Redirecting..." : "Continue with Google"}
+              {oauthLoading === "google" ? t("auth.redirecting") : t("auth.continueWithGoogle")}
             </Button>
 
           </div>
 
           <p className="mt-6 text-center text-xs text-[#6B6E85]">
-            Already a member?{" "}
+            {t("auth.alreadyMember")}{" "}
             <Link to="/login" className="font-semibold text-[#7B61FF] hover:text-[#6B4EFF]">
-              Sign in
+              {t("auth.signIn")}
             </Link>
           </p>
         </div>

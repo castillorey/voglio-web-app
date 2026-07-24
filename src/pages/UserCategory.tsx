@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import supabase from "../supabase-client";
 import { getProfileByUsername, getCurrentUserId, IProfile } from "../services/profile";
+import { useTranslation } from "react-i18next";
 
 import { fetchTakenVoglioIds, toggleVoglioTaken } from "../services/voglioTaken";
 import VoglioPreview from "../components/voglio/VoglioPreview";
@@ -28,10 +29,11 @@ interface CategoryDetail {
 export default function UserCategory() {
   const { username, categoryId } = useParams<{ username: string; categoryId: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [profile, setProfile] = useState<IProfile | null>(null);
   const [category, setCategory] = useState<CategoryDetail | null>(null);
   const [voglioList, setVoglioList] = useState<IVoglio[]>([]);
-  const [takenSet, setTakenSet] = useState<Set<number>>(new Set());
+  const [takenMap, setTakenMap] = useState<Map<number, string>>(new Map());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [takenFilter, setTakenFilter] = useState("all");
@@ -41,15 +43,15 @@ export default function UserCategory() {
     let list = [...voglioList];
 
     if (takenFilter === "taken") {
-      list = list.filter((v) => takenSet.has(v.id!));
+      list = list.filter((v) => takenMap.has(v.id!));
     } else if (takenFilter === "untaken") {
-      list = list.filter((v) => !takenSet.has(v.id!));
+      list = list.filter((v) => !takenMap.has(v.id!));
     }
 
     list.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
 
     return list;
-  }, [voglioList, takenFilter, takenSet]);
+  }, [voglioList, takenFilter, takenMap]);
 
   useEffect(() => {
     if (!username || !categoryId) return;
@@ -64,7 +66,7 @@ export default function UserCategory() {
     try {
       const prof = await getProfileByUsername(username);
       if (!prof) {
-        setError("User not found");
+        setError(t("friends.profileRequired"));
         setLoading(false);
         return;
       }
@@ -79,7 +81,7 @@ export default function UserCategory() {
         .single();
 
       if (catError || !catData) {
-        setError("Category not found");
+        setError(t("userCategory.noPublicVoglios"));
         setLoading(false);
         return;
       }
@@ -109,13 +111,9 @@ export default function UserCategory() {
       }));
       setVoglioList(items);
 
-      if (currentUserId) {
-        const taken = await fetchTakenVoglioIds(
-          items.map((v) => v.id!),
-          currentUserId
-        );
-        setTakenSet(taken);
-      }
+      const voglioIds = items.map((v) => v.id!).filter(Boolean);
+      const map = await fetchTakenVoglioIds(voglioIds);
+      setTakenMap(map);
     } catch (err: any) {
       setError(err.message);
     }
@@ -124,25 +122,23 @@ export default function UserCategory() {
 
   const handleToggleTaken = async (voglioId: number) => {
     if (!currentUserId) return;
-    const currentlyTaken = takenSet.has(voglioId);
-    const newState = await toggleVoglioTaken(voglioId, currentUserId, currentlyTaken);
-    setTakenSet((prev) => {
-      const next = new Set(prev);
-      if (newState) {
-        next.add(voglioId);
+
+    const result = await toggleVoglioTaken(voglioId, currentUserId);
+
+    setTakenMap((prev) => {
+      const next = new Map(prev);
+      if (result.taken) {
+        next.set(voglioId, result.taker!);
       } else {
         next.delete(voglioId);
       }
       return next;
     });
-    setVoglioList((prev) =>
-      prev.map((v) => (v.id === voglioId ? { ...v, isTaken: newState } : v))
-    );
   };
 
-  if (loading) return <div className="mt-8 text-center text-[#6B6E85] text-sm">Loading...</div>;
+  if (loading) return <div className="mt-8 text-center text-[#6B6E85] text-sm">{t("common.loading")}</div>;
   if (error) return <div className="mt-8 text-center text-red-500 text-sm">{error}</div>;
-  if (!profile || !category) return <div className="mt-8 text-center text-[#6B6E85] text-sm">Not found</div>;
+  if (!profile || !category) return <div className="mt-8 text-center text-[#6B6E85] text-sm">{t("common.error")}</div>;
 
   return (
     <>
@@ -189,17 +185,17 @@ export default function UserCategory() {
       </div>
 
       <div className="mt-4 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center sm:justify-end">
-        <Select value={takenFilter} onValueChange={setTakenFilter}>
-          <SelectTrigger className="w-full sm:w-[140px] h-9 text-xs rounded-xl border-[#EFEFF4]">
-            <BookmarkCheck className="size-3.5 mr-1 text-[#6B6E85]" />
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="rounded-xl border-[#F0F1F6]">
-            <SelectItem value="all" className="text-xs">All</SelectItem>
-            <SelectItem value="taken" className="text-xs">Taken</SelectItem>
-            <SelectItem value="untaken" className="text-xs">Not taken</SelectItem>
-          </SelectContent>
-        </Select>
+          <Select value={takenFilter} onValueChange={setTakenFilter}>
+            <SelectTrigger className="w-full sm:w-[140px] h-9 text-xs rounded-xl border-[#EFEFF4]">
+              <BookmarkCheck className="size-3.5 mr-1 text-[#6B6E85]" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl border-[#F0F1F6]">
+              <SelectItem value="all" className="text-xs">{t("userCategory.all")}</SelectItem>
+              <SelectItem value="taken" className="text-xs">{t("userCategory.taken")}</SelectItem>
+              <SelectItem value="untaken" className="text-xs">{t("userCategory.notTaken")}</SelectItem>
+            </SelectContent>
+          </Select>
       </div>
 
       <div className="mt-4 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2">
@@ -210,15 +206,16 @@ export default function UserCategory() {
             onDeleteVoglio={() => {}}
             OnEditClick={() => {}}
             isReadOnly
-            isTaken={takenSet.has(voglio.id!)}
+            isTaken={takenMap.has(voglio.id!)}
+            takenBy={takenMap.get(voglio.id!) || null}
             onToggleTaken={() => handleToggleTaken(voglio.id!)}
           />
         ))}
         {filteredAndSorted.length === 0 && (
           <p className="col-span-full text-center text-[#6B6E85] text-sm mt-8">
             {voglioList.length === 0
-              ? "No public voglios in this category"
-              : "No voglios match this filter"}
+              ? t("userCategory.noPublicVoglios")
+              : t("userCategory.noVogliosMatch")}
           </p>
         )}
       </div>

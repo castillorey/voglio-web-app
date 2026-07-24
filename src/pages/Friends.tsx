@@ -6,12 +6,14 @@ import supabase from "../supabase-client";
 import { getCurrentUserId, IProfile, searchProfiles, getProfile } from "../services/profile";
 import { followUser, unfollowUser, getFollowing, NoProfileError } from "../services/follow";
 import AlertDialog from "@/components/ui/alert-dialog";
+import { useTranslation } from "react-i18next";
 
 export default function Friends() {
   const navigate = useNavigate();
   const currentUserId = getCurrentUserId();
+  const { t } = useTranslation();
   
-  const [activeTab, setActiveTab] = useState<"todos" | "siguiendo" | "seguidores">("todos");
+  const [activeTab, setActiveTab] = useState<"todos" | "siguiendo" | "seguidores">("siguiendo");
   const [query, setQuery] = useState("");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   
@@ -96,7 +98,7 @@ export default function Friends() {
       // Filter out self
       const filtered = results.filter((p) => p.id !== currentUserId);
       setAllProfiles(filtered);
-      setActiveTab("todos"); // Switch to search/discovery tab
+      setActiveTab("todos");
     } catch (err) {
       console.error(err);
     }
@@ -109,7 +111,7 @@ export default function Friends() {
         await unfollowUser(userId);
         setFollowingIds((prev) => prev.filter((id) => id !== userId));
         setFollowingProfiles((prev) => prev.filter((p) => p.id !== userId));
-        showToast(`Dejaste de seguir a @${username}`);
+        showToast(t("friends.unfollowed", { username }));
       } else {
         await followUser(userId);
         setFollowingIds((prev) => [...prev, userId]);
@@ -117,7 +119,7 @@ export default function Friends() {
         if (prof) {
           setFollowingProfiles((prev) => [...prev, prof]);
         }
-        showToast(`¡Ahora sigues a @${username}!`);
+        showToast(t("friends.nowFollowing", { username }));
       }
     } catch (err) {
       if (err instanceof NoProfileError) {
@@ -138,8 +140,11 @@ export default function Friends() {
     const q = query.toLowerCase().trim();
     let baseList: IProfile[] = [];
 
-    if (activeTab === "todos") baseList = allProfiles;
-    else if (activeTab === "siguiendo") baseList = followingProfiles;
+    if (activeTab === "todos") {
+      // Only show search results when there's a query
+      if (!q) return [];
+      baseList = allProfiles;
+    } else if (activeTab === "siguiendo") baseList = followingProfiles;
     else if (activeTab === "seguidores") baseList = followersProfiles;
 
     if (!q) return baseList;
@@ -169,7 +174,7 @@ export default function Friends() {
           <Search className="absolute left-4 size-5 text-[#8C8F9E]" />
           <input
             type="text"
-            placeholder="Buscar amigos..."
+            placeholder={t("friends.searchPlaceholder")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
@@ -183,9 +188,9 @@ export default function Friends() {
         {/* Tab category pills */}
         <div className="flex gap-2.5 mt-5 overflow-x-auto no-scrollbar py-1">
           {[
-            { id: "todos", label: "Todos" },
-            { id: "siguiendo", label: "Siguiendo" },
-            { id: "seguidores", label: "Seguidores" },
+            { id: "todos", label: t("friends.todos") },
+            { id: "siguiendo", label: t("friends.following") },
+            { id: "seguidores", label: t("friends.followers") },
           ].map((tab) => {
             const active = activeTab === tab.id;
             return (
@@ -209,12 +214,12 @@ export default function Friends() {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="w-8 h-8 rounded-full border-2 border-[#7B61FF] border-t-transparent animate-spin" />
-              <p className="text-xs text-[#8C8F9E] mt-3">Cargando...</p>
+              <p className="text-xs text-[#8C8F9E] mt-3">{t("common.loading")}</p>
             </div>
           ) : displayList.length === 0 ? (
             <div className="bg-white rounded-[24px] p-8 border border-[#F0F1F6] text-center shadow-sm">
-              <p className="text-sm font-medium text-[#5E6173]">No se encontraron amigos</p>
-              <p className="text-xs text-[#8C8F9E] mt-1">Intenta con otra búsqueda o explora otras pestañas.</p>
+              <p className="text-sm font-medium text-[#5E6173]">{t("friends.noResults")}</p>
+              <p className="text-xs text-[#8C8F9E] mt-1">{t("friends.tryAnotherSearch")}</p>
             </div>
           ) : (
             displayList.map((profile) => {
@@ -241,7 +246,7 @@ export default function Friends() {
                         {profile.display_name || profile.username}
                       </p>
                       <p className="text-[11px] text-[#8C8F9E] mt-0.5 font-medium">
-                        {profile.location || "Location not set"}
+                        {profile.location || t("friends.locationNotSet")}
                       </p>
                     </div>
                   </div>
@@ -258,7 +263,7 @@ export default function Friends() {
                         : "bg-[#7B61FF] text-white hover:bg-[#6B4EFF] shadow-md shadow-[#7B61FF]/10"
                     }`}
                   >
-                    {isFollowingUser ? "Siguiendo" : "Seguir"}
+                    {isFollowingUser ? t("friends.unfollow") : t("friends.follow")}
                   </button>
                 </div>
               );
@@ -274,8 +279,8 @@ export default function Friends() {
           setProfileAlertOpen(false);
           navigate("/account");
         }}
-        title="Profile required"
-        message="You need to set up your profile name before you can follow others."
+        title={t("friends.profileRequired")}
+        message={t("friends.profileRequiredMessage")}
       />
     </div>
   );

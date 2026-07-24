@@ -22,6 +22,7 @@ import {
 import { Card } from "./profile-shared";
 import { getColorHex } from "./profile-utils";
 import { SIZES, SIZING_FORMATS, SizingFormat } from "./profile-sizes";
+import { useTranslation } from "react-i18next";
 
 const GENDER_OPTIONS = ["", "Male", "Female", "Non-binary", "Other", "Prefer not to say"];
 
@@ -83,13 +84,14 @@ export default function ProfileEdit({
   onAvatarUpload,
   avatarInputRef,
 }: ProfileEditProps) {
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen" style={{ background: "#F8F8FB" }}>
       <div className="mx-auto" style={{ maxWidth: 430, padding: 20 }}>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-display text-2xl text-[#1B1B2D]">Edit profile</h2>
+          <h2 className="font-display text-2xl text-[#1B1B2D]">{t("profile.editProfile")}</h2>
           <Button variant="ghost" size="sm" onClick={onCancel} className="text-[#7B61FF]">
-            Cancel
+            {t("common.cancel")}
           </Button>
         </div>
 
@@ -125,10 +127,10 @@ export default function ProfileEdit({
 
         <div className="space-y-6">
           <Card>
-            <h3 className="text-sm font-semibold text-[#1B1B2D] mb-4">Basic info</h3>
+            <h3 className="text-sm font-semibold text-[#1B1B2D] mb-4">{t("profile.basicInfo")}</h3>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="displayName" className="text-xs text-[#8C8F9E]">Display name</Label>
+                <Label htmlFor="displayName" className="text-xs text-[#8C8F9E]">{t("profile.displayName")}</Label>
                 <Input
                   id="displayName"
                   value={displayName}
@@ -137,29 +139,29 @@ export default function ProfileEdit({
                 />
               </div>
               <div>
-                <Label htmlFor="location" className="text-xs text-[#8C8F9E]">Location</Label>
+                <Label htmlFor="location" className="text-xs text-[#8C8F9E]">{t("profile.location")}</Label>
                 <Input
                   id="location"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   className="mt-1 text-sm"
-                  placeholder="e.g. Madrid, España"
+                  placeholder={t("profile.locationPlaceholder")}
                 />
               </div>
             </div>
           </Card>
 
           <Card>
-            <h3 className="text-sm font-semibold text-[#1B1B2D] mb-4">Personal</h3>
+            <h3 className="text-sm font-semibold text-[#1B1B2D] mb-4">{t("profile.personal")}</h3>
             <div className="space-y-4">
               <DatePicker
                 id="birthDate"
-                label="Birth date"
+                label={t("profile.birthDate")}
                 value={birthDate}
                 onChange={setBirthDate}
               />
               <div>
-                <Label htmlFor="gender" className="text-xs text-[#8C8F9E]">Gender</Label>
+                <Label htmlFor="gender" className="text-xs text-[#8C8F9E]">{t("profile.gender")}</Label>
                 <select
                   id="gender"
                   value={gender}
@@ -167,7 +169,7 @@ export default function ProfileEdit({
                   className="mt-1 flex h-9 w-full rounded-md border border-[#F0F1F6] bg-transparent px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#7B61FF]"
                 >
                   {GENDER_OPTIONS.map((opt) => (
-                    <option key={opt} value={opt}>{opt || "Select..."}</option>
+                    <option key={opt} value={opt}>{opt || t("common.select")}</option>
                   ))}
                 </select>
               </div>
@@ -176,7 +178,7 @@ export default function ProfileEdit({
 
           <Card>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-[#1B1B2D]">Sizes</h3>
+              <h3 className="text-sm font-semibold text-[#1B1B2D]">{t("profile.sizes")}</h3>
               <div className="flex rounded-lg border border-[#E8E9EE] overflow-hidden">
                 {SIZING_FORMATS.map((fmt) => (
                   <button
@@ -196,42 +198,42 @@ export default function ProfileEdit({
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <Label htmlFor="shirtSize" className="text-xs text-[#8C8F9E]">Shirt</Label>
+                <Label htmlFor="shirtSize" className="text-xs text-[#8C8F9E]">{t("profile.shirt")}</Label>
                 <select
                   id="shirtSize"
                   value={shirtSize}
                   onChange={(e) => setShirtSize(e.target.value)}
                   className="mt-1 flex h-9 w-full rounded-md border border-[#F0F1F6] bg-transparent px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#7B61FF]"
                 >
-                  <option value="">Select...</option>
+                  <option value="">{t("common.select")}</option>
                   {SIZES[sizingFormat].shirt.map((opt) => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <Label htmlFor="pantsSize" className="text-xs text-[#8C8F9E]">Pants</Label>
+                <Label htmlFor="pantsSize" className="text-xs text-[#8C8F9E]">{t("profile.pants")}</Label>
                 <select
                   id="pantsSize"
                   value={pantsSize}
                   onChange={(e) => setPantsSize(e.target.value)}
                   className="mt-1 flex h-9 w-full rounded-md border border-[#F0F1F6] bg-transparent px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#7B61FF]"
                 >
-                  <option value="">Select...</option>
+                  <option value="">{t("common.select")}</option>
                   {SIZES[sizingFormat].pants.map((opt) => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <Label htmlFor="shoeSize" className="text-xs text-[#8C8F9E]">Shoe</Label>
+                <Label htmlFor="shoeSize" className="text-xs text-[#8C8F9E]">{t("profile.shoe")}</Label>
                 <select
                   id="shoeSize"
                   value={shoeSize}
                   onChange={(e) => setShoeSize(e.target.value)}
                   className="mt-1 flex h-9 w-full rounded-md border border-[#F0F1F6] bg-transparent px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#7B61FF]"
                 >
-                  <option value="">Select...</option>
+                  <option value="">{t("common.select")}</option>
                   {SIZES[sizingFormat].shoe.map((opt) => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
@@ -241,7 +243,7 @@ export default function ProfileEdit({
           </Card>
 
           <Card>
-            <h3 className="text-sm font-semibold text-[#1B1B2D] mb-4">Colores favoritos</h3>
+            <h3 className="text-sm font-semibold text-[#1B1B2D] mb-4">{t("profile.favoriteColors")}</h3>
             {(() => {
               const colors = preferences["Colores favoritos"] || [];
               return (
@@ -283,7 +285,7 @@ export default function ProfileEdit({
                     }));
                   }}>
                     <SelectTrigger className="h-9 text-sm">
-                      <SelectValue placeholder="Add a color..." />
+                      <SelectValue placeholder={t("profile.addColor")} />
                     </SelectTrigger>
                     <SelectContent>
                       {colorOptions.map((c) => (
@@ -302,7 +304,7 @@ export default function ProfileEdit({
           </Card>
 
           <Card>
-            <h3 className="text-sm font-semibold text-[#1B1B2D] mb-4">Preferencias personalizadas</h3>
+            <h3 className="text-sm font-semibold text-[#1B1B2D] mb-4">{t("profile.customPreferences")}</h3>
 
             {Object.entries(preferences).filter(([catName]) => catName !== "Colores favoritos").map(([catName, items]) => (
               <div key={catName} className="mb-4 pb-4 border-b border-[#F3F4F7] last:border-b-0 last:mb-0 last:pb-0">
@@ -344,7 +346,7 @@ export default function ProfileEdit({
                   <Input
                     value={newPrefItem[catName] || ""}
                     onChange={(e) => setNewPrefItem((prev) => ({ ...prev, [catName]: e.target.value }))}
-                    placeholder="Add item..."
+                    placeholder={t("profile.addItem")}
                     className="h-8 text-xs flex-1"
                     onKeyDown={async (e) => {
                       if (e.key === "Enter" && newPrefItem[catName]?.trim()) {
@@ -382,7 +384,7 @@ export default function ProfileEdit({
               <Input
                 value={newPrefCategory}
                 onChange={(e) => setNewPrefCategory(e.target.value)}
-                placeholder="New category name..."
+                placeholder={t("profile.newCategoryName")}
                 className="h-9 text-sm flex-1"
                 onKeyDown={async (e) => {
                   if (e.key === "Enter" && newPrefCategory.trim()) {
@@ -402,14 +404,14 @@ export default function ProfileEdit({
                   setNewPrefCategory("");
                 }}
               >
-                <Plus className="size-4 mr-1" /> Add
+                <Plus className="size-4 mr-1" /> {t("common.add")}
               </Button>
             </div>
           </Card>
 
           <div className="flex gap-2">
             <Button onClick={onSave} disabled={saving} className="flex-1 bg-[#7B61FF] hover:bg-[#6B4EFF] text-white">
-              {saving ? "Saving..." : "Save"}
+              {saving ? t("common.saving") : t("common.save")}
             </Button>
             <Button variant="outline" onClick={onSignOut} className="border-[#F0F1F6] text-[#5E6173]">
               <LogOut className="size-4" />

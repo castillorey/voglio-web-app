@@ -5,6 +5,7 @@ import { IProfile } from "@/services/profile";
 import { PreferenceMap } from "@/services/preferences";
 import { Card, Chip, ProfileRow } from "./profile-shared";
 import { getColorHex, formatDate } from "./profile-utils";
+import { useTranslation } from "react-i18next";
 
 interface ProfileDisplayProps {
   profile: IProfile;
@@ -23,13 +24,14 @@ export default function ProfileDisplay({
   onEdit,
   signOut,
 }: ProfileDisplayProps) {
+  const { t, i18n } = useTranslation();
   const zodiacSign = profile.zodiac_sign || "";
   const hasAboutData = profile.birth_date || profile.gender || profile.location || zodiacSign;
   const sizingFormat = profile.sizing_format || "US";
   const sizeData = [
-    { label: "Camisa", value: profile.shirt_size },
-    { label: "Pantalón", value: profile.pants_size },
-    { label: "Zapatos", value: profile.shoe_size },
+    { label: t("profile.shirt"), value: profile.shirt_size },
+    { label: t("profile.pants"), value: profile.pants_size },
+    { label: t("profile.shoe"), value: profile.shoe_size },
   ].filter((s) => s.value);
   const hasSizeData = sizeData.length > 0;
 
@@ -63,7 +65,7 @@ export default function ProfileDisplay({
                 {zodiacSign}
               </p>
             )}
-            <p className="text-sm text-[#8C8F9E] mt-2">{followingCount} following</p>
+            <p className="text-sm text-[#8C8F9E] mt-2">{followingCount} {t("friends.following")}</p>
           </div>
         </div>
 
@@ -76,7 +78,7 @@ export default function ProfileDisplay({
             className="text-[#7B61FF] hover:text-[#6B4EFF] hover:bg-[#F3EEFF]"
           >
             <Settings className="size-4 mr-1" />
-            Edit
+            {t("common.edit")}
           </Button>
         </div>
 
@@ -84,35 +86,35 @@ export default function ProfileDisplay({
         {!hasAboutData && !hasSizeData && Object.keys(preferences).length === 0 && (
           <div className="mt-8 rounded-xl border border-dashed border-[#E0E1E8] p-6 text-center">
             <p className="text-sm font-medium text-[#1B1B2D]">
-              Your profile is looking empty
+              {t("profile.emptyProfile")}
             </p>
             <p className="text-xs text-[#6B6E85] mt-1">
-              Tap Edit to add your info and help friends find the perfect gift for you
+              {t("profile.tapEditToAdd")}
             </p>
             <div className="flex justify-center gap-4 mt-5">
               <div className="flex flex-col items-center gap-1.5">
                 <div className="w-10 h-10 rounded-full bg-[#FFF0F5] flex items-center justify-center">
                   <Cake className="size-4 text-[#FF59C7]" />
                 </div>
-                <span className="text-[10px] text-[#8C8F9E]">Birthday</span>
+                <span className="text-[10px] text-[#8C8F9E]">{t("profile.birthday")}</span>
               </div>
               <div className="flex flex-col items-center gap-1.5">
                 <div className="w-10 h-10 rounded-full bg-[#EEF4FF] flex items-center justify-center">
                   <MapPin className="size-4 text-[#4A8CFF]" />
                 </div>
-                <span className="text-[10px] text-[#8C8F9E]">Location</span>
+                <span className="text-[10px] text-[#8C8F9E]">{t("profile.location")}</span>
               </div>
               <div className="flex flex-col items-center gap-1.5">
                 <div className="w-10 h-10 rounded-full bg-[#F0FFF4] flex items-center justify-center">
                   <Shirt className="size-4 text-[#34C759]" />
                 </div>
-                <span className="text-[10px] text-[#8C8F9E]">Sizes</span>
+                <span className="text-[10px] text-[#8C8F9E]">{t("profile.sizes")}</span>
               </div>
               <div className="flex flex-col items-center gap-1.5">
                 <div className="w-10 h-10 rounded-full bg-[#FFF8EE] flex items-center justify-center">
                   <Palette className="size-4 text-[#FF9F0A]" />
                 </div>
-                <span className="text-[10px] text-[#8C8F9E]">Colors</span>
+                <span className="text-[10px] text-[#8C8F9E]">{t("profile.colors")}</span>
               </div>
             </div>
           </div>
@@ -121,12 +123,12 @@ export default function ProfileDisplay({
         {/* About Me Card */}
         {hasAboutData && (
           <Card className="mt-6">
-            <h3 className="text-sm font-semibold text-[#1B1B2D] mb-1">About me</h3>
+            <h3 className="text-sm font-semibold text-[#1B1B2D] mb-1">{t("profile.aboutMe")}</h3>
             <div className="divide-y divide-[#F3F4F7]">
-              <ProfileRow label="Fecha de nacimiento" value={formatDate(profile.birth_date || "")} />
-              <ProfileRow label="Ubicación" value={profile.location} />
-              <ProfileRow label="Género" value={profile.gender} />
-              <ProfileRow label="Signo zodiacal" value={zodiacSign} />
+              <ProfileRow label={t("profile.birthDate")} value={formatDate(profile.birth_date || "")} />
+              <ProfileRow label={t("profile.location")} value={profile.location} />
+              <ProfileRow label={t("profile.gender")} value={profile.gender} />
+              <ProfileRow label={t("profile.zodiacSign")} value={zodiacSign} />
             </div>
           </Card>
         )}
@@ -136,7 +138,7 @@ export default function ProfileDisplay({
           {hasSizeData && (
             <Card className="p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-xs font-semibold text-[#1B1B2D] uppercase tracking-wide">Tallas</h3>
+                <h3 className="text-xs font-semibold text-[#1B1B2D] uppercase tracking-wide">{t("profile.sizes")}</h3>
                 <span className="text-[10px] font-medium text-[#8C8F9E] bg-[#F0F1F6] px-2 py-0.5 rounded">{sizingFormat}</span>
               </div>
               <div className="space-y-2.5">
@@ -154,7 +156,7 @@ export default function ProfileDisplay({
             if (colors.length === 0) return null;
             return (
               <Card className="p-4">
-                <h3 className="text-xs font-semibold text-[#1B1B2D] mb-3 uppercase tracking-wide">Colores fav</h3>
+                <h3 className="text-xs font-semibold text-[#1B1B2D] mb-3 uppercase tracking-wide">{t("profile.favoriteColors")}</h3>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {colors.map((c) => (
                     <div key={c.id} className="flex flex-col items-center gap-0.5">
@@ -192,8 +194,32 @@ export default function ProfileDisplay({
             onClick={signOut}
             className="text-sm text-[#8C8F9E] hover:text-[#EF4444] transition-colors"
           >
-            Cerrar sesión
+            {t("auth.signOut")}
           </button>
+        </div>
+
+        {/* Language Switcher */}
+        <div className="mt-4 flex justify-center">
+          <div className="flex rounded-lg border border-[#E8E9EE] overflow-hidden">
+            {[
+              { value: "en", label: "EN" },
+              { value: "es", label: "ES" },
+              { value: "pt", label: "PT" },
+            ].map((lang) => (
+              <button
+                key={lang.value}
+                type="button"
+                onClick={() => i18n.changeLanguage(lang.value)}
+                className={`px-3 py-1 text-xs font-medium transition-colors ${
+                  i18n.language === lang.value
+                    ? "bg-[#1B1B2D] text-white"
+                    : "bg-white text-[#8C8F9E] hover:text-[#1B1B2D]"
+                }`}
+              >
+                {lang.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="h-8" />

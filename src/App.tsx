@@ -11,6 +11,7 @@ import Account from "./pages/Account";
 import Friends from "./pages/Friends";
 import UserCollections from "./pages/UserCollections";
 import UserCategory from "./pages/UserCategory";
+import UserProfile from "./pages/UserProfile";
 import Bookmarked from "./pages/Bookmarked";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
             <Route path="account" element={<Account />} />
             <Route path="friends" element={<Friends />} />
             <Route path="friends/u/:username" element={<UserCollections />} />
+            <Route path="friends/u/:username/profile" element={<UserProfile />} />
             <Route path="friends/u/:username/category/:categoryId" element={<UserCategory />} />
           </Route>
           <Route path="*" element={<NotFound />} />

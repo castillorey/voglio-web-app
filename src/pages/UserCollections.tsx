@@ -13,10 +13,12 @@ import { followUser, unfollowUser, isFollowing, NoProfileError } from "../servic
 import AlertDialog from "@/components/ui/alert-dialog";
 import CategoryPreview from "../components/category/CategoryPreview";
 import { ICategory } from "@/components/voglio/VoglioForm";
+import { useTranslation } from "react-i18next";
 
 export default function UserCollections() {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [profile, setProfile] = useState<IProfile | null>(null);
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,7 +40,7 @@ export default function UserCollections() {
     try {
       const prof = await getProfileByUsername(username);
       if (!prof) {
-        setError("User not found");
+        setError(t("friends.profileRequired"));
         setLoading(false);
         return;
       }
@@ -93,11 +95,11 @@ export default function UserCollections() {
   };
 
   if (loading)
-    return <div className="mt-8 text-center text-[#6B6E85] text-sm">Loading...</div>;
+    return <div className="mt-8 text-center text-[#6B6E85] text-sm">{t("common.loading")}</div>;
   if (error)
     return <div className="mt-8 text-center text-red-500 text-sm">{error}</div>;
   if (!profile)
-    return <div className="mt-8 text-center text-[#6B6E85] text-sm">User not found</div>;
+    return <div className="mt-8 text-center text-[#6B6E85] text-sm">{t("common.error")}</div>;
 
   const isOwnProfile = currentUserId === profile.id;
 
@@ -112,7 +114,10 @@ export default function UserCollections() {
         <ChevronLeft className="size-5" />
       </Button>
 
-      <div className="flex items-start gap-4 mt-4">
+      <div
+        className="flex items-start gap-4 mt-4 cursor-pointer hover:opacity-80 transition-opacity"
+        onClick={() => navigate(`/friends/u/${username}/profile`)}
+      >
         <div className="relative shrink-0">
           <div className="w-14 h-14 rounded-full p-[2px]" style={{ background: "linear-gradient(135deg, #FF59C7, #7B61FF)" }}>
             <div className="w-full h-full rounded-full overflow-hidden bg-white">
@@ -147,7 +152,7 @@ export default function UserCollections() {
       </div>
 
       <div className="mt-6">
-        <p className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wide">Public categories</p>
+        <p className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wide">{t("userCollections.publicCategories")}</p>
       </div>
 
       <div className="mt-4 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2">
@@ -172,7 +177,7 @@ export default function UserCollections() {
         ))}
         {categoryList.length === 0 && (
           <p className="col-span-full text-center text-[#6B6E85] text-sm mt-8">
-            No public categories yet
+            {t("userCollections.noPublicCategories")}
           </p>
         )}
       </div>
@@ -183,8 +188,8 @@ export default function UserCollections() {
           setProfileAlertOpen(false);
           navigate("/account");
         }}
-        title="Profile required"
-        message="You need to set up your profile name before you can follow others."
+        title={t("userCollections.profileRequired")}
+        message={t("userCollections.profileRequiredMessage")}
       />
     </>
   );
