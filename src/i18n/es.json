@@ -160,7 +160,8 @@
     "chooseEmoji": "Elegir emoji",
     "createCategory": "Crear categoría",
     "updateCategory": "Actualizar categoría",
-    "nameRequired": "El nombre es obligatorio"
+    "nameRequired": "El nombre es obligatorio",
+    "emojiPicker": "Elige un emoji"
   },
   "profile": {
     "editProfile": "Editar perfil",
