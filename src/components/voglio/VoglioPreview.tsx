@@ -40,6 +40,7 @@ export default function VoglioPreview({
   isTaken,
   takenBy,
   onToggleTaken,
+  onCardClick,
 }: {
   props: IVoglio;
   onDeleteVoglio: (voglioId: number) => void;
@@ -48,6 +49,7 @@ export default function VoglioPreview({
   isTaken?: boolean;
   takenBy?: string | null;
   onToggleTaken?: () => void;
+  onCardClick?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
@@ -143,7 +145,10 @@ export default function VoglioPreview({
   };
 
   return (
-    <Card className={`relative rounded-[20px] border overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.04)] ${isTaken ? "border-[#7B61FF]" : "border-[#F0F1F6]"}`}>
+    <Card
+      className={`relative rounded-[20px] border overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.04)] ${isTaken ? "border-[#7B61FF]" : "border-[#F0F1F6]"} ${isReadOnly && onCardClick ? "cursor-pointer hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-shadow" : ""}`}
+      onClick={isReadOnly && onCardClick ? onCardClick : undefined}
+    >
       {isOwner && (isSmallDevice ? <MobileDrawerMenu /> : <DesktopDropdownMenu />)}
       <CardContent className="p-0">
         {props.imageUrl ? (
@@ -164,7 +169,7 @@ export default function VoglioPreview({
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0 flex-1">
               <h4 className="font-bold text-sm text-[#1B1B2D] truncate">{props.name}</h4>
-              {props.notes && <p className="mt-1 text-xs text-[#6B6E85] line-clamp-2">{props.notes}</p>}
+              {!isReadOnly && props.notes && <p className="mt-1 text-xs text-[#6B6E85] line-clamp-2">{props.notes}</p>}
               {props.price != null && (
                 <p className="mt-2 text-xs font-semibold text-[#7B61FF]">${props.price}</p>
               )}

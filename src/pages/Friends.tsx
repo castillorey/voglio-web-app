@@ -13,7 +13,7 @@ export default function Friends() {
   const currentUserId = getCurrentUserId();
   const { t } = useTranslation();
   
-  const [activeTab, setActiveTab] = useState<"todos" | "siguiendo" | "seguidores">("siguiendo");
+  const [activeTab, setActiveTab] = useState<"find" | "siguiendo" | "seguidores">("siguiendo");
   const [query, setQuery] = useState("");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   
@@ -41,7 +41,7 @@ export default function Friends() {
       const followedIds = await getFollowing(currentUserId);
       setFollowingIds(followedIds);
 
-      // 2. Fetch all profiles (excluding current user) for "Todos" discovery
+      // 2. Fetch all profiles (excluding current user) for "Find" discovery
       const { data: allProfs, error: allErr } = await supabase
         .from("profiles")
         .select("*")
@@ -98,7 +98,7 @@ export default function Friends() {
       // Filter out self
       const filtered = results.filter((p) => p.id !== currentUserId);
       setAllProfiles(filtered);
-      setActiveTab("todos");
+      setActiveTab("find");
     } catch (err) {
       console.error(err);
     }
@@ -140,7 +140,7 @@ export default function Friends() {
     const q = query.toLowerCase().trim();
     let baseList: IProfile[] = [];
 
-    if (activeTab === "todos") {
+    if (activeTab === "find") {
       // Only show search results when there's a query
       if (!q) return [];
       baseList = allProfiles;
@@ -188,7 +188,7 @@ export default function Friends() {
         {/* Tab category pills */}
         <div className="flex gap-2.5 mt-5 overflow-x-auto no-scrollbar py-1">
           {[
-            { id: "todos", label: t("friends.todos") },
+            { id: "buscar", label: t("friends.find") },
             { id: "siguiendo", label: t("friends.following") },
             { id: "seguidores", label: t("friends.followers") },
           ].map((tab) => {

@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 
 import { fetchTakenVoglioIds, toggleVoglioTaken } from "../services/voglioTaken";
 import VoglioPreview from "../components/voglio/VoglioPreview";
+import VoglioDetailDialog from "../components/voglio/VoglioDetailDialog";
 import { IVoglio } from "@/components/voglio/VoglioForm";
 
 interface CategoryDetail {
@@ -37,6 +38,7 @@ export default function UserCategory() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [takenFilter, setTakenFilter] = useState("all");
+  const [selectedVoglio, setSelectedVoglio] = useState<IVoglio | null>(null);
   const currentUserId = getCurrentUserId();
 
   const filteredAndSorted = useMemo(() => {
@@ -209,6 +211,7 @@ export default function UserCategory() {
             isTaken={takenMap.has(voglio.id!)}
             takenBy={takenMap.get(voglio.id!) || null}
             onToggleTaken={() => handleToggleTaken(voglio.id!)}
+            onCardClick={() => setSelectedVoglio(voglio)}
           />
         ))}
         {filteredAndSorted.length === 0 && (
@@ -219,6 +222,17 @@ export default function UserCategory() {
           </p>
         )}
       </div>
+
+      {selectedVoglio && (
+        <VoglioDetailDialog
+          open={!!selectedVoglio}
+          onClose={() => setSelectedVoglio(null)}
+          voglio={selectedVoglio}
+          isTaken={takenMap.has(selectedVoglio.id!)}
+          takenBy={takenMap.get(selectedVoglio.id!) || null}
+          onToggleTaken={() => handleToggleTaken(selectedVoglio.id!)}
+        />
+      )}
     </>
   );
 }
