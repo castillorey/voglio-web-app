@@ -188,7 +188,7 @@ export default function Friends() {
         {/* Tab category pills */}
         <div className="flex gap-2.5 mt-5 overflow-x-auto no-scrollbar py-1">
           {[
-            { id: "buscar", label: t("friends.find") },
+            { id: "find", label: t("friends.find") },
             { id: "siguiendo", label: t("friends.following") },
             { id: "seguidores", label: t("friends.followers") },
           ].map((tab) => {
