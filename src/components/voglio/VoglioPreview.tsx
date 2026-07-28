@@ -166,16 +166,14 @@ export default function VoglioPreview({
         )}
 
         <div className="p-4">
-          <div className="flex items-center justify-between gap-2">
-            <div className="min-w-0 flex-1">
-              <h4 className="font-bold text-sm text-[#1B1B2D] truncate">{props.name}</h4>
-              {!isReadOnly && props.notes && <p className="mt-1 text-xs text-[#6B6E85] line-clamp-2">{props.notes}</p>}
-              {props.price != null && (
-                <p className="mt-2 text-xs font-semibold text-[#7B61FF]">${props.price}</p>
-              )}
-            </div>
-             {!isOwner && (
-              <div className="flex gap-1.5 shrink-0">
+          <h4 className="font-bold text-sm text-[#1B1B2D] truncate">{props.name}</h4>
+          {!isReadOnly && !onCardClick && props.notes && <p className="mt-1 text-xs text-[#6B6E85] line-clamp-2">{props.notes}</p>}
+          <div className="flex items-center justify-between gap-2 mt-1">
+            {props.price != null && (
+              <p className="text-xs font-semibold text-[#7B61FF]">${props.price}</p>
+            )}
+            {!isOwner && (
+              <div className="flex gap-1.5 shrink-0 ml-auto">
                 {props.referenceLink && (
                   <Button
                     variant="ghost"

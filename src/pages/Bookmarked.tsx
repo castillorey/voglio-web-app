@@ -6,6 +6,7 @@ import supabase from "../supabase-client";
 import { getCurrentUserId } from "../services/profile";
 import { toggleVoglioTaken } from "../services/voglioTaken";
 import VoglioPreview from "../components/voglio/VoglioPreview";
+import VoglioDetailDialog from "../components/voglio/VoglioDetailDialog";
 import { IVoglio } from "@/components/voglio/VoglioForm";
 import { useTranslation } from "react-i18next";
 
@@ -23,6 +24,7 @@ export default function Bookmarked() {
   const { t } = useTranslation();
   const [items, setItems] = useState<BookmarkedVoglio[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedVoglio, setSelectedVoglio] = useState<{ voglio: IVoglio; isTaken: boolean; onToggleTaken: () => void } | null>(null);
   const currentUserId = getCurrentUserId();
 
   useEffect(() => {
@@ -156,6 +158,11 @@ export default function Bookmarked() {
                 OnEditClick={() => {}}
                 isTaken
                 onToggleTaken={() => handleUnmark(item.voglio.id!)}
+                onCardClick={() => setSelectedVoglio({
+                  voglio: item.voglio,
+                  isTaken: true,
+                  onToggleTaken: () => handleUnmark(item.voglio.id!),
+                })}
               />
               <Link
                 to={`/friends/u/${item.ownerUsername}/category/${item.categoryId}`}
@@ -173,6 +180,16 @@ export default function Bookmarked() {
             </div>
           ))}
         </div>
+      )}
+
+      {selectedVoglio && (
+        <VoglioDetailDialog
+          open={!!selectedVoglio}
+          onClose={() => setSelectedVoglio(null)}
+          voglio={selectedVoglio.voglio}
+          isTaken={selectedVoglio.isTaken}
+          onToggleTaken={selectedVoglio.onToggleTaken}
+        />
       )}
     </>
   );
