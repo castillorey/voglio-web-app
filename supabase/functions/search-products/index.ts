@@ -6,6 +6,20 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "content-type, apikey, authorization",
 };
 
+const RATE_LIMIT = 10;
+const RATE_WINDOW_MS = 60_000;
+const hits = new Map<string, number[]>();
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = hits.get(ip) ?? [];
+  const recent = timestamps.filter((t) => now - t < RATE_WINDOW_MS);
+  if (recent.length >= RATE_LIMIT) return false;
+  recent.push(now);
+  hits.set(ip, recent);
+  return true;
+}
+
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -16,6 +30,11 @@ function json(body: unknown, status = 200) {
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: CORS_HEADERS });
+  }
+
+  const ip = req.headers.get("x-forwarded-for") ?? "unknown";
+  if (!checkRateLimit(ip)) {
+    return json({ error: "Rate limit exceeded. Try again later." }, 429);
   }
 
   try {
@@ -39,13 +58,13 @@ serve(async (req) => {
       return json({ results: [] });
     }
 
-    const results = data.shopping_results.map((item: any) => ({
-      title: item.title ?? "",
-      price: item.price ?? "",
-      link: item.link || item.product_link || item.merchant_link || "",
-      thumbnail: item.thumbnail ?? "",
-      source: item.source ?? "",
-      description: item.extracted_description ?? item.description ?? "",
+    const results = data.shopping_results.map((item: Record<string, unknown>) => ({
+      title: (item.title as string) ?? "",
+      price: (item.price as string) ?? "",
+      link: (item.link as string) || (item.product_link as string) || (item.merchant_link as string) || "",
+      thumbnail: (item.thumbnail as string) ?? "",
+      source: (item.source as string) ?? "",
+      description: (item.extracted_description as string) ?? (item.description as string) ?? "",
     }));
 
     return json({ results });
