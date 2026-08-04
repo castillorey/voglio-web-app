@@ -47,8 +47,8 @@ test.describe("Authenticated navigation", () => {
 
     await page.locator("nav button").filter({ hasText: "" }).first().click();
     await expect(page.getByText("Create new")).toBeVisible();
-    await expect(page.getByText("New category")).toBeVisible();
-    await expect(page.getByText("New voglio")).toBeVisible();
+    await expect(page.getByRole("button", { name: /New category/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /New voglio/ })).toBeVisible();
   });
 
   test("Collections page shows category grid and count", async ({ page }) => {

@@ -59,10 +59,10 @@ test.describe("Auth pages (desktop)", () => {
     await setupSupabaseMocks(page);
     await page.goto("/register");
 
-    await expect(page.getByText("Create your account")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Create your account" })).toBeVisible();
     await expect(page.getByLabel("Email")).toBeVisible();
     await expect(page.getByLabel("Password")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Create account" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Create your account" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Sign in" })).toBeVisible();
   });
 
@@ -72,7 +72,7 @@ test.describe("Auth pages (desktop)", () => {
 
     await page.getByLabel("Email").fill("new@example.com");
     await page.getByLabel("Password").fill("password123");
-    await page.getByRole("button", { name: "Create account" }).click();
+    await page.getByRole("button", { name: "Create your account" }).click();
 
     await expect(page.getByText("Account created! Check your email.")).toBeVisible();
   });
@@ -83,7 +83,7 @@ test.describe("Auth pages (desktop)", () => {
 
     await page.getByLabel("Email").fill("taken@example.com");
     await page.getByLabel("Password").fill("password123");
-    await page.getByRole("button", { name: "Create account" }).click();
+    await page.getByRole("button", { name: "Create your account" }).click();
 
     await expect(page.getByText(/A user with this email address/)).toBeVisible();
   });
@@ -121,7 +121,7 @@ test.describe("Auth pages (mobile)", () => {
 
     await page.getByLabel("Email").fill("mobile@example.com");
     await page.getByLabel("Password").fill("password123");
-    await page.getByRole("button", { name: "Create account" }).click();
+    await page.getByRole("button", { name: "Create your account" }).click();
 
     await expect(page.getByText("Account created! Check your email.")).toBeVisible();
   });

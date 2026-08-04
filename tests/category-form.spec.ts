@@ -67,7 +67,7 @@ test.describe("Category form", () => {
     await page.getByRole("button", { name: "🎄 Christmas" }).click();
 
     await expect(page.getByPlaceholder("Name")).toHaveValue("Christmas");
-    await expect(page.getByRole("button", { name: "🎄" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "🎄", exact: true })).toBeVisible();
   });
 
   test("preset selection pre-fills then create persists the preset", async ({ page }) => {
@@ -93,8 +93,8 @@ test.describe("Category form", () => {
     await openCategoryForm(page);
     await page.getByRole("button", { name: "❔" }).click();
 
-    // emoji-picker-react renders a search input
-    await expect(page.getByPlaceholder("Search emojis…")).toBeVisible();
+    // emoji-picker-react renders a search input (default placeholder)
+    await expect(page.getByPlaceholder("Search")).toBeVisible();
   });
 
   test("creating a category closes the dialog and updates the grid", async ({ page }) => {
@@ -136,7 +136,7 @@ test.describe("Category form", () => {
     // Open the Birthday category's edit menu (desktop dropdown)
     const birthdayCard = page.getByText("Birthday", { exact: true }).locator("..").locator("..").locator("..");
     await birthdayCard.locator("button").first().click();
-    await page.getByRole("menuitem", { name: "Edit" }).click();
+    await page.getByText("Edit", { exact: true }).click();
 
     await expect(page.getByPlaceholder("Name")).toHaveValue("Birthday");
     await expect(page.getByLabel("Description")).toHaveValue("Gifts for my birthday");
@@ -159,7 +159,7 @@ test.describe("Category form", () => {
 
     const birthdayCard = page.getByText("Birthday", { exact: true }).locator("..").locator("..").locator("..");
     await birthdayCard.locator("button").first().click();
-    await page.getByRole("menuitem", { name: "Delete" }).click();
+    await page.getByText("Delete", { exact: true }).click();
 
     await expect(page.getByText("Birthday", { exact: true })).toBeHidden();
     expect(db.categories.find((c) => c.id === 1)).toBeUndefined();
