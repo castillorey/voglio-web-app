@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import { Page, Route } from "@playwright/test";
 
 export const SUPABASE_URL = "https://useejgiprosrfiabgukn.supabase.co";
