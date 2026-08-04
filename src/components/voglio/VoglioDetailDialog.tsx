@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { BookmarkCheck, Bookmark, ExternalLink, Image } from "lucide-react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { IVoglio } from "./VoglioForm";
-import { getCurrentUserId } from "../../services/profile";
+import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 
 interface VoglioDetailDialogProps {
@@ -33,6 +33,7 @@ function VoglioDetailContent({
   takenBy?: string | null;
   onToggleTaken?: () => void;
 }) {
+  const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
   const { t } = useTranslation();
 

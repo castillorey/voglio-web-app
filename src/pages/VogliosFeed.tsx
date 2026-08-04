@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users } from "lucide-react";
 import supabase from "../supabase-client";
-import { getProfile, getCurrentUserId, IProfile } from "../services/profile";
+import { getProfile, IProfile } from "../services/profile";
 import { getFollowing } from "../services/follow";
+import { useAuth } from "../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 
 interface FeedCategory {
@@ -17,6 +18,7 @@ interface FeedCategory {
 
 export default function VogliosFeed() {
   const navigate = useNavigate();
+  const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
   const { t } = useTranslation();
   const [categories, setCategories] = useState<FeedCategory[]>([]);

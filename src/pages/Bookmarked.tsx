@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Heart, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import supabase from "../supabase-client";
-import { getCurrentUserId } from "../services/profile";
+import { useAuth } from "../contexts/AuthContext";
 import { toggleVoglioTaken } from "../services/voglioTaken";
 import VoglioPreview from "../components/voglio/VoglioPreview";
 import VoglioDetailDialog from "../components/voglio/VoglioDetailDialog";
@@ -25,6 +25,7 @@ export default function Bookmarked() {
   const [items, setItems] = useState<BookmarkedVoglio[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedVoglio, setSelectedVoglio] = useState<{ voglio: IVoglio; isTaken: boolean; onToggleTaken: () => void } | null>(null);
+  const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
 
   useEffect(() => {

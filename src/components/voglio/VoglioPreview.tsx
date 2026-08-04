@@ -29,7 +29,7 @@ import { useState } from "react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import supabase from "../../supabase-client";
 import { IVoglio } from "./VoglioForm";
-import { getCurrentUserId } from "../../services/profile";
+import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 
 export default function VoglioPreview({
@@ -53,6 +53,7 @@ export default function VoglioPreview({
 }) {
   const [open, setOpen] = useState(false);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
+  const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
   const isOwner = !isReadOnly && !!currentUserId && currentUserId === props.userId;
   const { t } = useTranslation();

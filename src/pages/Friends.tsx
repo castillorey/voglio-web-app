@@ -3,13 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { Search, Sparkles } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import supabase from "../supabase-client";
-import { getCurrentUserId, IProfile, searchProfiles, getProfile } from "../services/profile";
+import { IProfile, searchProfiles, getProfile } from "../services/profile";
 import { followUser, unfollowUser, getFollowing, NoProfileError } from "../services/follow";
+import { useAuth } from "../contexts/AuthContext";
 import AlertDialog from "@/components/ui/alert-dialog";
 import { useTranslation } from "react-i18next";
 
 export default function Friends() {
   const navigate = useNavigate();
+  const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
   const { t } = useTranslation();
   
