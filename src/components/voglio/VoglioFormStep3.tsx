@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -12,7 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, ChevronDown, LayoutGrid } from "lucide-react";
-import EmojiPicker, { EmojiStyle } from "emoji-picker-react";
+
+const LazyEmojiPicker = lazy(() => import("emoji-picker-react"));
 
 import supabase from "../../supabase-client";
 import { ICategory, IVoglio } from "./VoglioForm";
@@ -155,14 +156,16 @@ export default function VoglioFormStep3({
 
             {showEmojiPicker && (
               <div className="flex justify-center">
-                <EmojiPicker
-                  emojiStyle={EmojiStyle.NATIVE}
-                  previewConfig={{ showPreview: false }}
-                  onEmojiClick={(data) => {
-                    setNewCategoryEmoji(data.emoji);
-                    setShowEmojiPicker(false);
-                  }}
-                />
+                <Suspense fallback={<div className="flex items-center justify-center h-[352px] text-sm text-[#6B6E85]">Loading...</div>}>
+                  <LazyEmojiPicker
+                    emojiStyle={"native" as never}
+                    previewConfig={{ showPreview: false }}
+                    onEmojiClick={(data) => {
+                      setNewCategoryEmoji(data.emoji);
+                      setShowEmojiPicker(false);
+                    }}
+                  />
+                </Suspense>
               </div>
             )}
 

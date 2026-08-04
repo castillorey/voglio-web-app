@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import supabase from "../../supabase-client";
-import EmojiPicker, { EmojiStyle } from "emoji-picker-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -10,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { ICategory } from "../voglio/VoglioForm";
 import { useTranslation } from "react-i18next";
+
+const LazyEmojiPicker = lazy(() => import("emoji-picker-react"));
 
 const presetCategories = [
   { name: "Birthday", emoji: "🎂" },
@@ -175,11 +176,13 @@ export default function CategoryForm({
         >
           <DialogTitle className="sr-only">{t("categoryForm.emojiPicker")}</DialogTitle>
           <div className="relative">
-            <EmojiPicker
-              emojiStyle={EmojiStyle.NATIVE}
-              previewConfig={{ showPreview: false }}
-              onEmojiClick={handleEmojiChange}
-            />
+            <Suspense fallback={<div className="flex items-center justify-center h-[352px] text-sm text-[#6B6E85]">Loading...</div>}>
+              <LazyEmojiPicker
+                emojiStyle={"native" as never}
+                previewConfig={{ showPreview: false }}
+                onEmojiClick={handleEmojiChange}
+              />
+            </Suspense>
           </div>
         </DialogContent>
       </Dialog>
