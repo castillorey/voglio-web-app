@@ -110,6 +110,7 @@ export default function VoglioFormStep1({
                     <img
                       src={item.thumbnail}
                       alt={item.title}
+                      loading="lazy"
                       className="w-full h-full object-contain"
                     />
                   ) : (

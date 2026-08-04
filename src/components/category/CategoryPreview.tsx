@@ -186,6 +186,7 @@ export default function CategoryPreview({
                     <img
                       src={thumbnails[i]}
                       alt=""
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   ) : (

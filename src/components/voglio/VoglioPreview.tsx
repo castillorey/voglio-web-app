@@ -162,6 +162,7 @@ export default function VoglioPreview({
             <img
               src={props.imageUrl}
               alt=""
+              loading="lazy"
               className="w-full h-full object-cover"
             />
           </div>

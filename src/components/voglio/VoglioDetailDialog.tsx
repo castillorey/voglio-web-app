@@ -44,6 +44,7 @@ function VoglioDetailContent({
           <img
             src={voglio.imageUrl}
             alt={voglio.name}
+            loading="lazy"
             className="w-full max-h-64 object-contain"
           />
         </div>
