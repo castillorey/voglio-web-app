@@ -28,22 +28,22 @@ export async function toggleVoglioTaken(
 ): Promise<{ taken: boolean; taker: string | null }> {
   if (!currentUserId) return { taken: false, taker: null };
 
-  const { data: existing, error: fetchError } = await supabase
+  const { data: rows, error: fetchError } = await supabase
     .from("voglio_taken")
     .select("user_id")
-    .eq("voglio_id", voglioId)
-    .maybeSingle();
+    .eq("voglio_id", voglioId);
 
   if (fetchError) {
     console.log("Error checking taken state: ", fetchError);
     return { taken: false, taker: null };
   }
 
-  if (existing) {
-    if (existing.user_id !== currentUserId) {
-      return { taken: true, taker: existing.user_id };
-    }
+  const takenRows = rows || [];
+  const myTaken = takenRows.some((r) => r.user_id === currentUserId);
+  const otherTaker =
+    takenRows.find((r) => r.user_id !== currentUserId)?.user_id ?? null;
 
+  if (myTaken) {
     const { error } = await supabase
       .from("voglio_taken")
       .delete()
@@ -52,7 +52,7 @@ export async function toggleVoglioTaken(
 
     if (error) {
       console.log("Error unmarking voglio: ", error);
-      return { taken: true, taker: existing.user_id };
+      return { taken: true, taker: currentUserId };
     }
 
     const { count } = await supabase
@@ -66,21 +66,25 @@ export async function toggleVoglioTaken(
       .eq("id", voglioId);
 
     return { taken: false, taker: null };
-  } else {
-    const { error } = await supabase
-      .from("voglio_taken")
-      .insert({ voglio_id: voglioId, user_id: currentUserId });
-
-    if (error) {
-      console.log("Error marking voglio: ", error);
-      return { taken: false, taker: null };
-    }
-
-    await supabase
-      .from("voglio")
-      .update({ is_taken: true })
-      .eq("id", voglioId);
-
-    return { taken: true, taker: currentUserId };
   }
+
+  if (otherTaker) {
+    return { taken: true, taker: otherTaker };
+  }
+
+  const { error } = await supabase
+    .from("voglio_taken")
+    .insert({ voglio_id: voglioId, user_id: currentUserId });
+
+  if (error) {
+    console.log("Error marking voglio: ", error);
+    return { taken: false, taker: null };
+  }
+
+  await supabase
+    .from("voglio")
+    .update({ is_taken: true })
+    .eq("id", voglioId);
+
+  return { taken: true, taker: currentUserId };
 }

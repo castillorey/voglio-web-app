@@ -66,6 +66,27 @@ test.describe("Bookmarked page", () => {
     expect(db.taken.filter((t) => t.voglio_id === 50).length).toBe(0);
   });
 
+  test("unmarking works when a friend also bookmarked the same item", async ({ page }) => {
+    const db = bookmarkedDB();
+    db.taken.push({
+      voglio_id: 50,
+      user_id: TEST_FRIEND_ID,
+      created_at: "2026-01-02T00:00:00.000Z",
+    });
+    await injectSession(page);
+    await setupSupabaseMocks(page, db);
+    await page.goto("/bookmarked");
+
+    await expect(page.getByText("Wireless Headphones")).toBeVisible();
+
+    // Unmark via the bookmark icon; only my row is removed
+    await page.getByRole("button", { name: "Unmark item" }).click();
+
+    await expect(page.getByText("No saved items yet")).toBeVisible();
+    expect(db.taken.filter((t) => t.voglio_id === 50 && t.user_id === TEST_USER_ID).length).toBe(0);
+    expect(db.taken.filter((t) => t.voglio_id === 50 && t.user_id === TEST_FRIEND_ID).length).toBe(1);
+  });
+
   test("navigating to find friends goes to friends page", async ({ page }) => {
     await injectSession(page);
     await setupSupabaseMocks(page);
