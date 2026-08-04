@@ -164,6 +164,7 @@ export default function Bookmarked() {
                 onDeleteVoglio={() => {}}
                 OnEditClick={() => {}}
                 isTaken
+                takenBy={currentUserId}
                 onToggleTaken={() => handleUnmark(item.voglio.id!)}
                 onCardClick={() => setSelectedVoglio({
                   voglio: item.voglio,
@@ -171,6 +172,7 @@ export default function Bookmarked() {
                   takenBy: currentUserId,
                   onToggleTaken: () => handleUnmark(item.voglio.id!),
                 })}
+                stopClickPropagationOnActions
               />
               <Link
                 to={`/friends/u/${item.ownerUsername}/category/${item.categoryId}`}

@@ -41,6 +41,7 @@ export default function VoglioPreview({
   takenBy,
   onToggleTaken,
   onCardClick,
+  stopClickPropagationOnActions,
 }: {
   props: IVoglio;
   onDeleteVoglio: (voglioId: number) => void;
@@ -50,6 +51,7 @@ export default function VoglioPreview({
   takenBy?: string | null;
   onToggleTaken?: () => void;
   onCardClick?: () => void;
+  stopClickPropagationOnActions?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
@@ -180,7 +182,10 @@ export default function VoglioPreview({
               <p className="text-xs font-semibold text-[#7B61FF]">${props.price}</p>
             )}
             {!isOwner && (
-              <div className="flex gap-1.5 shrink-0 ml-auto">
+              <div
+                className="flex gap-1.5 shrink-0 ml-auto"
+                onClick={stopClickPropagationOnActions ? (e) => e.stopPropagation() : undefined}
+              >
                 {props.referenceLink && (
                   <Button
                     variant="ghost"
@@ -196,6 +201,7 @@ export default function VoglioPreview({
                 <Button
                   variant="ghost"
                   disabled={isTaken && takenBy !== currentUserId}
+                  aria-label={isTaken ? t("voglioPreview.unmark") : t("voglioPreview.markAsTaken")}
                   className={`size-12 rounded-full p-0 [&_svg]:size-5 ${
                     isTaken
                       ? takenBy === currentUserId

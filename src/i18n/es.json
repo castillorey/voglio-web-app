@@ -167,7 +167,9 @@
     "deleteConfirm": "¿Estás seguro de que quieres eliminar esta categoría? Esta acción no se puede deshacer."
   },
   "voglioPreview": {
-    "deleteConfirm": "¿Estás seguro de que quieres eliminar este artículo? Esta acción no se puede deshacer."
+    "deleteConfirm": "¿Estás seguro de que quieres eliminar este artículo? Esta acción no se puede deshacer.",
+    "unmark": "Quitar de guardados",
+    "markAsTaken": "Marcar como guardado"
   },
   "profile": {
     "editProfile": "Editar perfil",

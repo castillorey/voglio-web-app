@@ -59,9 +59,8 @@ test.describe("Bookmarked page", () => {
 
     await expect(page.getByText("Wireless Headphones")).toBeVisible();
 
-    // Open the detail dialog and unmark it
-    await page.getByText("Wireless Headphones").click();
-    await page.getByRole("button", { name: "Taken" }).click();
+    // Unmark directly via the bookmark icon on the card
+    await page.getByRole("button", { name: "Unmark item" }).click();
 
     await expect(page.getByText("No saved items yet")).toBeVisible();
     expect(db.taken.filter((t) => t.voglio_id === 50).length).toBe(0);

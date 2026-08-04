@@ -167,7 +167,9 @@
     "deleteConfirm": "Tem certeza de que deseja excluir esta categoria? Esta ação não pode ser desfeita."
   },
   "voglioPreview": {
-    "deleteConfirm": "Tem certeza de que deseja excluir este item? Esta ação não pode ser desfeita."
+    "deleteConfirm": "Tem certeza de que deseja excluir este item? Esta ação não pode ser desfeita.",
+    "unmark": "Remover dos guardados",
+    "markAsTaken": "Marcar como guardado"
   },
   "profile": {
     "editProfile": "Editar perfil",
