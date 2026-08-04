@@ -178,7 +178,7 @@ export function makeAccessToken(overrides: Record<string, unknown> = {}): string
   });
 }
 
-const AUTH_SESSION_KEY = `sb-${SUPABASE_URL.replace("https://", "").replace(/\./g, "-")}-auth-token`;
+const AUTH_SESSION_KEY = `sb-${new URL(SUPABASE_URL).hostname.split(".")[0]}-auth-token`;
 
 export function injectSession(page: Page, overrides: Record<string, unknown> = {}) {
   const session = {
@@ -206,6 +206,28 @@ export function injectSession(page: Page, overrides: Record<string, unknown> = {
 type Json = Record<string, unknown> | unknown[];
 
 function ok(route: Route, body: Json, status = 200) {
+  const accept = route.request().headers()["accept"] ?? "";
+  if (accept.includes("application/vnd.pgrst.object+json")) {
+    if (Array.isArray(body)) {
+      if (body.length === 1) {
+        return route.fulfill({
+          status,
+          contentType: "application/json",
+          body: JSON.stringify(body[0]),
+        });
+      }
+      return route.fulfill({
+        status: 406,
+        contentType: "application/json",
+        body: JSON.stringify({
+          code: "PGRST116",
+          details: `Results contain ${body.length} rows, application/vnd.pgrst.object+json requires 1 row`,
+          hint: null,
+          message: "JSON object requested, multiple (or no) rows returned",
+        }),
+      });
+    }
+  }
   return route.fulfill({
     status,
     contentType: "application/json",
@@ -213,25 +235,34 @@ function ok(route: Route, body: Json, status = 200) {
   });
 }
 
+/** Supabase insert() sends a JSON array; update() sends an object. Normalize. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function postBody(route: Route): Record<string, any> {
+  const data = route.request().postDataJSON();
+  if (Array.isArray(data)) return data[0] ?? {};
+  return data ?? {};
+}
+
 /** Extract eq conditions from PostgREST query params (eq, and, not). */
 function parseEq(url: URL): Record<string, string> {
   const out: Record<string, string> = {};
-  for (const key of ["eq", "and", "not"]) {
-    const raw = url.searchParams.getAll(key);
-    for (const item of raw) {
-      for (const part of item.split(",")) {
-        const m = part.match(/^(\w+)=eq\.(.*)$/);
-        if (m) out[m[1]] = m[2];
-      }
+  for (const [key, value] of url.searchParams) {
+    const m = value.match(/^eq\.(.*)$/);
+    if (m) out[key] = m[1];
+  }
+  for (const item of url.searchParams.getAll("and")) {
+    for (const part of item.split(",")) {
+      const m = part.match(/^(\w+)=eq\.(.*)$/);
+      if (m) out[m[1]] = m[2];
     }
   }
   return out;
 }
 
 function parseIn(url: URL, field: string): string[] | null {
-  const raw = url.searchParams.getAll("in");
-  for (const item of raw) {
-    const m = item.match(new RegExp(`^${field}=in\\.\\((.*)\\)$`));
+  for (const [key, value] of url.searchParams) {
+    if (key !== field) continue;
+    const m = value.match(/^in\.\((.*)\)$/);
     if (m) return m[1].split(",").map((x) => x.trim());
   }
   const ands = url.searchParams.getAll("and");
@@ -394,7 +425,7 @@ function handleCategory(route: Route, url: URL, method: string, state: MockState
   }
 
   if (method === "POST") {
-    const body = route.request().postDataJSON();
+    const body = postBody(route);
     const row: FakeCategory = {
       id: state.nextCategoryId++,
       name: body.name,
@@ -408,7 +439,7 @@ function handleCategory(route: Route, url: URL, method: string, state: MockState
   }
 
   if (method === "PATCH") {
-    const body = route.request().postDataJSON();
+    const body = postBody(route);
     const row = db.categories.find((c) => c.id === Number(filters.id));
     if (!row) return ok(route, []);
     Object.assign(row, body);
@@ -448,7 +479,7 @@ function handleVoglio(route: Route, url: URL, method: string, state: MockState) 
   }
 
   if (method === "POST") {
-    const body = route.request().postDataJSON();
+    const body = postBody(route);
     const row: FakeVoglio = {
       id: state.nextVoglioId++,
       name: body.name,
@@ -468,7 +499,7 @@ function handleVoglio(route: Route, url: URL, method: string, state: MockState) 
   }
 
   if (method === "PATCH") {
-    const body = route.request().postDataJSON();
+    const body = postBody(route);
     const row = db.voglios.find((v) => v.id === Number(filters.id));
     if (!row) return ok(route, []);
     Object.assign(row, body);
@@ -498,7 +529,7 @@ function handleTaken(route: Route, url: URL, method: string, state: MockState) {
   }
 
   if (method === "POST") {
-    const body = route.request().postDataJSON();
+    const body = postBody(route);
     const row = { voglio_id: body.voglio_id, user_id: body.user_id, created_at: new Date().toISOString() };
     if (!db.taken.find((t) => t.voglio_id === body.voglio_id && t.user_id === body.user_id)) {
       db.taken.push(row);
@@ -540,7 +571,7 @@ function handleProfiles(route: Route, url: URL, method: string, state: MockState
   }
 
   if (method === "POST") {
-    const body = route.request().postDataJSON();
+    const body = postBody(route);
     const row: FakeProfile = {
       id: body.id,
       username: body.username,
@@ -563,7 +594,7 @@ function handleProfiles(route: Route, url: URL, method: string, state: MockState
   }
 
   if (method === "PATCH") {
-    const body = route.request().postDataJSON();
+    const body = postBody(route);
     const row = db.profiles.find((p) => p.id === filters.id);
     if (!row) return ok(route, []);
     Object.assign(row, body);
@@ -585,7 +616,7 @@ function handleFollows(route: Route, url: URL, method: string, state: MockState)
   }
 
   if (method === "POST") {
-    const body = route.request().postDataJSON();
+    const body = postBody(route);
     const row = { follower_id: body.follower_id, following_id: body.following_id };
     if (!db.follows.find((f) => f.follower_id === row.follower_id && f.following_id === row.following_id)) {
       db.follows.push(row);
