@@ -163,6 +163,12 @@
     "nameRequired": "Name is required",
     "emojiPicker": "Pick an emoji"
   },
+  "categoryPreview": {
+    "deleteConfirm": "Are you sure you want to delete this category? This action cannot be undone."
+  },
+  "voglioPreview": {
+    "deleteConfirm": "Are you sure you want to delete this item? This action cannot be undone."
+  },
   "profile": {
     "editProfile": "Edit profile",
     "basicInfo": "Basic info",

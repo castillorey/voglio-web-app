@@ -163,6 +163,12 @@
     "nameRequired": "El nombre es obligatorio",
     "emojiPicker": "Elige un emoji"
   },
+  "categoryPreview": {
+    "deleteConfirm": "¿Estás seguro de que quieres eliminar esta categoría? Esta acción no se puede deshacer."
+  },
+  "voglioPreview": {
+    "deleteConfirm": "¿Estás seguro de que quieres eliminar este artículo? Esta acción no se puede deshacer."
+  },
   "profile": {
     "editProfile": "Editar perfil",
     "basicInfo": "Información básica",

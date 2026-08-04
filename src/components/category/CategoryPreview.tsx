@@ -70,6 +70,11 @@ export default function CategoryPreview({
 
   const handleOnDelete = async () => {
     if (props.id === null) return;
+    const confirmed = window.confirm(t("categoryPreview.deleteConfirm"));
+    if (!confirmed) {
+      setOpen(false);
+      return;
+    }
     const { data, error } = await supabase
       .from("category")
       .delete()

@@ -59,6 +59,11 @@ export default function VoglioPreview({
   const { t } = useTranslation();
 
   const handleOnDelete = async () => {
+    const confirmed = window.confirm(t("voglioPreview.deleteConfirm"));
+    if (!confirmed) {
+      setOpen(false);
+      return;
+    }
     const { error } = await supabase.from("voglio").delete().eq("id", props.id);
     if (error) {
       console.log("Error deleting: ", error);
