@@ -212,7 +212,7 @@ export default function VoglioFormStep3({
             if (value) return onFormChange({ ...formData, categoryId: value });
           }}
         >
-          <SelectTrigger className={`mt-1.5 w-full ${errors.categoryId ? "border-red-500" : ""}`}>
+          <SelectTrigger id="category" className={`mt-1.5 w-full ${errors.categoryId ? "border-red-500" : ""}`}>
             <SelectValue placeholder={t("voglioForm.selectCategory")} />
           </SelectTrigger>
           <SelectContent>

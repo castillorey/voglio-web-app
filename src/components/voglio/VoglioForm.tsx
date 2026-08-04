@@ -196,6 +196,7 @@ export default function VoglioForm({
       size_id: formData.sizeId,
       image_url: imageUrl,
       quantity: formData.quantity,
+      price: formData.price,
       is_private: formData.isPrivate,
     };
 
@@ -235,7 +236,11 @@ export default function VoglioForm({
   };
 
   return (
-    <form>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
+    >
       {/* Step indicator */}
       <div className="flex items-center gap-2 mb-5">
         <span

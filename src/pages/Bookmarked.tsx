@@ -24,7 +24,12 @@ export default function Bookmarked() {
   const { t } = useTranslation();
   const [items, setItems] = useState<BookmarkedVoglio[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedVoglio, setSelectedVoglio] = useState<{ voglio: IVoglio; isTaken: boolean; onToggleTaken: () => void } | null>(null);
+  const [selectedVoglio, setSelectedVoglio] = useState<{
+    voglio: IVoglio;
+    isTaken: boolean;
+    takenBy: string | null;
+    onToggleTaken: () => void;
+  } | null>(null);
   const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
 
@@ -155,6 +160,7 @@ export default function Bookmarked() {
             <div key={item.voglio.id}>
               <VoglioPreview
                 props={item.voglio}
+                isReadOnly
                 onDeleteVoglio={() => {}}
                 OnEditClick={() => {}}
                 isTaken
@@ -162,6 +168,7 @@ export default function Bookmarked() {
                 onCardClick={() => setSelectedVoglio({
                   voglio: item.voglio,
                   isTaken: true,
+                  takenBy: currentUserId,
                   onToggleTaken: () => handleUnmark(item.voglio.id!),
                 })}
               />
@@ -189,6 +196,7 @@ export default function Bookmarked() {
           onClose={() => setSelectedVoglio(null)}
           voglio={selectedVoglio.voglio}
           isTaken={selectedVoglio.isTaken}
+          takenBy={selectedVoglio.takenBy}
           onToggleTaken={selectedVoglio.onToggleTaken}
         />
       )}
