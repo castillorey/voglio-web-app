@@ -11,10 +11,17 @@ export default function ImageUploader({
 }) {
   const inputFile = useRef<HTMLInputElement>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const MAX_SIZE_MB = 5;
   const uploadImage = async (e: any) => {
     e.preventDefault();
     let file = e?.target?.files[0];
     if (!file) return;
+
+    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+      alert(`Image must be less than ${MAX_SIZE_MB}MB`);
+      if (inputFile?.current) inputFile.current.value = "";
+      return;
+    }
 
     onImageChange(file);
   };

@@ -152,6 +152,11 @@ export default function VoglioForm({
 
   const uploadImage = async (imageFile: File) => {
     if (!imageFile) return;
+    const MAX_SIZE_MB = 5;
+    if (imageFile.size > MAX_SIZE_MB * 1024 * 1024) {
+      alert(`Image must be less than ${MAX_SIZE_MB}MB`);
+      return;
+    }
     const fileName = user.id + "/" + uuidv4();
     const { error } = await supabase.storage
       .from("images")
