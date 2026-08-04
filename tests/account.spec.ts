@@ -44,6 +44,27 @@ test.describe("Account page", () => {
     await expect(page.getByText("Test User")).toBeVisible();
   });
 
+  test("selects month/day/year for birthday and saves it", async ({ page }) => {
+    await injectSession(page);
+    await setupSupabaseMocks(page);
+    await page.goto("/account");
+
+    await page.getByRole("button", { name: "Edit" }).click();
+    await expect(page.getByText("Birth date")).toBeVisible();
+
+    await page.getByLabel("Month").selectOption({ label: "May" });
+    await page.getByLabel("Day").selectOption({ label: "15" });
+    await page.getByLabel("Year").selectOption({ label: "1995" });
+
+    // Regression: month/day selections must persist instead of snapping back
+    await expect(page.getByLabel("Month")).toHaveValue("5");
+    await expect(page.getByLabel("Day")).toHaveValue("15");
+    await expect(page.getByLabel("Year")).toHaveValue("1995");
+
+    await page.getByRole("button", { name: "Save" }).click();
+    await expect(page.getByText("May 15, 1995")).toBeVisible();
+  });
+
   test("language switcher changes UI language", async ({ page }) => {
     await injectSession(page);
     await setupSupabaseMocks(page);

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 
 const MONTHS = [
@@ -16,15 +17,32 @@ interface DatePickerProps {
   id?: string;
 }
 
-export function DatePicker({ value, onChange, label, id }: DatePickerProps) {
+function parseDate(value: string) {
   const parts = value ? value.split("-") : [];
-  const year = parts[0] || "";
-  const month = parts[1] || "";
-  const day = parts[2] || "";
+  return {
+    year: parts[0] || "",
+    month: parts[1] ? String(Number(parts[1])) : "",
+    day: parts[2] ? String(Number(parts[2])) : "",
+  };
+}
 
-  const handleChange = (y: string, m: string, d: string) => {
-    if (y && m && d) {
-      onChange(`${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`);
+export function DatePicker({ value, onChange, label, id }: DatePickerProps) {
+  const [draft, setDraft] = useState(() => parseDate(value));
+
+  useEffect(() => {
+    const parsed = parseDate(value);
+    if (parsed.year && parsed.month && parsed.day) {
+      setDraft(parsed);
+    }
+  }, [value]);
+
+  const { year, month, day } = draft;
+
+  const handleChange = (part: "year" | "month" | "day", next: string) => {
+    const nextDraft = { ...draft, [part]: next };
+    setDraft(nextDraft);
+    if (nextDraft.year && nextDraft.month && nextDraft.day) {
+      onChange(`${nextDraft.year}-${nextDraft.month.padStart(2, "0")}-${nextDraft.day.padStart(2, "0")}`);
     } else {
       onChange("");
     }
@@ -39,8 +57,9 @@ export function DatePicker({ value, onChange, label, id }: DatePickerProps) {
       )}
       <div className="mt-1 grid grid-cols-3 gap-2">
         <select
+          aria-label="Month"
           value={month}
-          onChange={(e) => handleChange(year, e.target.value, day)}
+          onChange={(e) => handleChange("month", e.target.value)}
           className={selectClass}
         >
           <option value="">Month</option>
@@ -49,8 +68,9 @@ export function DatePicker({ value, onChange, label, id }: DatePickerProps) {
           ))}
         </select>
         <select
+          aria-label="Day"
           value={day}
-          onChange={(e) => handleChange(year, month, e.target.value)}
+          onChange={(e) => handleChange("day", e.target.value)}
           className={selectClass}
         >
           <option value="">Day</option>
@@ -59,8 +79,9 @@ export function DatePicker({ value, onChange, label, id }: DatePickerProps) {
           ))}
         </select>
         <select
+          aria-label="Year"
           value={year}
-          onChange={(e) => handleChange(e.target.value, month, day)}
+          onChange={(e) => handleChange("year", e.target.value)}
           className={selectClass}
         >
           <option value="">Year</option>
