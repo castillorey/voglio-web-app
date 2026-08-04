@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 const Register = lazy(() => import("./pages/Register"));
 const Login = lazy(() => import("./pages/Login"));
@@ -31,22 +32,24 @@ function App() {
     <div className="">
       <BrowserRouter>
         <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Wrapper />}>
-              <Route index element={<Collections />} />
-              <Route path="category/:categoryId" element={<Category />} />
-              <Route path="voglio/:voglioId" element={<Voglio />} />
-              <Route path="bookmarked" element={<Bookmarked />} />
-              <Route path="account" element={<Account />} />
-              <Route path="friends" element={<Friends />} />
-              <Route path="friends/u/:username" element={<UserCollections />} />
-              <Route path="friends/u/:username/profile" element={<UserProfile />} />
-              <Route path="friends/u/:username/category/:categoryId" element={<UserCategory />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Wrapper />}>
+                <Route index element={<Collections />} />
+                <Route path="category/:categoryId" element={<Category />} />
+                <Route path="voglio/:voglioId" element={<Voglio />} />
+                <Route path="bookmarked" element={<Bookmarked />} />
+                <Route path="account" element={<Account />} />
+                <Route path="friends" element={<Friends />} />
+                <Route path="friends/u/:username" element={<UserCollections />} />
+                <Route path="friends/u/:username/profile" element={<UserProfile />} />
+                <Route path="friends/u/:username/category/:categoryId" element={<UserCategory />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ErrorBoundary>
         </Suspense>
       </BrowserRouter>
     </div>
