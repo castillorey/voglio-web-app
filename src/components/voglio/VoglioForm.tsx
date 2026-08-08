@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { v4 as uuidv4 } from "uuid";
 
 import supabase from "../../supabase-client";
+import { useAuth } from "../../contexts/AuthContext";
 import { ProductResult } from "../../services/productSearch";
 import VoglioFormStep1 from "./VoglioFormStep1";
 import VoglioFormStep2 from "./VoglioFormStep2";
@@ -66,8 +67,8 @@ export default function VoglioForm({
   onUpdateVoglio?: (editedVoglio: IVoglio) => void;
 }) {
   const CDNURL = import.meta.env.VITE_CDNURL;
-  const session: string = localStorage.getItem("session")!;
-  const user = session && JSON.parse(session)?.user;
+  const { getCurrentUserId } = useAuth();
+  const user = getCurrentUserId();
   const { t } = useTranslation();
 
   const [step, setStep] = useState(1);
@@ -122,7 +123,7 @@ export default function VoglioForm({
     price: null,
     isPrivate: false,
     isTaken: false,
-    userId: user?.id ?? "",
+    userId: user ?? "",
   };
   const [formData, setFormData] = useState<IVoglio>(emptyForm);
   let imageUrl = "";
@@ -140,7 +141,7 @@ export default function VoglioForm({
     const { data, error } = await supabase
       .from("category")
       .select("*")
-      .eq("user_id", user.id)
+      .eq("user_id", user)
       .order("id", { ascending: true });
 
     if (error) {
@@ -152,7 +153,12 @@ export default function VoglioForm({
 
   const uploadImage = async (imageFile: File) => {
     if (!imageFile) return;
-    const fileName = user.id + "/" + uuidv4();
+    const MAX_SIZE_MB = 5;
+    if (imageFile.size > MAX_SIZE_MB * 1024 * 1024) {
+      alert(`Image must be less than ${MAX_SIZE_MB}MB`);
+      return;
+    }
+    const fileName = user + "/" + uuidv4();
     const { error } = await supabase.storage
       .from("images")
       .upload(fileName, imageFile);
@@ -190,6 +196,7 @@ export default function VoglioForm({
       size_id: formData.sizeId,
       image_url: imageUrl,
       quantity: formData.quantity,
+      price: formData.price,
       is_private: formData.isPrivate,
     };
 
@@ -229,7 +236,11 @@ export default function VoglioForm({
   };
 
   return (
-    <form>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
+    >
       {/* Step indicator */}
       <div className="flex items-center gap-2 mb-5">
         <span

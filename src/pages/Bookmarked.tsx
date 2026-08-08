@@ -3,9 +3,10 @@ import { useNavigate, Link } from "react-router-dom";
 import { Heart, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import supabase from "../supabase-client";
-import { getCurrentUserId } from "../services/profile";
+import { useAuth } from "../contexts/AuthContext";
 import { toggleVoglioTaken } from "../services/voglioTaken";
 import VoglioPreview from "../components/voglio/VoglioPreview";
+import VoglioDetailDialog from "../components/voglio/VoglioDetailDialog";
 import { IVoglio } from "@/components/voglio/VoglioForm";
 import { useTranslation } from "react-i18next";
 
@@ -23,6 +24,13 @@ export default function Bookmarked() {
   const { t } = useTranslation();
   const [items, setItems] = useState<BookmarkedVoglio[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedVoglio, setSelectedVoglio] = useState<{
+    voglio: IVoglio;
+    isTaken: boolean;
+    takenBy: string | null;
+    onToggleTaken: () => void;
+  } | null>(null);
+  const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
 
   useEffect(() => {
@@ -152,10 +160,19 @@ export default function Bookmarked() {
             <div key={item.voglio.id}>
               <VoglioPreview
                 props={item.voglio}
+                isReadOnly
                 onDeleteVoglio={() => {}}
                 OnEditClick={() => {}}
                 isTaken
+                takenBy={currentUserId}
                 onToggleTaken={() => handleUnmark(item.voglio.id!)}
+                onCardClick={() => setSelectedVoglio({
+                  voglio: item.voglio,
+                  isTaken: true,
+                  takenBy: currentUserId,
+                  onToggleTaken: () => handleUnmark(item.voglio.id!),
+                })}
+                stopClickPropagationOnActions
               />
               <Link
                 to={`/friends/u/${item.ownerUsername}/category/${item.categoryId}`}
@@ -173,6 +190,17 @@ export default function Bookmarked() {
             </div>
           ))}
         </div>
+      )}
+
+      {selectedVoglio && (
+        <VoglioDetailDialog
+          open={!!selectedVoglio}
+          onClose={() => setSelectedVoglio(null)}
+          voglio={selectedVoglio.voglio}
+          isTaken={selectedVoglio.isTaken}
+          takenBy={selectedVoglio.takenBy}
+          onToggleTaken={selectedVoglio.onToggleTaken}
+        />
       )}
     </>
   );

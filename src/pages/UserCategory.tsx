@@ -11,7 +11,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import supabase from "../supabase-client";
-import { getProfileByUsername, getCurrentUserId, IProfile } from "../services/profile";
+import { getProfileByUsername, IProfile } from "../services/profile";
+import { useAuth } from "../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 
 import { fetchTakenVoglioIds, toggleVoglioTaken } from "../services/voglioTaken";
@@ -39,6 +40,7 @@ export default function UserCategory() {
   const [error, setError] = useState<string | null>(null);
   const [takenFilter, setTakenFilter] = useState("all");
   const [selectedVoglio, setSelectedVoglio] = useState<IVoglio | null>(null);
+  const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
 
   const filteredAndSorted = useMemo(() => {

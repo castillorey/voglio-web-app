@@ -160,7 +160,16 @@
     "chooseEmoji": "Choose emoji",
     "createCategory": "Create category",
     "updateCategory": "Update category",
-    "nameRequired": "Name is required"
+    "nameRequired": "Name is required",
+    "emojiPicker": "Pick an emoji"
+  },
+  "categoryPreview": {
+    "deleteConfirm": "Are you sure you want to delete this category? This action cannot be undone."
+  },
+  "voglioPreview": {
+    "deleteConfirm": "Are you sure you want to delete this item? This action cannot be undone.",
+    "unmark": "Unmark item",
+    "markAsTaken": "Mark as taken"
   },
   "profile": {
     "editProfile": "Edit profile",

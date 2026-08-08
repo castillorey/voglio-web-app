@@ -5,8 +5,9 @@ import supabase from "../supabase-client";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { getProfile, createProfile, updateProfile, getCurrentUserId, IProfile, fetchColorOptions } from "../services/profile";
+import { getProfile, createProfile, updateProfile, IProfile, fetchColorOptions } from "../services/profile";
 import { getFollowing } from "../services/follow";
+import { useAuth } from "../contexts/AuthContext";
 import { fetchPreferences, PreferenceMap } from "../services/preferences";
 import ProfileDisplay from "@/components/profile/ProfileDisplay";
 import ProfileEdit from "@/components/profile/ProfileEdit";
@@ -17,6 +18,7 @@ import { useTranslation } from "react-i18next";
 
 export default function Perfil() {
     const navigate = useNavigate();
+    const { getCurrentUserId } = useAuth();
     const currentUserId = getCurrentUserId();
     const { t } = useTranslation();
     const [profile, setProfile] = useState<IProfile | null>(null);

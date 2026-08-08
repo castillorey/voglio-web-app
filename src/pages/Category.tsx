@@ -13,7 +13,7 @@ import VoglioForm, {
 import VoglioPreview from "../components/voglio/VoglioPreview";
 import VoglioDialog from "@/components/VoglioDialog";
 import { fetchTakenVoglioIds, toggleVoglioTaken } from "../services/voglioTaken";
-import { getCurrentUserId } from "../services/profile";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Category() {
   const navigate = useNavigate();
@@ -24,6 +24,7 @@ export default function Category() {
   const [openNewVoglioDialog, setOpenNewVoglioDialog] = useState(false);
   const [editVoglioData, setEditVoglioData] = useState<IVoglio | null>(null);
   const [takenMap, setTakenMap] = useState<Map<number, string>>(new Map());
+  const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
 
   const fetchCategory = async () => {

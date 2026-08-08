@@ -6,10 +6,10 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import supabase from "../supabase-client";
 import {
   getProfileByUsername,
-  getCurrentUserId,
   IProfile,
 } from "../services/profile";
 import { followUser, unfollowUser, isFollowing, NoProfileError } from "../services/follow";
+import { useAuth } from "../contexts/AuthContext";
 import AlertDialog from "@/components/ui/alert-dialog";
 import CategoryPreview from "../components/category/CategoryPreview";
 import { ICategory } from "@/components/voglio/VoglioForm";
@@ -25,6 +25,7 @@ export default function UserCollections() {
   const [error, setError] = useState<string | null>(null);
   const [following, setFollowing] = useState(false);
   const [profileAlertOpen, setProfileAlertOpen] = useState(false);
+  const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
 
   useEffect(() => {

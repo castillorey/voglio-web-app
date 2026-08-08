@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users } from "lucide-react";
 import supabase from "../supabase-client";
-import { getProfile, getCurrentUserId, IProfile } from "../services/profile";
+import { IProfile } from "../services/profile";
 import { getFollowing } from "../services/follow";
+import { useAuth } from "../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 
 interface FeedCategory {
@@ -17,6 +18,7 @@ interface FeedCategory {
 
 export default function VogliosFeed() {
   const navigate = useNavigate();
+  const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
   const { t } = useTranslation();
   const [categories, setCategories] = useState<FeedCategory[]>([]);
@@ -55,9 +57,12 @@ export default function VogliosFeed() {
       setCategories(items);
 
       const userIds = [...new Set(items.map((c) => c.user_id))];
-      const profiles = (await Promise.all(userIds.map((id) => getProfile(id)))).filter(Boolean) as IProfile[];
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, username, display_name, avatar_url")
+        .in("id", userIds);
       const map: Record<string, IProfile> = {};
-      profiles.forEach((p) => { map[p.id] = p; });
+      (profiles || []).forEach((p) => { map[p.id] = p as IProfile; });
       setProfileMap(map);
     } catch (err) {
       console.log(err);

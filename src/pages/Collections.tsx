@@ -7,7 +7,7 @@ import CategoryPreview from "../components/category/CategoryPreview";
 import supabase from "../supabase-client";
 import CreateDialog from "../components/CreateDialog";
 import { ICategory } from "@/components/voglio/VoglioForm";
-import { getCurrentUserId } from "../services/profile";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Collections() {
   const { t } = useTranslation();
@@ -16,6 +16,7 @@ export default function Collections() {
   const [editCategoryData, setEditCategoryData] = useState<ICategory | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
 
   useEffect(() => {

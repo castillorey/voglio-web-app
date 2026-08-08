@@ -15,9 +15,11 @@ export class NoProfileError extends Error {
 }
 
 export const followUser = async (followingId: string) => {
-  const session = localStorage.getItem("session");
-  if (!session) throw new Error("Not authenticated");
-  const userId = JSON.parse(session).user.id;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+  const userId = user.id;
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -38,9 +40,11 @@ export const followUser = async (followingId: string) => {
 };
 
 export const unfollowUser = async (followingId: string) => {
-  const session = localStorage.getItem("session");
-  if (!session) throw new Error("Not authenticated");
-  const userId = JSON.parse(session).user.id;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+  const userId = user.id;
 
   const { error } = await supabase
     .from("follows")

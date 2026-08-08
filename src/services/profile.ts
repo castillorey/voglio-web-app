@@ -105,12 +105,6 @@ export const searchProfiles = async (query: string) => {
   return data as IProfile[];
 };
 
-export const getCurrentUserId = () => {
-  const session = localStorage.getItem("session");
-  if (!session) return null;
-  return JSON.parse(session)?.user?.id as string | null;
-};
-
 export async function fetchColorOptions(): Promise<{ name: string; hex: string }[]> {
   const { data, error } = await supabase
     .from("color_options")
