@@ -90,7 +90,8 @@
     "gender": "Gender",
     "sizes": "Sizes",
     "favorites": "Favorites",
-    "noDetails": "No personal details added yet"
+    "noDetails": "No personal details added yet",
+    "userNotFound": "This user doesn't exist"
   },
   "userCollections": {
     "publicCategories": "Public categories",
