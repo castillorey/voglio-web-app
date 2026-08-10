@@ -159,6 +159,14 @@ export default function Friends() {
 
   const displayList = getFilteredProfiles();
 
+  const hasQuery = query.trim().length > 0;
+  const emptyTitle = activeTab === "find"
+    ? (hasQuery ? t("friends.noResults") : t("friends.searchPrompt"))
+    : t("friends.noResults");
+  const emptyHint = activeTab === "find"
+    ? (hasQuery ? t("friends.tryDifferentName") : t("friends.searchPromptHint"))
+    : t("friends.tryAnotherSearch");
+
   return (
     <div className="relative">
       {/* Toast notification banner */}
@@ -220,8 +228,8 @@ export default function Friends() {
             </div>
           ) : displayList.length === 0 ? (
             <div className="bg-white rounded-[24px] p-8 border border-[#F0F1F6] text-center shadow-sm">
-              <p className="text-sm font-medium text-[#5E6173]">{t("friends.noResults")}</p>
-              <p className="text-xs text-[#8C8F9E] mt-1">{t("friends.tryAnotherSearch")}</p>
+              <p className="text-sm font-medium text-[#5E6173]">{emptyTitle}</p>
+              <p className="text-xs text-[#8C8F9E] mt-1">{emptyHint}</p>
             </div>
           ) : (
             displayList.map((profile) => {
