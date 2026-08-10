@@ -53,6 +53,9 @@
   * {
     @apply border-border;
   }
+  html, body {
+    touch-action: manipulation;
+  }
   body {
     @apply font-sans antialiased bg-[#F8F7FC] text-[#1B1B2D];
   }
