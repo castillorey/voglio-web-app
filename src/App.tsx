@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
 const Register = lazy(() => import("./pages/Register"));
@@ -27,6 +27,18 @@ function LoadingFallback() {
   );
 }
 
+function PublicLayout() {
+  return (
+    <div className="flex flex-col min-h-screen bg-[#F8F7FC] pb-10">
+      <main className="flex-grow px-5 lg:px-8 box-border mx-auto w-full" style={{ maxWidth: 480 }}>
+        <div className="mt-5">
+          <Outlet />
+        </div>
+      </main>
+    </div>
+  );
+}
+
 function App() {
   return (
     <div className="">
@@ -46,6 +58,9 @@ function App() {
                 <Route path="friends/u/:username" element={<UserCollections />} />
                 <Route path="friends/u/:username/profile" element={<UserProfile />} />
                 <Route path="friends/u/:username/category/:categoryId" element={<UserCategory />} />
+              </Route>
+              <Route path="/:username" element={<PublicLayout />}>
+                <Route index element={<UserProfile isPublic />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

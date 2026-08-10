@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Heart, ChevronLeft } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import supabase from "../supabase-client";
 import { useAuth } from "../contexts/AuthContext";
@@ -119,15 +119,7 @@ export default function Bookmarked() {
 
   return (
     <>
-      <div className="flex items-center gap-3 mb-6">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-8 shrink-0 text-[#6B6E85] hover:text-[#1B1B2D]"
-          onClick={() => navigate(-1)}
-        >
-          <ChevronLeft className="size-5" />
-        </Button>
+      <div className="sticky top-0 z-10 -mx-5 lg:-mx-8 px-5 lg:px-8 mb-6 bg-[#F8F7FC] py-4">
         <h1 className="font-display text-2xl text-[#1B1B2D]">{t("bookmark.savedItems")}</h1>
       </div>
 
