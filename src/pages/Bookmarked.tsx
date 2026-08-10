@@ -119,7 +119,9 @@ export default function Bookmarked() {
 
   return (
     <>
-      <h1 className="font-display text-2xl text-[#1B1B2D] mb-6">{t("bookmark.savedItems")}</h1>
+      <div className="sticky top-0 z-10 -mx-5 lg:-mx-8 px-5 lg:px-8 mb-6 bg-[#F8F7FC] py-4">
+        <h1 className="font-display text-2xl text-[#1B1B2D]">{t("bookmark.savedItems")}</h1>
+      </div>
 
       {loading ? (
         <div className="mt-8 text-center text-[#6B6E85] text-sm">
