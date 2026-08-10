@@ -4,7 +4,7 @@ import './index.css'
 import './i18n'
 import App from './App.tsx'
 import { AuthProvider } from './contexts/AuthContext'
-import { ToastProvider } from './contexts/ToastProvider'
+import { ToastProvider } from './contexts/ToastContext'
 
 function PreventZoom() {
   useEffect(() => {
