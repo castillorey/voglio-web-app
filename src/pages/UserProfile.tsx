@@ -10,13 +10,12 @@ import {
   Shirt,
   Footprints,
   Heart,
-  Palette,
-  UtensilsCrossed,
   Sparkles,
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { getProfileByUsername, IProfile } from "../services/profile";
-import { formatDate, getZodiacSign } from "@/components/profile/profile-utils";
+import { getProfileByUsername, IProfile, fetchColorOptions } from "../services/profile";
+import { fetchPreferences, PreferenceMap } from "../services/preferences";
+import { formatDate, getZodiacSign, getColorHex } from "@/components/profile/profile-utils";
 import { useTranslation } from "react-i18next";
 
 export default function UserProfile() {
@@ -26,6 +25,8 @@ export default function UserProfile() {
   const [profile, setProfile] = useState<IProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [preferences, setPreferences] = useState<PreferenceMap>({});
+  const [colorOptions, setColorOptions] = useState<{ name: string; hex: string }[]>([]);
 
   useEffect(() => {
     if (!username) return;
@@ -45,6 +46,15 @@ export default function UserProfile() {
         return;
       }
       setProfile(prof);
+      const prefs = await fetchPreferences(prof.id);
+      const grouped: PreferenceMap = {};
+      for (const p of prefs) {
+        if (!grouped[p.category_name]) grouped[p.category_name] = [];
+        grouped[p.category_name].push(p);
+      }
+      setPreferences(grouped);
+      const colors = await fetchColorOptions();
+      setColorOptions(colors);
     } catch (err: any) {
       setError(err.message);
     }
@@ -215,37 +225,53 @@ export default function UserProfile() {
           </Card>
         )}
 
-        {/* Favorites */}
-        {(profile.favorite_color || profile.favorite_food) && (
-          <Card className="rounded-[16px] border-[#F0F1F6] shadow-sm">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-[#F1EEFF] flex items-center justify-center shrink-0">
-                  <Heart className="size-5 text-[#7B61FF]" />
-                </div>
-                <p className="text-xs text-[#6B6E85] font-medium">{t("userProfile.favorites")}</p>
-              </div>
-              <div className="ml-[52px] space-y-2">
-                {profile.favorite_color && (
-                  <div className="flex items-center gap-2">
-                    <Palette className="size-4 text-[#6B6E85]" />
-                    <span className="text-sm text-[#1B1B2D]">
-                      {profile.favorite_color}
-                    </span>
-                  </div>
-                )}
-                {profile.favorite_food && (
-                  <div className="flex items-center gap-2">
-                    <UtensilsCrossed className="size-4 text-[#6B6E85]" />
-                    <span className="text-sm text-[#1B1B2D]">
-                      {profile.favorite_food}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* Favorites Colors */}
+        {(() => {
+          const colors = preferences["Colores favoritos"] || [];
+          const otherPrefs = Object.entries(preferences).filter(([cat]) => cat !== "Colores favoritos");
+          if (colors.length === 0 && otherPrefs.length === 0) return null;
+          return (
+            <>
+              {colors.length > 0 && (
+                <Card className="rounded-[16px] border-[#F0F1F6] shadow-sm">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-full bg-[#F1EEFF] flex items-center justify-center shrink-0">
+                        <Heart className="size-5 text-[#7B61FF]" />
+                      </div>
+                      <p className="text-xs text-[#6B6E85] font-medium">{t("userProfile.favoriteColors")}</p>
+                    </div>
+                    <div className="flex flex-wrap gap-2 ml-[52px]">
+                      {colors.map((c) => (
+                        <div key={c.id} className="flex flex-col items-center gap-0.5">
+                          <div
+                            className="w-[32px] h-[32px] rounded-full border-2 border-white shadow-md"
+                            style={{ backgroundColor: getColorHex(c.item_value, colorOptions), boxShadow: "0 2px 8px rgba(0,0,0,.1)" }}
+                          />
+                          <span className="text-[9px] text-[#5E6173] capitalize">{c.item_value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+              {otherPrefs.map(([catName, items]) => (
+                <Card key={catName} className="rounded-[16px] border-[#F0F1F6] shadow-sm">
+                  <CardContent className="p-4">
+                    <p className="text-xs text-[#6B6E85] font-medium mb-3">{catName}</p>
+                    <div className="flex flex-wrap gap-2 ml-0">
+                      {items.map((item) => (
+                        <span key={item.id} className="px-[14px] py-[8px] rounded-full text-sm text-[#5E6173] bg-[#F7F7FA] border border-[#ECECF2]">
+                          {item.item_value}
+                        </span>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </>
+          );
+        })()}
 
         {/* No details */}
         {!profile.location &&
@@ -254,8 +280,7 @@ export default function UserProfile() {
           !profile.shirt_size &&
           !profile.pants_size &&
           !profile.shoe_size &&
-          !profile.favorite_color &&
-          !profile.favorite_food && (
+          Object.keys(preferences).length === 0 && (
             <p className="text-center text-[#6B6E85] text-sm mt-8">
               {t("userProfile.noDetails")}
             </p>
