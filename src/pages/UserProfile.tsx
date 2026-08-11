@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getProfileByUsername, IProfile } from "../services/profile";
+import { fetchPreferences, PreferenceMap } from "../services/preferences";
 import { formatDate, getZodiacSign } from "@/components/profile/profile-utils";
 import { useTranslation } from "react-i18next";
 
@@ -25,6 +26,7 @@ export default function UserProfile({ isPublic = false }: { isPublic?: boolean }
   const { key } = useLocation();
   const { t } = useTranslation();
   const [profile, setProfile] = useState<IProfile | null>(null);
+  const [preferences, setPreferences] = useState<PreferenceMap>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -54,6 +56,13 @@ export default function UserProfile({ isPublic = false }: { isPublic?: boolean }
         return;
       }
       setProfile(prof);
+      const prefs = await fetchPreferences(prof.id);
+      const grouped: PreferenceMap = {};
+      for (const p of prefs) {
+        if (!grouped[p.category_name]) grouped[p.category_name] = [];
+        grouped[p.category_name].push(p);
+      }
+      setPreferences(grouped);
     } catch (err: any) {
       setError(err.message);
     }
@@ -225,36 +234,43 @@ export default function UserProfile({ isPublic = false }: { isPublic?: boolean }
         )}
 
         {/* Favorites */}
-        {(profile.favorite_color || profile.favorite_food) && (
-          <Card className="rounded-[16px] border-[#F0F1F6] shadow-sm">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-[#F1EEFF] flex items-center justify-center shrink-0">
-                  <Heart className="size-5 text-[#7B61FF]" />
+        {(() => {
+          const favoriteColors = preferences["Colores favoritos"] || [];
+          const hasFavorites = favoriteColors.length > 0 || profile.favorite_color || profile.favorite_food;
+          if (!hasFavorites) return null;
+          return (
+            <Card className="rounded-[16px] border-[#F0F1F6] shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-[#F1EEFF] flex items-center justify-center shrink-0">
+                    <Heart className="size-5 text-[#7B61FF]" />
+                  </div>
+                  <p className="text-xs text-[#6B6E85] font-medium">{t("userProfile.favorites")}</p>
                 </div>
-                <p className="text-xs text-[#6B6E85] font-medium">{t("userProfile.favorites")}</p>
-              </div>
-              <div className="ml-[52px] space-y-2">
-                {profile.favorite_color && (
-                  <div className="flex items-center gap-2">
-                    <Palette className="size-4 text-[#6B6E85]" />
-                    <span className="text-sm text-[#1B1B2D]">
-                      {profile.favorite_color}
-                    </span>
-                  </div>
-                )}
-                {profile.favorite_food && (
-                  <div className="flex items-center gap-2">
-                    <UtensilsCrossed className="size-4 text-[#6B6E85]" />
-                    <span className="text-sm text-[#1B1B2D]">
-                      {profile.favorite_food}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+                <div className="ml-[52px] space-y-2">
+                  {favoriteColors.map((c) => (
+                    <div key={c.id} className="flex items-center gap-2">
+                      <Palette className="size-4 text-[#6B6E85]" />
+                      <span className="text-sm text-[#1B1B2D]">{c.item_value}</span>
+                    </div>
+                  ))}
+                  {profile.favorite_color && (
+                    <div className="flex items-center gap-2">
+                      <Palette className="size-4 text-[#6B6E85]" />
+                      <span className="text-sm text-[#1B1B2D]">{profile.favorite_color}</span>
+                    </div>
+                  )}
+                  {profile.favorite_food && (
+                    <div className="flex items-center gap-2">
+                      <UtensilsCrossed className="size-4 text-[#6B6E85]" />
+                      <span className="text-sm text-[#1B1B2D]">{profile.favorite_food}</span>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })()}
 
         {/* No details */}
         {!profile.location &&
@@ -263,8 +279,7 @@ export default function UserProfile({ isPublic = false }: { isPublic?: boolean }
           !profile.shirt_size &&
           !profile.pants_size &&
           !profile.shoe_size &&
-          !profile.favorite_color &&
-          !profile.favorite_food && (
+          Object.keys(preferences).length === 0 && (
             <p className="text-center text-[#6B6E85] text-sm mt-8">
               {t("userProfile.noDetails")}
             </p>
