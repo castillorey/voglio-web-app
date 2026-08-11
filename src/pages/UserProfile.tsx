@@ -18,6 +18,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getProfileByUsername, IProfile } from "../services/profile";
 import { fetchPreferences, PreferenceMap } from "../services/preferences";
 import { formatDate, getZodiacSign } from "@/components/profile/profile-utils";
+import { Chip } from "@/components/profile/profile-shared";
 import { useTranslation } from "react-i18next";
 
 export default function UserProfile({ isPublic = false }: { isPublic?: boolean }) {
@@ -270,7 +271,23 @@ export default function UserProfile({ isPublic = false }: { isPublic?: boolean }
               </CardContent>
             </Card>
           );
-        })()}
+        }        )()}
+
+        {/* Custom preferences */}
+        {Object.entries(preferences)
+          .filter(([catName]) => catName !== "Colores favoritos")
+          .map(([catName, items]) => (
+            <Card key={catName} className="rounded-[16px] border-[#F0F1F6] shadow-sm">
+              <CardContent className="p-4">
+                <p className="text-xs text-[#6B6E85] font-medium mb-2">{catName}</p>
+                <div className="flex flex-wrap gap-2">
+                  {items.map((item) => (
+                    <Chip key={item.id}>{item.item_value}</Chip>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
 
         {/* No details */}
         {!profile.location &&
