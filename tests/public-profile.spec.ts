@@ -19,6 +19,15 @@ test.describe("Public profile page", () => {
     await expect(page.getByText("Géminis")).toBeVisible();
   });
 
+  test("shows favorite colors from preferences", async ({ page }) => {
+    await setupSupabaseMocks(page);
+    await page.goto("/testuser");
+
+    await expect(page.getByText("Red")).toBeVisible();
+    await expect(page.getByText("Blue")).toBeVisible();
+    await expect(page.getByText("Favorites")).toBeVisible();
+  });
+
   test("shows an error for an unknown username", async ({ page }) => {
     await setupSupabaseMocks(page);
     await page.goto("/nobody");
