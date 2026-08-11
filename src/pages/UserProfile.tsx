@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -18,15 +18,24 @@ import { fetchPreferences, PreferenceMap } from "../services/preferences";
 import { formatDate, getZodiacSign, getColorHex } from "@/components/profile/profile-utils";
 import { useTranslation } from "react-i18next";
 
-export default function UserProfile() {
+export default function UserProfile({ isPublic = false }: { isPublic?: boolean }) {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
+  const { key } = useLocation();
   const { t } = useTranslation();
   const [profile, setProfile] = useState<IProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [preferences, setPreferences] = useState<PreferenceMap>({});
   const [colorOptions, setColorOptions] = useState<{ name: string; hex: string }[]>([]);
+
+  const goBack = () => {
+    if (key !== "default") {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  };
 
   useEffect(() => {
     if (!username) return;
@@ -41,7 +50,7 @@ export default function UserProfile() {
     try {
       const prof = await getProfileByUsername(username);
       if (!prof) {
-        setError(t("friends.profileRequired"));
+        setError(isPublic ? t("userProfile.userNotFound") : t("friends.profileRequired"));
         setLoading(false);
         return;
       }
@@ -85,7 +94,7 @@ export default function UserProfile() {
         variant="ghost"
         size="icon"
         className="size-8 self-start text-[#6B6E85] hover:text-[#1B1B2D]"
-        onClick={() => navigate(-1)}
+        onClick={goBack}
       >
         <ChevronLeft className="size-5" />
       </Button>

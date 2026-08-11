@@ -45,7 +45,18 @@ test.describe("Friends page", () => {
     await page.getByPlaceholder("Search friends...").press("Enter");
 
     await expect(page.getByText("No friends found")).toBeVisible();
-    await expect(page.getByText("Try a different search or explore other tabs.")).toBeVisible();
+    await expect(page.getByText("Try a different name.")).toBeVisible();
+  });
+
+  test("find tab with no search invites typing a name", async ({ page }) => {
+    await injectSession(page);
+    await setupSupabaseMocks(page);
+    await page.goto("/friends");
+
+    await page.getByRole("button", { name: "Find" }).click();
+
+    await expect(page.getByText("Search for friends by name")).toBeVisible();
+    await expect(page.getByText("Type a name in the search bar to find your friends.")).toBeVisible();
   });
 
   test("follow button toggles to unfollow and shows toast", async ({ page }) => {

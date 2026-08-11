@@ -96,7 +96,7 @@ test.describe("Auth pages (desktop)", () => {
 
   test("unknown route shows 404 page", async ({ page }) => {
     await setupSupabaseMocks(page);
-    await page.goto("/this-route-does-not-exist");
+    await page.goto("/this/route/does/not/exist");
     await expect(page.getByText("404")).toBeVisible();
     await expect(page.getByText("Page not found")).toBeVisible();
   });

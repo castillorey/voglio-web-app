@@ -73,6 +73,9 @@
     "find": "Buscar",
     "noResults": "No se encontraron amigos",
     "tryAnotherSearch": "Intenta con otra búsqueda o explora otras pestañas.",
+    "searchPrompt": "Busca amigos por nombre",
+    "searchPromptHint": "Escribe un nombre en la barra de búsqueda para encontrar a tus amigos.",
+    "tryDifferentName": "Prueba con otro nombre.",
     "locationNotSet": "Ubicación no configurada",
     "follow": "Seguir",
     "unfollow": "Siguiendo",
@@ -87,7 +90,8 @@
     "gender": "Género",
     "sizes": "Tallas",
     "favorites": "Favoritos",
-    "noDetails": "Aún no hay detalles personales"
+    "noDetails": "Aún no hay detalles personales",
+    "userNotFound": "Este usuario no existe"
   },
   "userCollections": {
     "publicCategories": "Categorías públicas",
