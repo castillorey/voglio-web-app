@@ -14,6 +14,8 @@ const Friends = lazy(() => import("./pages/Friends"));
 const UserCollections = lazy(() => import("./pages/UserCollections"));
 const UserCategory = lazy(() => import("./pages/UserCategory"));
 const UserProfile = lazy(() => import("./pages/UserProfile"));
+const UserPublicCategories = lazy(() => import("./pages/UserPublicCategories"));
+const UserPublicCategory = lazy(() => import("./pages/UserPublicCategory"));
 const Bookmarked = lazy(() => import("./pages/Bookmarked"));
 
 function LoadingFallback() {
@@ -61,6 +63,8 @@ function App() {
               </Route>
               <Route path="/:username" element={<PublicLayout />}>
                 <Route index element={<UserProfile isPublic />} />
+                <Route path="public" element={<UserPublicCategories />} />
+                <Route path="public/:categoryId" element={<UserPublicCategory />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
