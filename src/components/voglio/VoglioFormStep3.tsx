@@ -269,7 +269,13 @@ export default function VoglioFormStep3({
 
       <button
         type="button"
-        onClick={() => setShowMore(!showMore)}
+        onClick={() => {
+          const nextShowMore = !showMore;
+          setShowMore(nextShowMore);
+          if (!nextShowMore) {
+            onFormChange({ ...formData, price: null });
+          }
+        }}
         className="flex items-center gap-1.5 text-xs font-semibold text-[#7B61FF] uppercase tracking-wider"
       >
         <ChevronDown
@@ -292,7 +298,7 @@ export default function VoglioFormStep3({
               name="price"
               type="number"
               onChange={(event) => {
-                onFormChange({ ...formData, price: +event.target.value });
+                onFormChange({ ...formData, price: event.target.value ? +event.target.value : null });
               }}
               value={formData.price ?? ""}
               placeholder="0.00"
