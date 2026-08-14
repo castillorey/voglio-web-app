@@ -15,10 +15,13 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import supabase from "../supabase-client";
 import { getProfileByUsername, IProfile } from "../services/profile";
 import { fetchPreferences, PreferenceMap } from "../services/preferences";
 import { formatDate, getZodiacSign } from "@/components/profile/profile-utils";
 import { Chip } from "@/components/profile/profile-shared";
+import CategoryPreview from "../components/category/CategoryPreview";
+import { ICategory } from "@/components/voglio/VoglioForm";
 import { useTranslation } from "react-i18next";
 
 export default function UserProfile({ isPublic = false }: { isPublic?: boolean }) {
@@ -28,6 +31,7 @@ export default function UserProfile({ isPublic = false }: { isPublic?: boolean }
   const { t } = useTranslation();
   const [profile, setProfile] = useState<IProfile | null>(null);
   const [preferences, setPreferences] = useState<PreferenceMap>({});
+  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,6 +68,27 @@ export default function UserProfile({ isPublic = false }: { isPublic?: boolean }
         grouped[p.category_name].push(p);
       }
       setPreferences(grouped);
+
+      if (isPublic) {
+        const { data: categories, error: catError } = await supabase
+          .from("category")
+          .select(`id, name, description, emoji_code, is_private, voglio(count)`)
+          .eq("user_id", prof.id)
+          .eq("is_private", false);
+
+        if (catError) throw catError;
+
+        setCategoryList(
+          (categories || []).map((item) => ({
+            id: item.id,
+            name: item.name,
+            emojiCode: item.emoji_code,
+            description: item.description,
+            vogliosCount: item.voglio?.[0]?.count ?? 0,
+            isPrivate: item.is_private,
+          })),
+        );
+      }
     } catch (err: any) {
       setError(err.message);
     }
@@ -288,6 +313,37 @@ export default function UserProfile({ isPublic = false }: { isPublic?: boolean }
               </CardContent>
             </Card>
           ))}
+
+        {/* Public categories */}
+        {isPublic && (
+          <>
+            <div className="mt-6">
+              <p className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wide">{t("userCollections.publicCategories")}</p>
+            </div>
+            <div className="mt-4 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2">
+              {categoryList.map((category) => (
+                <div
+                  key={category.id}
+                  onClick={() =>
+                    navigate(`/${username}/public/${category.id}`)
+                  }
+                >
+                  <CategoryPreview
+                    props={category}
+                    onDeleteClick={() => {}}
+                    OnEditClick={() => {}}
+                    isReadOnly
+                  />
+                </div>
+              ))}
+              {categoryList.length === 0 && (
+                <p className="col-span-full text-center text-[#6B6E85] text-sm mt-8">
+                  {t("userCollections.noPublicCategories")}
+                </p>
+              )}
+            </div>
+          </>
+        )}
 
         {/* No details */}
         {!profile.location &&
