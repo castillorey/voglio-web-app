@@ -90,6 +90,7 @@
     "gender": "Gender",
     "sizes": "Sizes",
     "favorites": "Favorites",
+    "preferences": "Preferences",
     "noDetails": "No personal details added yet",
     "userNotFound": "This user doesn't exist"
   },

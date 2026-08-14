@@ -1,0 +1,148 @@
+import { useEffect, useState } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import supabase from "../supabase-client";
+import { getProfileByUsername, IProfile } from "../services/profile";
+import CategoryPreview from "../components/category/CategoryPreview";
+import { ICategory } from "@/components/voglio/VoglioForm";
+import { useTranslation } from "react-i18next";
+
+export default function UserPublicCategories() {
+  const { username } = useParams<{ username: string }>();
+  const navigate = useNavigate();
+  const { key } = useLocation();
+  const { t } = useTranslation();
+  const [profile, setProfile] = useState<IProfile | null>(null);
+  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!username) return;
+    loadCategories();
+  }, [username]);
+
+  const loadCategories = async () => {
+    if (!username) return;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const prof = await getProfileByUsername(username);
+      if (!prof) {
+        setError(t("userProfile.userNotFound"));
+        setLoading(false);
+        return;
+      }
+      setProfile(prof);
+
+      const { data: categories, error: catError } = await supabase
+        .from("category")
+        .select(`id, name, description, emoji_code, is_private, voglio(count)`)
+        .eq("user_id", prof.id)
+        .eq("is_private", false);
+
+      if (catError) throw catError;
+
+      setCategoryList(
+        (categories || []).map((item) => ({
+          id: item.id,
+          name: item.name,
+          emojiCode: item.emoji_code,
+          description: item.description,
+          vogliosCount: item.voglio?.[0]?.count ?? 0,
+          isPrivate: item.is_private,
+        })),
+      );
+    } catch (err: any) {
+      setError(err.message);
+    }
+    setLoading(false);
+  };
+
+  const goBack = () => {
+    if (key !== "default") {
+      navigate(-1);
+    } else {
+      navigate(`/${username}`);
+    }
+  };
+
+  if (loading)
+    return <div className="mt-8 text-center text-[#6B6E85] text-sm">{t("common.loading")}</div>;
+  if (error)
+    return (
+      <div className="mt-8 text-center text-red-500 text-sm">
+        {error}
+      </div>
+    );
+  if (!profile)
+    return (
+      <div className="mt-8 text-center text-[#6B6E85] text-sm">
+        {t("common.error")}
+      </div>
+    );
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="size-8 self-start text-[#6B6E85] hover:text-[#1B1B2D]"
+        onClick={goBack}
+      >
+        <ChevronLeft className="size-5" />
+      </Button>
+
+      <div className="flex items-start gap-4 mt-4">
+        <div className="relative shrink-0">
+          <div className="w-14 h-14 rounded-full p-[2px]" style={{ background: "linear-gradient(135deg, #FF59C7, #7B61FF)" }}>
+            <div className="w-full h-full rounded-full overflow-hidden bg-white">
+              <Avatar className="w-full h-full">
+                <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || ""} />
+                <AvatarFallback className="text-lg font-bold bg-[#F1EEFF] text-[#7B61FF]">
+                  {(profile.display_name || profile.username).slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+          </div>
+        </div>
+        <div className="flex-1 pt-1">
+          <h2 className="font-display text-xl text-[#1B1B2D]">
+            {profile.display_name || profile.username}
+          </h2>
+          <p className="text-sm text-[#6B6E85]">@{profile.username}</p>
+        </div>
+      </div>
+
+      <div className="mt-6">
+        <p className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wide">{t("userCollections.publicCategories")}</p>
+      </div>
+
+      <div className="mt-4 mb-8 grid grid-cols-1 gap-5 xs:grid-cols-2">
+        {categoryList.map((category) => (
+          <div
+            key={category.id}
+            onClick={() =>
+              navigate(`/${username}/public/${category.id}`)
+            }
+          >
+            <CategoryPreview
+              props={category}
+              onDeleteClick={() => {}}
+              OnEditClick={() => {}}
+              isReadOnly
+            />
+          </div>
+        ))}
+        {categoryList.length === 0 && (
+          <p className="col-span-full text-center text-[#6B6E85] text-sm mt-8">
+            {t("userCollections.noPublicCategories")}
+          </p>
+        )}
+      </div>
+    </>
+  );
+}
