@@ -14,6 +14,7 @@ interface ProfileDisplayProps {
   followingCount: number;
   onEdit: () => void;
   signOut: () => void;
+  city?: string;
 }
 
 export default function ProfileDisplay({
@@ -23,10 +24,11 @@ export default function ProfileDisplay({
   followingCount,
   onEdit,
   signOut,
+  city,
 }: ProfileDisplayProps) {
   const { t, i18n } = useTranslation();
   const zodiacSign = profile.zodiac_sign || "";
-  const hasAboutData = profile.birth_date || profile.gender || profile.location || zodiacSign;
+  const hasAboutData = profile.birth_date || profile.gender || profile.location || profile.city || zodiacSign;
   const sizingFormat = profile.sizing_format || "US";
   const sizeData = [
     { label: t("profile.shirt"), value: profile.shirt_size },
@@ -126,7 +128,7 @@ export default function ProfileDisplay({
             <h3 className="text-sm font-semibold text-[#1B1B2D] mb-1">{t("profile.aboutMe")}</h3>
             <div className="divide-y divide-[#F3F4F7]">
               <ProfileRow label={t("profile.birthDate")} value={formatDate(profile.birth_date || "")} />
-              <ProfileRow label={t("profile.location")} value={profile.location} />
+              <ProfileRow label={t("profile.location")} value={profile.location ? (city ? `${profile.location}, ${city}` : profile.location) : (city || undefined)} />
               <ProfileRow label={t("profile.gender")} value={profile.gender} />
               <ProfileRow label={t("profile.zodiacSign")} value={zodiacSign} />
             </div>

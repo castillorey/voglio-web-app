@@ -26,6 +26,7 @@ export default function Perfil() {
     const [birthDate, setBirthDate] = useState("");
     const [gender, setGender] = useState("");
     const [location, setLocation] = useState("");
+    const [city, setCity] = useState("");
     const [shirtSize, setShirtSize] = useState("");
     const [pantsSize, setPantsSize] = useState("");
     const [shoeSize, setShoeSize] = useState("");
@@ -58,6 +59,7 @@ export default function Perfil() {
                 setBirthDate(prof.birth_date || "");
                 setGender(prof.gender || "");
                 setLocation(prof.location || "");
+                setCity(prof.city || "");
                 setShirtSize(prof.shirt_size || "");
                 setPantsSize(prof.pants_size || "");
                 setShoeSize(prof.shoe_size || "");
@@ -92,6 +94,7 @@ export default function Perfil() {
                 birth_date: birthDate || null,
                 gender: gender || null,
                 location: location || null,
+                city: city || null,
                 shirt_size: shirtSize || null,
                 pants_size: pantsSize || null,
                 shoe_size: shoeSize || null,
@@ -114,6 +117,7 @@ export default function Perfil() {
                 birth_date: birthDate || null,
                 gender: gender || null,
                 location: location || null,
+                city: city || null,
                 shirt_size: shirtSize || null,
                 pants_size: pantsSize || null,
                 shoe_size: shoeSize || null,
@@ -243,6 +247,7 @@ export default function Perfil() {
                 birthDate={birthDate} setBirthDate={setBirthDate}
                 gender={gender} setGender={setGender}
                 location={location} setLocation={setLocation}
+                city={city} setCity={setCity}
                 shirtSize={shirtSize} setShirtSize={setShirtSize}
                 pantsSize={pantsSize} setPantsSize={setPantsSize}
                 shoeSize={shoeSize} setShoeSize={setShoeSize}
@@ -271,6 +276,7 @@ export default function Perfil() {
             followingCount={followingCount}
             onEdit={() => setEditing(true)}
             signOut={signOut}
+            city={city}
         />
     );
 }

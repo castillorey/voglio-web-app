@@ -22,6 +22,7 @@ import {
 import { Card } from "./profile-shared";
 import { getColorHex } from "./profile-utils";
 import { SIZES, SIZING_FORMATS, SizingFormat } from "./profile-sizes";
+import { COUNTRIES } from "./profile-countries";
 import { useTranslation } from "react-i18next";
 
 const GENDER_OPTIONS = ["", "Male", "Female", "Non-binary", "Other", "Prefer not to say"];
@@ -36,6 +37,8 @@ interface ProfileEditProps {
   setGender: (v: string) => void;
   location: string;
   setLocation: (v: string) => void;
+  city: string;
+  setCity: (v: string) => void;
   shirtSize: string;
   setShirtSize: (v: string) => void;
   pantsSize: string;
@@ -67,6 +70,7 @@ export default function ProfileEdit({
   birthDate, setBirthDate,
   gender, setGender,
   location, setLocation,
+  city, setCity,
   shirtSize, setShirtSize,
   pantsSize, setPantsSize,
   shoeSize, setShoeSize,
@@ -140,12 +144,27 @@ export default function ProfileEdit({
               </div>
               <div>
                 <Label htmlFor="location" className="text-xs text-[#8C8F9E]">{t("profile.location")}</Label>
+                <Select value={location} onValueChange={setLocation}>
+                  <SelectTrigger className="mt-1 text-sm">
+                    <SelectValue placeholder={t("profile.selectCountry")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {COUNTRIES.map((country) => (
+                      <SelectItem key={country} value={country}>
+                        {country}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="city" className="text-xs text-[#8C8F9E]">{t("profile.city")}</Label>
                 <Input
-                  id="location"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  id="city"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
                   className="mt-1 text-sm"
-                  placeholder={t("profile.locationPlaceholder")}
+                  placeholder={t("profile.cityPlaceholder")}
                 />
               </div>
             </div>

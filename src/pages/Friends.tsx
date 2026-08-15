@@ -256,7 +256,7 @@ export default function Friends() {
                         {profile.display_name || profile.username}
                       </p>
                       <p className="text-[11px] text-[#8C8F9E] mt-0.5 font-medium">
-                        {profile.location || t("friends.locationNotSet")}
+                        {profile.location ? (profile.city ? `${profile.location}, ${profile.city}` : profile.location) : (profile.city || t("friends.locationNotSet"))}
                       </p>
                     </div>
                   </div>

@@ -151,7 +151,7 @@ export default function UserProfile({ isPublic = false }: { isPublic?: boolean }
       {/* Details Cards */}
       <div className="mt-6 mb-8 space-y-3">
         {/* Location */}
-        {profile.location && (
+        {(profile.location || profile.city) && (
           <Card className="rounded-[16px] border-[#F0F1F6] shadow-sm">
             <CardContent className="p-4 flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-[#F1EEFF] flex items-center justify-center shrink-0">
@@ -160,7 +160,7 @@ export default function UserProfile({ isPublic = false }: { isPublic?: boolean }
               <div>
                 <p className="text-xs text-[#6B6E85] font-medium">{t("userProfile.location")}</p>
                 <p className="text-sm font-semibold text-[#1B1B2D]">
-                  {profile.location}
+                  {profile.location ? (profile.city ? `${profile.location}, ${profile.city}` : profile.location) : (profile.city || "")}
                 </p>
               </div>
             </CardContent>
@@ -347,6 +347,7 @@ export default function UserProfile({ isPublic = false }: { isPublic?: boolean }
 
         {/* No details */}
         {!profile.location &&
+          !profile.city &&
           !profile.birth_date &&
           !profile.gender &&
           !profile.shirt_size &&
