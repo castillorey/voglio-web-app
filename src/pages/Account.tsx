@@ -71,9 +71,9 @@ export default function Perfil() {
                   grouped[p.category_name].push(p);
                 }
                 setPreferences(grouped);
-                const colors = await fetchColorOptions();
-                setColorOptions(colors);
             }
+            const colors = await fetchColorOptions();
+            setColorOptions(colors);
         } catch (err) {
             console.log(err);
         }
