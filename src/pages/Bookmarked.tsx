@@ -120,7 +120,7 @@ export default function Bookmarked() {
   return (
     <>
       <div className="sticky top-0 z-10 -mx-5 lg:-mx-8 px-5 lg:px-8 mb-6 bg-[#F8F7FC] py-4">
-        <h1 className="font-display text-2xl text-[#1B1B2D]">{t("bookmark.savedItems")}</h1>
+        <h1 className="font-display text-2xl text-[#1B1B2D]">{t("bookmark.bookedItems")}</h1>
       </div>
 
       {loading ? (

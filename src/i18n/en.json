@@ -211,7 +211,7 @@
     "pageNotFound": "Page not found"
   },
   "bookmark": {
-    "savedItems": "Saved items",
+    "bookedItems": "Booked items",
     "noSavedItems": "No saved items yet",
     "browseFriends": "Browse your friends' categories and bookmark items you like",
     "findFriends": "Find friends"

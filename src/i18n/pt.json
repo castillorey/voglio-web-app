@@ -211,7 +211,7 @@
     "pageNotFound": "Página não encontrada"
   },
   "bookmark": {
-    "savedItems": "Itens salvos",
+    "bookedItems": "Itens reservados",
     "noSavedItems": "Nenhum item salvo ainda",
     "browseFriends": "Explore as categorias dos seus amigos e salve os itens que você gosta",
     "findFriends": "Encontrar amigos"
