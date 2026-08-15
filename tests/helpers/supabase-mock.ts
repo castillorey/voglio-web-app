@@ -45,6 +45,8 @@ export interface FakeProfile {
   shoe_size: string | null;
   sizing_format: string | null;
   zodiac_sign: string | null;
+  favorite_color: string | null;
+  favorite_food: string | null;
   created_at: string;
 }
 
@@ -59,12 +61,21 @@ export interface FakeTaken {
   created_at: string;
 }
 
+export interface FakePreference {
+  id: number;
+  user_id: string;
+  category_name: string;
+  item_value: string;
+  display_order: number;
+}
+
 export interface MockDB {
   categories: FakeCategory[];
   voglios: FakeVoglio[];
   profiles: FakeProfile[];
   follows: FakeFollow[];
   taken: FakeTaken[];
+  preferences: FakePreference[];
 }
 
 export const defaultDB = (): MockDB => ({
@@ -116,7 +127,7 @@ export const defaultDB = (): MockDB => ({
       user_id: TEST_USER_ID,
     },
   ],
-  profiles: [
+   profiles: [
     {
       id: TEST_USER_ID,
       username: TEST_USERNAME,
@@ -130,6 +141,8 @@ export const defaultDB = (): MockDB => ({
       shoe_size: null,
       sizing_format: "US",
       zodiac_sign: "Gemini",
+      favorite_color: null,
+      favorite_food: null,
       created_at: "2024-01-01T00:00:00.000Z",
     },
     {
@@ -145,11 +158,36 @@ export const defaultDB = (): MockDB => ({
       shoe_size: null,
       sizing_format: "US",
       zodiac_sign: null,
+      favorite_color: null,
+      favorite_food: null,
       created_at: "2024-01-02T00:00:00.000Z",
     },
   ],
   follows: [{ follower_id: TEST_USER_ID, following_id: TEST_FRIEND_ID }],
   taken: [],
+  preferences: [
+    {
+      id: 1,
+      user_id: TEST_USER_ID,
+      category_name: "Colores favoritos",
+      item_value: "Red",
+      display_order: 0,
+    },
+    {
+      id: 2,
+      user_id: TEST_USER_ID,
+      category_name: "Colores favoritos",
+      item_value: "Blue",
+      display_order: 1,
+    },
+    {
+      id: 3,
+      user_id: TEST_USER_ID,
+      category_name: "Custom Category",
+      item_value: "Custom item",
+      display_order: 0,
+    },
+  ],
 });
 
 function b64url(input: string): string {
@@ -368,7 +406,7 @@ export function setupSupabaseMocks(
       return handleFollows(route, url, method, state);
     }
     if (path.includes("/rest/v1/user_preferences")) {
-      return ok(route, method === "GET" ? [] : []);
+      return handlePreferences(route, url, method, state);
     }
     if (path.includes("/rest/v1/color_options")) {
       return ok(route, []);
@@ -629,6 +667,40 @@ function handleFollows(route: Route, url: URL, method: string, state: MockState)
     db.follows = db.follows.filter(
       (f) => !(f.follower_id === filters.follower_id && f.following_id === filters.following_id),
     );
+    return ok(route, []);
+  }
+
+  return ok(route, []);
+}
+
+function handlePreferences(route: Route, url: URL, method: string, state: MockState) {
+  const { db } = state;
+  const filters = parseEq(url);
+
+  if (method === "GET") {
+    let rows = [...db.preferences];
+    if (filters.user_id) rows = rows.filter((r) => r.user_id === filters.user_id);
+    return ok(route, rows);
+  }
+
+  if (method === "POST") {
+    const body = postBody(route);
+    const row: FakePreference = {
+      id: Date.now(),
+      user_id: body.user_id ?? TEST_USER_ID,
+      category_name: body.category_name,
+      item_value: body.item_value,
+      display_order: body.display_order ?? 0,
+    };
+    db.preferences.push(row);
+    return ok(route, [row], 201);
+  }
+
+  if (method === "DELETE") {
+    if (filters.id) {
+      db.preferences = db.preferences.filter((r) => r.id !== Number(filters.id));
+      return ok(route, []);
+    }
     return ok(route, []);
   }
 
