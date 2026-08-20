@@ -13,6 +13,7 @@ import {
   Palette,
   UtensilsCrossed,
   Sparkles,
+  Scissors,
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import supabase from "../supabase-client";
@@ -238,7 +239,7 @@ export default function UserProfile({ isPublic = false }: { isPublic?: boolean }
                 )}
                 {profile.pants_size && (
                   <div className="text-center p-2 bg-[#F8F8FB] rounded-xl">
-                    <Footprints className="size-4 mx-auto text-[#6B6E85] mb-1" />
+                    <Scissors className="size-4 mx-auto text-[#6B6E85] mb-1" />
                     <p className="text-[10px] text-[#6B6E85]">{t("profile.pants")}</p>
                     <p className="text-sm font-bold text-[#1B1B2D]">
                       {profile.pants_size}
