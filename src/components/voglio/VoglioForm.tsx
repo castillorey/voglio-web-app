@@ -9,12 +9,15 @@ import VoglioFormStep1 from "./VoglioFormStep1";
 import VoglioFormStep2 from "./VoglioFormStep2";
 import VoglioFormStep3 from "./VoglioFormStep3";
 import { useTranslation } from "react-i18next";
+import { getProfile } from "../../services/profile";
+import { getCurrencySymbol } from "../profile/profile-currencies";
 
 export interface IVoglio {
   id: number | null;
   name: string;
   notes: string;
   price: number | null;
+  currency: string | null;
   categoryId: string | null;
   referenceLink: string;
   sizeId: string | null;
@@ -36,6 +39,7 @@ export interface IVoglioDto {
   image_url: string;
   quantity: number | null;
   price: number | null;
+  currency: string | null;
   is_private: boolean;
   user_id?: string;
 }
@@ -78,8 +82,31 @@ export default function VoglioForm({
   const [searchResults, setSearchResults] = useState<ProductResult[]>([]);
   const [searching, setSearching] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [currency, setCurrency] = useState("USD");
 
-  const handleFormChange = (newFormData: IVoglio) => {  
+  useEffect(() => {
+    fetchCategoryList();
+    fetchUserCurrency();
+    if (editVoglioData) {
+      setFormData({ ...formData, ...editVoglioData });
+    } else if (categoryId) {
+      setFormData({ ...formData, categoryId: categoryId.toString() });
+    }
+  }, []);
+
+  const fetchUserCurrency = async () => {
+    if (!user) return;
+    try {
+      const prof = await getProfile(user);
+      if (prof?.currency) {
+        setCurrency(prof.currency);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleFormChange = (newFormData: IVoglio) => {
     setFormData(newFormData);
     setErrors({});
   };
@@ -121,6 +148,7 @@ export default function VoglioForm({
     imageUrl: "",
     quantity: 1,
     price: null,
+    currency: null,
     isPrivate: false,
     isTaken: false,
     userId: user ?? "",
@@ -197,6 +225,7 @@ export default function VoglioForm({
       image_url: imageUrl,
       quantity: formData.quantity,
       price: formData.price,
+      currency: formData.currency || currency,
       is_private: formData.isPrivate,
     };
 
@@ -291,6 +320,8 @@ export default function VoglioForm({
           categoryList={categoryList}
           onFormChange={handleFormChange}
           onQuickCreateCategory={handleQuickCreateCategory}
+          currency={currency}
+          currencySymbol={getCurrencySymbol(currency)}
         />
       )}
       <div className="mt-6 pt-4 border-t border-[#F0F1F6] xs:flex justify-end gap-3">

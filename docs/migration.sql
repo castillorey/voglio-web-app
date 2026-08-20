@@ -64,6 +64,7 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS birth_date DATE;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS gender TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS location TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS city TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS currency TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS shirt_size TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS pants_size TEXT;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS shoe_size TEXT;

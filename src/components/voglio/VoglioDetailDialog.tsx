@@ -12,6 +12,7 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import { IVoglio } from "./VoglioForm";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
+import { getCurrencySymbol } from "../profile/profile-currencies";
 
 interface VoglioDetailDialogProps {
   open: boolean;
@@ -20,6 +21,7 @@ interface VoglioDetailDialogProps {
   isTaken?: boolean;
   takenBy?: string | null;
   onToggleTaken?: () => void;
+  currency?: string;
 }
 
 function VoglioDetailContent({
@@ -27,11 +29,13 @@ function VoglioDetailContent({
   isTaken,
   takenBy,
   onToggleTaken,
+  currency,
 }: {
   voglio: IVoglio;
   isTaken?: boolean;
   takenBy?: string | null;
   onToggleTaken?: () => void;
+  currency?: string;
 }) {
   const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
@@ -57,7 +61,7 @@ function VoglioDetailContent({
       <div>
         <h3 className="font-bold text-base text-[#1B1B2D]">{voglio.name}</h3>
         {voglio.price != null && (
-          <p className="mt-1 text-sm font-semibold text-[#7B61FF]">${voglio.price}</p>
+          <p className="mt-1 text-sm font-semibold text-[#7B61FF]">{getCurrencySymbol(currency || voglio.currency)}{voglio.price}</p>
         )}
       </div>
 
@@ -112,6 +116,7 @@ export default function VoglioDetailDialog({
   isTaken,
   takenBy,
   onToggleTaken,
+  currency,
 }: VoglioDetailDialogProps) {
   const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
   const { t } = useTranslation();
@@ -127,6 +132,7 @@ export default function VoglioDetailDialog({
           isTaken={isTaken}
           takenBy={takenBy}
           onToggleTaken={onToggleTaken}
+          currency={currency}
         />
       </MobileSheet>
     );
@@ -146,6 +152,7 @@ export default function VoglioDetailDialog({
           isTaken={isTaken}
           takenBy={takenBy}
           onToggleTaken={onToggleTaken}
+          currency={currency}
         />
       </DialogContent>
     </Dialog>

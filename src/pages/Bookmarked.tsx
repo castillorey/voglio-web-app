@@ -72,7 +72,7 @@ export default function Bookmarked() {
     const userIds = [...new Set(voglios.map((v) => v.user_id))];
     const { data: profiles } = await supabase
       .from("profiles")
-      .select("id, username, display_name")
+      .select("id, username, display_name, currency")
       .in("id", userIds);
 
     const profileMap = new Map(
@@ -88,6 +88,7 @@ export default function Bookmarked() {
           name: v.name,
           notes: v.notes,
           price: v.price,
+          currency: profile?.currency || null,
           categoryId: v.category_id?.toString() ?? null,
           referenceLink: v.reference_link ?? "",
           sizeId: v.size_id,
@@ -165,6 +166,7 @@ export default function Bookmarked() {
                   onToggleTaken: () => handleUnmark(item.voglio.id!),
                 })}
                 stopClickPropagationOnActions
+                currency={item.voglio.currency}
               />
               <Link
                 to={`/friends/u/${item.ownerUsername}/category/${item.categoryId}`}
@@ -192,6 +194,7 @@ export default function Bookmarked() {
           isTaken={selectedVoglio.isTaken}
           takenBy={selectedVoglio.takenBy}
           onToggleTaken={selectedVoglio.onToggleTaken}
+          currency={selectedVoglio.voglio.currency}
         />
       )}
     </>

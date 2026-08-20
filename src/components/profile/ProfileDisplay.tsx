@@ -5,6 +5,7 @@ import { IProfile } from "@/services/profile";
 import { PreferenceMap } from "@/services/preferences";
 import { Card, Chip, ProfileRow } from "./profile-shared";
 import { getColorHex, formatDate } from "./profile-utils";
+import { getCurrencySymbol } from "./profile-currencies";
 import { useTranslation } from "react-i18next";
 
 interface ProfileDisplayProps {
@@ -15,6 +16,7 @@ interface ProfileDisplayProps {
   onEdit: () => void;
   signOut: () => void;
   city?: string;
+  currency?: string;
 }
 
 export default function ProfileDisplay({
@@ -25,6 +27,7 @@ export default function ProfileDisplay({
   onEdit,
   signOut,
   city,
+  currency,
 }: ProfileDisplayProps) {
   const { t, i18n } = useTranslation();
   const zodiacSign = profile.zodiac_sign || "";
@@ -129,6 +132,7 @@ export default function ProfileDisplay({
             <div className="divide-y divide-[#F3F4F7]">
               <ProfileRow label={t("profile.birthDate")} value={formatDate(profile.birth_date || "")} />
               <ProfileRow label={t("profile.location")} value={profile.location ? (city ? `${profile.location}, ${city}` : profile.location) : (city || undefined)} />
+              <ProfileRow label={t("profile.currency")} value={currency ? `${getCurrencySymbol(currency)} — ${getCurrencyName(currency)}` : undefined} />
               <ProfileRow label={t("profile.gender")} value={profile.gender} />
               <ProfileRow label={t("profile.zodiacSign")} value={zodiacSign} />
             </div>

@@ -16,6 +16,7 @@ export interface IProfile {
   favorite_food: string | null;
   zodiac_sign: string | null;
   sizing_format: string | null;
+  currency: string | null;
   created_at: string;
 }
 
@@ -56,6 +57,7 @@ export const createProfile = async (profile: {
   favorite_food?: string | null;
   zodiac_sign?: string | null;
   sizing_format?: string | null;
+  currency?: string | null;
 }) => {
   const { data, error } = await supabase
     .from("profiles")
@@ -84,6 +86,7 @@ export const updateProfile = async (
     favorite_food?: string | null;
     zodiac_sign?: string | null;
     sizing_format?: string | null;
+    currency?: string | null;
   }
 ) => {
   const { data, error } = await supabase

@@ -23,6 +23,7 @@ import { Card } from "./profile-shared";
 import { getColorHex } from "./profile-utils";
 import { SIZES, SIZING_FORMATS, SizingFormat } from "./profile-sizes";
 import { COUNTRIES } from "./profile-countries";
+import { CURRENCIES } from "./profile-currencies";
 import { useTranslation } from "react-i18next";
 
 const GENDER_OPTIONS = ["", "Male", "Female", "Non-binary", "Other", "Prefer not to say"];
@@ -39,6 +40,8 @@ interface ProfileEditProps {
   setLocation: (v: string) => void;
   city: string;
   setCity: (v: string) => void;
+  currency: string;
+  setCurrency: (v: string) => void;
   shirtSize: string;
   setShirtSize: (v: string) => void;
   pantsSize: string;
@@ -71,6 +74,7 @@ export default function ProfileEdit({
   gender, setGender,
   location, setLocation,
   city, setCity,
+  currency, setCurrency,
   shirtSize, setShirtSize,
   pantsSize, setPantsSize,
   shoeSize, setShoeSize,
@@ -166,6 +170,21 @@ export default function ProfileEdit({
                   className="mt-1 text-sm"
                   placeholder={t("profile.cityPlaceholder")}
                 />
+              </div>
+              <div>
+                <Label htmlFor="currency" className="text-xs text-[#8C8F9E]">{t("profile.currency")}</Label>
+                <Select value={currency} onValueChange={setCurrency}>
+                  <SelectTrigger className="mt-1 text-sm">
+                    <SelectValue placeholder={t("profile.selectCurrency")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CURRENCIES.map((c) => (
+                      <SelectItem key={c.code} value={c.code}>
+                        {c.name} ({c.symbol})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </Card>

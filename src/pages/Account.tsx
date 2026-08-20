@@ -15,6 +15,7 @@ import { getZodiacSign } from "@/components/profile/profile-utils";
 import { SizingFormat } from "@/components/profile/profile-sizes";
 import { Cake, MapPin, Shirt, Palette, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { CURRENCIES } from "@/components/profile/profile-currencies";
 
 export default function Perfil() {
     const navigate = useNavigate();
@@ -30,6 +31,7 @@ export default function Perfil() {
     const [shirtSize, setShirtSize] = useState("");
     const [pantsSize, setPantsSize] = useState("");
     const [shoeSize, setShoeSize] = useState("");
+    const [currency, setCurrency] = useState("USD");
     const [followingCount, setFollowingCount] = useState(0);
     const [saving, setSaving] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -63,6 +65,7 @@ export default function Perfil() {
                 setShirtSize(prof.shirt_size || "");
                 setPantsSize(prof.pants_size || "");
                 setShoeSize(prof.shoe_size || "");
+                setCurrency(prof.currency || "USD");
                 setSizingFormat((prof.sizing_format as SizingFormat) || "US");
                 const following = await getFollowing(currentUserId);
                 setFollowingCount(following.length);
@@ -100,6 +103,7 @@ export default function Perfil() {
                 shoe_size: shoeSize || null,
                 sizing_format: sizingFormat,
                 zodiac_sign: getZodiacSign(birthDate) || null,
+                currency: currency || null,
             });
             setProfile(prof);
         } catch (err) {
@@ -123,6 +127,7 @@ export default function Perfil() {
                 shoe_size: shoeSize || null,
                 sizing_format: sizingFormat,
                 zodiac_sign: getZodiacSign(birthDate) || null,
+                currency: currency || null,
             });
             setProfile(updated);
             setEditing(false);
@@ -230,6 +235,19 @@ export default function Perfil() {
                             placeholder={t("account.yourName")}
                         />
                     </div>
+                    <div>
+                        <Label htmlFor="currency" className="text-xs font-semibold text-[#6B6E85] uppercase tracking-wider">{t("profile.currency")}</Label>
+                        <select
+                            id="currency"
+                            value={currency}
+                            onChange={(e) => setCurrency(e.target.value)}
+                            className="mt-1.5 flex h-9 w-full rounded-md border border-[#F0F1F6] bg-transparent px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#7B61FF]"
+                        >
+                            {CURRENCIES.map((c) => (
+                                <option key={c.code} value={c.code}>{c.name} ({c.symbol})</option>
+                            ))}
+                        </select>
+                    </div>
                     <Button size="sm" onClick={handleCreate} disabled={saving} className="w-full text-xs font-bold">
                         {saving ? t("common.creating") : t("account.createProfile")}
                     </Button>
@@ -248,6 +266,7 @@ export default function Perfil() {
                 gender={gender} setGender={setGender}
                 location={location} setLocation={setLocation}
                 city={city} setCity={setCity}
+                currency={currency} setCurrency={setCurrency}
                 shirtSize={shirtSize} setShirtSize={setShirtSize}
                 pantsSize={pantsSize} setPantsSize={setPantsSize}
                 shoeSize={shoeSize} setShoeSize={setShoeSize}
@@ -277,6 +296,7 @@ export default function Perfil() {
             onEdit={() => setEditing(true)}
             signOut={signOut}
             city={city}
+            currency={currency}
         />
     );
 }

@@ -77,6 +77,7 @@ export default function UserPublicCategory() {
         name: item.name,
         notes: item.notes,
         price: item.price,
+        currency: profile?.currency || null,
         categoryId: item.category_id?.toString() ?? null,
         referenceLink: item.reference_link ?? "",
         sizeId: item.size_id,
@@ -155,6 +156,7 @@ export default function UserPublicCategory() {
             OnEditClick={() => {}}
             isReadOnly
             onCardClick={() => setSelectedVoglio(voglio)}
+            currency={profile?.currency}
           />
         ))}
         {voglioList.length === 0 && (
@@ -172,6 +174,7 @@ export default function UserPublicCategory() {
           isTaken={false}
           takenBy={null}
           onToggleTaken={() => {}}
+          currency={profile?.currency}
         />
       )}
     </>

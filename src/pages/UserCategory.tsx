@@ -104,6 +104,7 @@ export default function UserCategory() {
         name: item.name,
         notes: item.notes,
         price: item.price,
+        currency: profile?.currency || null,
         categoryId: item.category_id?.toString() ?? null,
         referenceLink: item.reference_link ?? "",
         sizeId: item.size_id,
@@ -214,6 +215,7 @@ export default function UserCategory() {
             takenBy={takenMap.get(voglio.id!) || null}
             onToggleTaken={() => handleToggleTaken(voglio.id!)}
             onCardClick={() => setSelectedVoglio(voglio)}
+            currency={profile?.currency}
           />
         ))}
         {filteredAndSorted.length === 0 && (
@@ -233,6 +235,7 @@ export default function UserCategory() {
           isTaken={takenMap.has(selectedVoglio.id!)}
           takenBy={takenMap.get(selectedVoglio.id!) || null}
           onToggleTaken={() => handleToggleTaken(selectedVoglio.id!)}
+          currency={profile?.currency}
         />
       )}
     </>

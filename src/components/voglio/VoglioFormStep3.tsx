@@ -36,12 +36,16 @@ export default function VoglioFormStep3({
   categoryList,
   onFormChange,
   onQuickCreateCategory,
+  currency,
+  currencySymbol,
 }: {
   formData: IVoglio;
   errors: { name?: string; imageUrl?: string; categoryId?: string };
   categoryList: ICategory[];
   onFormChange: (formData: IVoglio) => void;
   onQuickCreateCategory?: (category: ICategory) => void;
+  currency?: string;
+  currencySymbol?: string;
 }) {
   const [showMore, setShowMore] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -293,17 +297,20 @@ export default function VoglioFormStep3({
               {t("voglioForm.price")} <span className="text-xs font-normal normal-case text-[#8C8F9E]">({t("common.optional")})</span>
             </Label>
 
-            <Input
-              id="price"
-              name="price"
-              type="number"
-              onChange={(event) => {
-                onFormChange({ ...formData, price: event.target.value ? +event.target.value : null });
-              }}
-              value={formData.price ?? ""}
-              placeholder="0.00"
-              className="mt-1.5"
-            />
+            <div className="relative mt-1.5">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#6B6E85]">{currencySymbol || "$"}</span>
+              <Input
+                id="price"
+                name="price"
+                type="number"
+                onChange={(event) => {
+                  onFormChange({ ...formData, price: event.target.value ? +event.target.value : null });
+                }}
+                value={formData.price ?? ""}
+                placeholder="0.00"
+                className="mt-1.5 pl-7"
+              />
+            </div>
           </div>
 
           {/* Quantity */}

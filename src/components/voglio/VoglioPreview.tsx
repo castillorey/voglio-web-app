@@ -31,6 +31,7 @@ import supabase from "../../supabase-client";
 import { IVoglio } from "./VoglioForm";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
+import { getCurrencySymbol } from "../profile/profile-currencies";
 
 export default function VoglioPreview({
   props,
@@ -42,6 +43,7 @@ export default function VoglioPreview({
   onToggleTaken,
   onCardClick,
   stopClickPropagationOnActions,
+  currency,
 }: {
   props: IVoglio;
   onDeleteVoglio: (voglioId: number) => void;
@@ -52,6 +54,7 @@ export default function VoglioPreview({
   onToggleTaken?: () => void;
   onCardClick?: () => void;
   stopClickPropagationOnActions?: boolean;
+  currency?: string;
 }) {
   const [open, setOpen] = useState(false);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 500px)");
@@ -179,7 +182,7 @@ export default function VoglioPreview({
           {!isReadOnly && !onCardClick && props.notes && <p className="mt-1 text-xs text-[#6B6E85] line-clamp-2">{props.notes}</p>}
           <div className="flex items-center justify-between gap-2 mt-1">
             {props.price != null && (
-              <p className="text-xs font-semibold text-[#7B61FF]">${props.price}</p>
+              <p className="text-xs font-semibold text-[#7B61FF]">{getCurrencySymbol(currency || props.currency)}{props.price}</p>
             )}
             {!isOwner && (
               <div

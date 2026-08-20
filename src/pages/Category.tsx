@@ -24,6 +24,7 @@ export default function Category() {
   const [openNewVoglioDialog, setOpenNewVoglioDialog] = useState(false);
   const [editVoglioData, setEditVoglioData] = useState<IVoglio | null>(null);
   const [takenMap, setTakenMap] = useState<Map<number, string>>(new Map());
+  const [currency, setCurrency] = useState("USD");
   const { getCurrentUserId } = useAuth();
   const currentUserId = getCurrentUserId();
 
@@ -49,7 +50,21 @@ export default function Category() {
     if (!categoryId) return;
     fetchCategory();
     fetchVoglios();
+    fetchCurrency();
   }, []);
+
+  const fetchCurrency = async () => {
+    if (!currentUserId) return;
+    try {
+      const { getProfile } = await import("../services/profile");
+      const prof = await getProfile(currentUserId);
+      if (prof?.currency) {
+        setCurrency(prof.currency);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const fetchVoglios = async () => {
     const { data, error } = await supabase
@@ -71,6 +86,7 @@ export default function Category() {
           imageUrl: voglio.image_url ?? "",
           quantity: voglio.quantity,
           price: voglio.price,
+          currency: currency,
           isPrivate: voglio.is_private,
           isTaken: voglio.is_taken ?? false,
           userId: voglio.user_id,
@@ -157,6 +173,7 @@ export default function Category() {
             isTaken={takenMap.has(voglio.id!)}
             takenBy={takenMap.get(voglio.id!) || null}
             onToggleTaken={() => handleToggleTaken(voglio.id!)}
+            currency={voglio.currency}
           />
         ))}
       </div>

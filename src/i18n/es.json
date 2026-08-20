@@ -184,6 +184,8 @@
     "selectCountry": "Seleccionar país",
     "city": "Ciudad",
     "cityPlaceholder": "ej. Madrid",
+    "currency": "Moneda",
+    "selectCurrency": "Seleccionar moneda",
     "personal": "Personal",
     "birthDate": "Fecha de nacimiento",
     "gender": "Género",
